@@ -9,8 +9,8 @@
     <!-- All POMs extend the Super POM unless explicitly set -->
     <!--parent>*</parent-->
 
-    <groupId>com.mycomany</groupId>
-    <artifactId>OtusJavaHW</artifactId>
+    <groupId>com.mycompany</groupId>
+    <artifactId>OtusJavaHW_ysavchen</artifactId>
     <version>2019-03-SNAPSHOT</version>
 
     <developers>
@@ -18,6 +18,10 @@
             <name>ysavchen</name>
         </developer>
     </developers>
+
+    <modules>
+        <module>L01.1-maven</module>
+    </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
