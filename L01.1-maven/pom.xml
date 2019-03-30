@@ -32,6 +32,7 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
                             <mainClass>com.mycompany.l011.HelloOtus</mainClass>
@@ -47,6 +48,16 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <compilerArgs>
+                        <arg>-Xlint:requires-automatic</arg>
+                        <arg>-Xlint:requires-transitive-automatic</arg>
+                    </compilerArgs>
+                </configuration>
             </plugin>
         </plugins>
     </build>
