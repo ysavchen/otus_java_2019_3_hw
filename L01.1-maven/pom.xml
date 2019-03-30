@@ -34,7 +34,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>ru.otus.l011.HelloOtus</mainClass>
+                            <mainClass>com.mycompany.l011.HelloOtus</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
