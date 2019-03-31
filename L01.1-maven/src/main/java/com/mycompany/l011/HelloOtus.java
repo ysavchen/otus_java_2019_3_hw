@@ -31,5 +31,6 @@ public class HelloOtus {
                 Ints.asList(1, 2, 3),
                 Ints.asList(4, 5, 6));
         System.out.println(concatenated);
+        System.out.println("Hello, git");
     }
 }
