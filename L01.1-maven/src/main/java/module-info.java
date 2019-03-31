@@ -1,4 +1,4 @@
-module L011maven {
+module com.mycompany.L011maven {
 
     requires transitive com.google.common;
 }
