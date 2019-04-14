@@ -13,6 +13,8 @@
     <artifactId>OtusJavaHW_ysavchen</artifactId>
     <version>2019-03-SNAPSHOT</version>
 
+    <packaging>pom</packaging>
+
     <developers>
         <developer>
             <name>ysavchen</name>
@@ -40,8 +42,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <packaging>pom</packaging>
 
     <build>
         <pluginManagement>

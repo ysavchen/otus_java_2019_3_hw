@@ -9,6 +9,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <packaging>jar</packaging>
+
     <artifactId>L03-generics-collections</artifactId>
+    <name>L03-generics-collections</name>
 
 </project>

@@ -5,6 +5,19 @@ import java.util.function.UnaryOperator;
 
 public class DIYarrayList<T> implements List<T> {
 
+    //stores the elements
+    private T[] array;
+
+    private static final int DEFAULT_SIZE = 10;
+
+    //index to add an element
+    private int addIndex;
+
+    @SuppressWarnings("unchecked")
+    public DIYarrayList() {
+        this.array = (T[]) new Object[DEFAULT_SIZE];
+    }
+
     @Override
     public int size() {
         throw new UnsupportedOperationException("size() is not implemented");
@@ -37,7 +50,12 @@ public class DIYarrayList<T> implements List<T> {
 
     @Override
     public boolean add(T t) {
-        throw new UnsupportedOperationException("add(T t) is not implemented");
+        if (addIndex == array.length) {
+            array = Arrays.copyOf(array, array.length * 2);
+        }
+        array[addIndex] = t;
+        addIndex++;
+        return true;
     }
 
     @Override
@@ -52,7 +70,8 @@ public class DIYarrayList<T> implements List<T> {
 
     @Override
     public boolean addAll(Collection<? extends T> c) {
-        throw new UnsupportedOperationException("addAll(Collection<? extends T> c) is not implemented");
+        c.forEach(this::add);
+        return true;
     }
 
     @Override
