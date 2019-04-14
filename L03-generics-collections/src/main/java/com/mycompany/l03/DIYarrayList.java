@@ -51,14 +51,14 @@ public class DIYarrayList<T> implements List<T> {
     @Override
     public boolean add(T t) {
         if (addIndex == array.length) {
-            increaseSize();
+            grow();
         }
         array[addIndex] = t;
         addIndex++;
         return true;
     }
 
-    private void increaseSize() {
+    private void grow() {
         array = Arrays.copyOf(array, array.length * 2);
     }
 
