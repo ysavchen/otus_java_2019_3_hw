@@ -6,15 +6,16 @@ import java.util.function.UnaryOperator;
 public class DIYarrayList<T> implements List<T> {
 
     //stores the elements
-    private Object[] array;
+    private T[] array;
 
     private static final int DEFAULT_SIZE = 10;
 
     //index to add an element
     private int addIndex;
 
+    @SuppressWarnings("unchecked")
     public DIYarrayList() {
-        this.array = new Object[DEFAULT_SIZE];
+        this.array = (T[]) new Object[DEFAULT_SIZE];
     }
 
     @Override
