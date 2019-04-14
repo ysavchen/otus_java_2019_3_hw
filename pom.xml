@@ -21,6 +21,7 @@
 
     <modules>
         <module>L01.1-maven</module>
+        <module>L03-generics-collections</module>
     </modules>
 
     <properties>
