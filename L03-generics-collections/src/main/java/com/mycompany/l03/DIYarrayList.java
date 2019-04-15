@@ -35,7 +35,7 @@ public class DIYarrayList<T> implements List<T> {
 
     @Override
     public Iterator<T> iterator() {
-        throw new UnsupportedOperationException("iterator() is not implemented");
+        return listIterator();
     }
 
     @Override

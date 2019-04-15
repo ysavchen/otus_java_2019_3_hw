@@ -10,6 +10,8 @@
         <version>2019-03-SNAPSHOT</version>
     </parent>
 
+    <packaging>jar</packaging>
+
     <artifactId>L01.1-maven</artifactId>
     <name>L01.1-maven</name>
 
@@ -19,8 +21,6 @@
             <artifactId>guava</artifactId>
         </dependency>
     </dependencies>
-
-    <packaging>jar</packaging>
 
     <build>
         <finalName>${project.name}</finalName>
@@ -52,12 +52,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <compilerArgs>
-                        <arg>-Xlint:requires-automatic</arg>
-                        <arg>-Xlint:requires-transitive-automatic</arg>
-                    </compilerArgs>
-                </configuration>
             </plugin>
         </plugins>
     </build>
