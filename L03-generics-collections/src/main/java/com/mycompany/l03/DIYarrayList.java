@@ -40,7 +40,7 @@ public class DIYarrayList<T> implements List<T> {
 
     @Override
     public Object[] toArray() {
-        throw new UnsupportedOperationException("toArray() is not implemented");
+        return array;
     }
 
     @Override
@@ -100,7 +100,7 @@ public class DIYarrayList<T> implements List<T> {
 
     @Override
     public void sort(Comparator<? super T> c) {
-        throw new UnsupportedOperationException("sort(Comparator<? super T> c) is not implemented");
+        Arrays.sort(array, 0, size, c);
     }
 
     @Override
@@ -147,7 +147,7 @@ public class DIYarrayList<T> implements List<T> {
 
     @Override
     public ListIterator<T> listIterator() {
-        throw new UnsupportedOperationException("listIterator() is not implemented");
+        return Arrays.asList(array).listIterator();
     }
 
     @Override

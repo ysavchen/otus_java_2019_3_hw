@@ -13,25 +13,24 @@ import java.util.List;
 public class DIYarrayListTestDrive {
 
     public static void main(String... args) {
-
         List<Integer> intList = new DIYarrayList<>();
 
-        //test addAll()
-        if (Collections.addAll(intList, generateInts(2))) {
-            //intList.forEach(System.out::println);
-            System.out.println(intList.size());
-            System.out.println("Collections.addAll() - passed");
-        }
+        //addAll()
+        Collections.addAll(intList, generateInts(0, 25));
 
-        //test copy()
-        List<Integer> newList = new DIYarrayList<>();
-        Collections.addAll(newList, generateInts(5));
-        Collections.copy(newList, intList);
+        //copy()
+        List<Integer> otherList = new DIYarrayList<>();
+        Collections.addAll(otherList, generateInts(30, 30));
+        Collections.copy(otherList, intList);
+
+        //sort()
+        //todo: otherList fails with NPE
+        Collections.sort(otherList, Integer::compareTo);
     }
 
-    private static Integer[] generateInts(int numElements) {
+    private static Integer[] generateInts(int firstInt, int numElements) {
         Integer[] intArray = new Integer[numElements];
-        for (int i = 0; i < numElements; i++) {
+        for (int i = firstInt; i < numElements; i++) {
             intArray[i] = i;
         }
         return intArray;
