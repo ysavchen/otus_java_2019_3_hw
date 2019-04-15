@@ -10,8 +10,8 @@ public class DIYarrayList<T> implements List<T> {
 
     private static final int DEFAULT_SIZE = 10;
 
-    //index to add an element
-    private int addIndex;
+    //number of elements in the array
+    private int size;
 
     @SuppressWarnings("unchecked")
     public DIYarrayList() {
@@ -20,7 +20,7 @@ public class DIYarrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        throw new UnsupportedOperationException("size() is not implemented");
+        return size;
     }
 
     @Override
@@ -50,16 +50,16 @@ public class DIYarrayList<T> implements List<T> {
 
     @Override
     public boolean add(T t) {
-        if (addIndex == array.length) {
+        if (size == array.length) {
             grow();
         }
-        array[addIndex] = t;
-        addIndex++;
+        array[size] = t;
+        size++;
         return true;
     }
 
     private void grow() {
-        array = Arrays.copyOf(array, array.length * 2);
+        array = Arrays.copyOf(array, array.length + 1);
     }
 
     @Override
@@ -110,12 +110,19 @@ public class DIYarrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        throw new UnsupportedOperationException("get(int index) is not implemented");
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+        return array[index];
     }
 
     @Override
     public T set(int index, T element) {
-        throw new UnsupportedOperationException("set(int index, T element) is not implemented");
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+        array[index] = element;
+        return element;
     }
 
     @Override
