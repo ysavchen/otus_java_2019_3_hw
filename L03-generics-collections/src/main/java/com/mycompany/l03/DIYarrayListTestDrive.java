@@ -24,14 +24,14 @@ public class DIYarrayListTestDrive {
         Collections.copy(otherList, intList);
 
         //sort()
-        //todo: otherList fails with NPE
         Collections.sort(otherList, Integer::compareTo);
     }
 
     private static Integer[] generateInts(int firstInt, int numElements) {
         Integer[] intArray = new Integer[numElements];
-        for (int i = firstInt; i < numElements; i++) {
-            intArray[i] = i;
+        for (int i = 0; i < numElements; i++) {
+            intArray[i] = firstInt;
+            firstInt++;
         }
         return intArray;
     }
