@@ -1,4 +1,4 @@
-package com.mycompany.l06;
+package com.mycompany.l06.tests;
 
 import com.mycompany.l06.annotations.*;
 
