@@ -24,6 +24,7 @@
     <modules>
         <module>L01.1-maven</module>
         <module>L03-generics-collections</module>
+        <module>L06-annotations-reflection</module>
     </modules>
 
     <properties>
