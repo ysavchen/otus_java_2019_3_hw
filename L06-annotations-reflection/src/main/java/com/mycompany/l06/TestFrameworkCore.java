@@ -3,16 +3,17 @@ package com.mycompany.l06;
 import com.mycompany.l06.annotations.*;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestFrameworkCore {
 
-    private List<Method> beforeAll = new ArrayList<>();
-    private List<Method> beforeEach = new ArrayList<>();
-    private List<Method> tests = new ArrayList<>();
-    private List<Method> afterEach = new ArrayList<>();
-    private List<Method> afterAll = new ArrayList<>();
+    private List<Method> beforeAll;
+    private List<Method> beforeEach;
+    private List<Method> tests;
+    private List<Method> afterEach;
+    private List<Method> afterAll;
 
     public void run(Class<?> testClass) {
         dispatchMethods(testClass.getDeclaredMethods());
@@ -38,21 +39,27 @@ public class TestFrameworkCore {
     }
 
     private void dispatchMethods(Method[] methods) {
+        beforeAll = new ArrayList<>();
+        beforeEach = new ArrayList<>();
+        tests = new ArrayList<>();
+        afterEach = new ArrayList<>();
+        afterAll = new ArrayList<>();
+
         for (Method method : methods) {
             method.setAccessible(true);
-            if (method.isAnnotationPresent(BeforeAll.class)) {
+            if (method.isAnnotationPresent(BeforeAll.class) && Modifier.isStatic(method.getModifiers())) {
                 beforeAll.add(method);
             }
-            if (method.isAnnotationPresent(BeforeEach.class)) {
+            if (method.isAnnotationPresent(BeforeEach.class) && !Modifier.isStatic(method.getModifiers())) {
                 beforeEach.add(method);
             }
-            if (method.isAnnotationPresent(Test.class)) {
+            if (method.isAnnotationPresent(Test.class) && !Modifier.isStatic(method.getModifiers())) {
                 tests.add(method);
             }
-            if (method.isAnnotationPresent(AfterEach.class)) {
+            if (method.isAnnotationPresent(AfterEach.class) && !Modifier.isStatic(method.getModifiers())) {
                 afterEach.add(method);
             }
-            if (method.isAnnotationPresent(AfterAll.class)) {
+            if (method.isAnnotationPresent(AfterAll.class) && Modifier.isStatic(method.getModifiers())) {
                 afterAll.add(method);
             }
             method.setAccessible(false);
