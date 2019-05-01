@@ -1,14 +1,15 @@
 package com.mycompany.l06;
 
-import com.mycompany.l06.tests.AnnotationsTest;
-import com.mycompany.l06.tests.SecondTestSuite;
+import com.mycompany.l06.tests.*;
 
 public class TestRunner {
 
     public static void main(String[] args) {
-        TestFrameworkCore testFrameWork = new TestFrameworkCore();
-        testFrameWork.run(AnnotationsTest.class);
-        testFrameWork.run(SecondTestSuite.class);
+        TestFrameworkCore.run(FirstTestSuite.class);
+        TestFrameworkCore.run(SecondTestSuite.class);
+        TestFrameworkCore.run(BeforeAllFailureSuite.class);
+        TestFrameworkCore.run(BeforeEachFailureSuite.class);
+        TestFrameworkCore.run(TestFailureSuite.class);
     }
 
 }

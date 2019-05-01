@@ -9,60 +9,85 @@ import java.util.List;
 
 public class TestFrameworkCore {
 
-    private List<Method> beforeAll;
-    private List<Method> beforeEach;
-    private List<Method> tests;
-    private List<Method> afterEach;
-    private List<Method> afterAll;
-
-    public void run(Class<?> testClass) {
-        dispatchMethods(testClass.getDeclaredMethods());
-
-        beforeAll.forEach(method -> ReflectionHelper.callStaticMethod(testClass, method.getName()));
-
-        tests.forEach(test -> {
-            Object object = ReflectionHelper.instantiate(testClass);
-            if (object != null) {
-                beforeEach.forEach(method ->
-                        ReflectionHelper.callMethod(object, method.getName())
-                );
-
-                ReflectionHelper.callMethod(object, test.getName());
-
-                afterEach.forEach(method ->
-                        ReflectionHelper.callMethod(object, method.getName())
-                );
-            }
-        });
-
-        afterAll.forEach(method -> ReflectionHelper.callStaticMethod(testClass, method.getName()));
+    public static void run(Class<?> testClass) {
+        try {
+            new Run(testClass).executeSuite();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
-    private void dispatchMethods(Method[] methods) {
-        beforeAll = new ArrayList<>();
-        beforeEach = new ArrayList<>();
-        tests = new ArrayList<>();
-        afterEach = new ArrayList<>();
-        afterAll = new ArrayList<>();
+    /**
+     * Represents a new run for a test suite
+     */
+    private static class Run {
+        private final List<Method> beforeAll = new ArrayList<>();
+        private final List<Method> beforeEach = new ArrayList<>();
+        private final List<Method> tests = new ArrayList<>();
+        private final List<Method> afterEach = new ArrayList<>();
+        private final List<Method> afterAll = new ArrayList<>();
 
-        for (Method method : methods) {
-            method.setAccessible(true);
-            if (method.isAnnotationPresent(BeforeAll.class) && Modifier.isStatic(method.getModifiers())) {
-                beforeAll.add(method);
+        private final Class<?> testClass;
+
+        private Object object;
+        private boolean isAfterEachExecuted = false;
+
+        Run(Class<?> testClass) {
+            this.testClass = testClass;
+        }
+
+        private void executeSuite() {
+            System.out.println("Executing suite: " + testClass.getName());
+            dispatchMethods(testClass.getDeclaredMethods());
+
+            try {
+                beforeAll.forEach(method -> ReflectionUtils.callMethod(null, method));
+
+                for (Method test : tests) {
+                    try {
+                        object = ReflectionUtils.instantiate(testClass);
+                        beforeEach.forEach(method -> ReflectionUtils.callMethod(object, method));
+                        ReflectionUtils.callMethod(object, test);
+                    } catch (Exception ex) {
+                        //must be executed if BeforeEach or Test is failed
+                        executeAfterEach();
+                    }
+                    executeAfterEach();
+                }
+            } finally {
+                //must be executed in any cases
+                afterAll.forEach(method -> ReflectionUtils.callMethod(null, method));
             }
-            if (method.isAnnotationPresent(BeforeEach.class) && !Modifier.isStatic(method.getModifiers())) {
-                beforeEach.add(method);
+            System.out.println();
+        }
+
+        private void executeAfterEach() {
+            if (object != null && !isAfterEachExecuted) {
+                afterEach.forEach(method -> ReflectionUtils.callMethod(object, method));
             }
-            if (method.isAnnotationPresent(Test.class) && !Modifier.isStatic(method.getModifiers())) {
-                tests.add(method);
+            isAfterEachExecuted = true;
+        }
+
+        private void dispatchMethods(Method[] methods) {
+            for (Method method : methods) {
+                method.setAccessible(true);
+                if (method.isAnnotationPresent(BeforeAll.class) && Modifier.isStatic(method.getModifiers())) {
+                    beforeAll.add(method);
+                }
+                if (method.isAnnotationPresent(BeforeEach.class) && !Modifier.isStatic(method.getModifiers())) {
+                    beforeEach.add(method);
+                }
+                if (method.isAnnotationPresent(Test.class) && !Modifier.isStatic(method.getModifiers())) {
+                    tests.add(method);
+                }
+                if (method.isAnnotationPresent(AfterEach.class) && !Modifier.isStatic(method.getModifiers())) {
+                    afterEach.add(method);
+                }
+                if (method.isAnnotationPresent(AfterAll.class) && Modifier.isStatic(method.getModifiers())) {
+                    afterAll.add(method);
+                }
+                method.setAccessible(false);
             }
-            if (method.isAnnotationPresent(AfterEach.class) && !Modifier.isStatic(method.getModifiers())) {
-                afterEach.add(method);
-            }
-            if (method.isAnnotationPresent(AfterAll.class) && Modifier.isStatic(method.getModifiers())) {
-                afterAll.add(method);
-            }
-            method.setAccessible(false);
         }
     }
 }

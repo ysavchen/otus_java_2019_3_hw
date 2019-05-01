@@ -2,9 +2,9 @@ package com.mycompany.l06.tests;
 
 import com.mycompany.l06.annotations.*;
 
-public class AnnotationsTest {
+public class FirstTestSuite {
 
-    AnnotationsTest() {
+    FirstTestSuite() {
         System.out.println("Call of the constructor");
     }
 
