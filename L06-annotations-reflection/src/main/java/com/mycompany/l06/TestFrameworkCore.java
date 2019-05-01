@@ -44,20 +44,13 @@ public class TestFrameworkCore {
                 beforeAll.forEach(method -> ReflectionUtils.callMethod(null, method));
 
                 for (Method test : tests) {
-                    Object object = null;
+                    Object object = ReflectionUtils.instantiate(testClass);
                     try {
-                        object = ReflectionUtils.instantiate(testClass);
-                        for (Method method : beforeEach) {
-                            ReflectionUtils.callMethod(object, method);
-                        }
+                        beforeEach.forEach(method -> ReflectionUtils.callMethod(object, method));
                         ReflectionUtils.callMethod(object, test);
                     } finally {
                         //must be executed in case BeforeEach or Test failure
-                        if (object != null) {
-                            for (Method method : afterEach) {
-                                ReflectionUtils.callMethod(object, method);
-                            }
-                        }
+                        afterEach.forEach(method -> ReflectionUtils.callMethod(object, method));
                     }
                 }
             } finally {
