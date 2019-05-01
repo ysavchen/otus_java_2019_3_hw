@@ -27,10 +27,10 @@ public class TestFrameworkCore {
         private final List<Method> afterEach = new ArrayList<>();
         private final List<Method> afterAll = new ArrayList<>();
 
+        /**
+         * Class of a test suite.
+         */
         private final Class<?> testClass;
-
-        private Object object;
-        private boolean isAfterEachExecuted = false;
 
         Run(Class<?> testClass) {
             this.testClass = testClass;
@@ -44,28 +44,27 @@ public class TestFrameworkCore {
                 beforeAll.forEach(method -> ReflectionUtils.callMethod(null, method));
 
                 for (Method test : tests) {
+                    Object object = null;
                     try {
                         object = ReflectionUtils.instantiate(testClass);
-                        beforeEach.forEach(method -> ReflectionUtils.callMethod(object, method));
+                        for (Method method : beforeEach) {
+                            ReflectionUtils.callMethod(object, method);
+                        }
                         ReflectionUtils.callMethod(object, test);
-                    } catch (Exception ex) {
-                        //must be executed if BeforeEach or Test is failed
-                        executeAfterEach();
+                    } finally {
+                        //must be executed in case BeforeEach or Test failure
+                        if (object != null) {
+                            for (Method method : afterEach) {
+                                ReflectionUtils.callMethod(object, method);
+                            }
+                        }
                     }
-                    executeAfterEach();
                 }
             } finally {
                 //must be executed in any cases
                 afterAll.forEach(method -> ReflectionUtils.callMethod(null, method));
             }
             System.out.println();
-        }
-
-        private void executeAfterEach() {
-            if (object != null && !isAfterEachExecuted) {
-                afterEach.forEach(method -> ReflectionUtils.callMethod(object, method));
-            }
-            isAfterEachExecuted = true;
         }
 
         private void dispatchMethods(Method[] methods) {
