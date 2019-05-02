@@ -9,6 +9,6 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>L06-annotaitons-reflection</artifactId>
+    <artifactId>L06-annotations-reflection</artifactId>
 
 </project>
