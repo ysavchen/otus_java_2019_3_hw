@@ -50,12 +50,26 @@ public class TestFrameworkCore {
                         ReflectionUtils.callMethod(object, test);
                     } finally {
                         //must be executed in case BeforeEach or Test failure
-                        afterEach.forEach(method -> ReflectionUtils.callMethod(object, method));
+                        afterEach.forEach(method -> {
+                            try {
+                                ReflectionUtils.callMethod(object, method);
+                            } catch (Exception ex) {
+                                System.out.println("AfterEach is not successful: " + method.getName());
+                                ex.printStackTrace();
+                            }
+                        });
                     }
                 }
             } finally {
                 //must be executed in any cases
-                afterAll.forEach(method -> ReflectionUtils.callMethod(null, method));
+                afterAll.forEach(method -> {
+                    try {
+                        ReflectionUtils.callMethod(null, method);
+                    } catch (Exception ex) {
+                        System.out.println("AfterAll is not successful: " + method.getName());
+                        ex.printStackTrace();
+                    }
+                });
             }
             System.out.println();
         }

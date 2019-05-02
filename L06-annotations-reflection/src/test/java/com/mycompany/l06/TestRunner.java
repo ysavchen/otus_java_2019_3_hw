@@ -10,6 +10,8 @@ public class TestRunner {
         TestFrameworkCore.run(BeforeAllFailureSuite.class);
         TestFrameworkCore.run(BeforeEachFailureSuite.class);
         TestFrameworkCore.run(TestFailureSuite.class);
+        TestFrameworkCore.run(AfterEachFailureSuite.class);
+        TestFrameworkCore.run(AfterAllFailureSuite.class);
     }
 
 }
