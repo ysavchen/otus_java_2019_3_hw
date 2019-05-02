@@ -32,7 +32,7 @@ public class TestFrameworkCore {
          */
         private final Class<?> testClass;
 
-        Run(Class<?> testClass) {
+        private Run(Class<?> testClass) {
             this.testClass = testClass;
         }
 
