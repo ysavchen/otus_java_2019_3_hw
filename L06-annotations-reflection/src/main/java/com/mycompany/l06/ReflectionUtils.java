@@ -12,7 +12,7 @@ public class ReflectionUtils {
     }
 
     /**
-     * Instantiated object of the needed class.
+     * Instantiates an object of the needed class.
      *
      * @param type class of object to be instantiated
      * @param args params for constructor
@@ -30,7 +30,7 @@ public class ReflectionUtils {
                 return makeAccessible(constructor, null).newInstance();
             }
         } catch (Throwable t) {
-            throw convertToUncheckedException(t);
+            throw throwAsUncheckedException(t);
         }
     }
 
@@ -45,12 +45,12 @@ public class ReflectionUtils {
         try {
             return makeAccessible(method, object).invoke(object, args);
         } catch (Throwable t) {
-            throw convertToUncheckedException(t);
+            throw throwAsUncheckedException(t);
         }
     }
 
     @SuppressWarnings("unchecked")
-    private static <T extends Throwable> RuntimeException convertToUncheckedException(Throwable t) throws T {
+    private static <T extends Throwable> RuntimeException throwAsUncheckedException(Throwable t) throws T {
         throw (T) t;
     }
 
