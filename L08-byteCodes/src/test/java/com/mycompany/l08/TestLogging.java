@@ -1,10 +1,24 @@
 package com.mycompany.l08;
 
-import com.mycompany.l08.annotations.Log;
-
-public class TestLogging {
+public class TestLogging implements Logging {
 
     @Log
+    @Override
     public void calculation(int param) {
+    }
+
+    @Log
+    @Override
+    public void testString(String str) {
+    }
+
+    @Log
+    @Override
+    public void testMyClass(MyClass myClass) {
+    }
+
+    @Log
+    @Override
+    public void testTwoParams(double paramOne, Boolean paramTwo) {
     }
 }

@@ -1,4 +1,4 @@
-package com.mycompany.l08.annotations;
+package com.mycompany.l08;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
