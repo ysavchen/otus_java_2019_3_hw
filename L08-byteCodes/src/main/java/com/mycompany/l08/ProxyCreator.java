@@ -30,7 +30,7 @@ public class ProxyCreator {
 
         final T obj = ReflectionUtils.instantiate(clazz);
         InvocationHandler handler = new LogInvocationHandler(obj, logMethods);
-        return (Logging) Proxy.newProxyInstance(ProxyCreator.class.getClassLoader(),
+        return (Logging) Proxy.newProxyInstance(Logging.class.getClassLoader(),
                 new Class<?>[]{Logging.class}, handler);
     }
 
