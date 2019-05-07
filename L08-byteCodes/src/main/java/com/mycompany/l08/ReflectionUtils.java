@@ -4,7 +4,7 @@ import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
 
-public class ReflectionUtils {
+class ReflectionUtils {
 
     //private constructor, ensuring non-instantiability
     private ReflectionUtils() {

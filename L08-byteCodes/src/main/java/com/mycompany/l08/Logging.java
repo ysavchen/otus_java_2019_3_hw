@@ -9,4 +9,6 @@ public interface Logging {
     void testMyClass(MyClass myClass);
 
     void testTwoParams(double paramOne, Boolean paramTwo);
+
+    void testNoAnnotation(int param);
 }

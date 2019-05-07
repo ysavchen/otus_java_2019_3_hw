@@ -3,55 +3,58 @@ package com.mycompany.l08;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProxyCreator {
 
-    public static <T extends Logging> Logging create(Class<T> clazz) {
+    /**
+     * Creates a proxy with added logging behavior for methods marked with {@link Log}.
+     *
+     * @param clazz class to be proxied
+     * @return proxied class
+     */
+    public static <T extends Logging> Logging newInstance(Class<T> clazz) {
+        final List<Method> logMethods = new ArrayList<>();
 
-        final List<Method> methods = new ArrayList<>();
-        for (Method method : clazz.getMethods()) {
-            if (method.getAnnotation(Log.class) != null) {
-                methods.add(method);
+        //collect methods declared in interface, which marked with @Log in a class
+        for (Method clazzMethod : clazz.getMethods()) {
+            if (clazzMethod.isAnnotationPresent(Log.class)) {
+                for (Method interfaceMethod : Logging.class.getDeclaredMethods()) {
+                    if (interfaceMethod.getName().equals(clazzMethod.getName())) {
+                        logMethods.add(interfaceMethod);
+                    }
+                }
             }
         }
 
         final T obj = ReflectionUtils.instantiate(clazz);
-        if (!methods.isEmpty()) {
-            InvocationHandler handler = new DemoInvocationHandler(obj);
-            return (Logging) Proxy.newProxyInstance(ProxyCreator.class.getClassLoader(),
-                    new Class<?>[]{Logging.class}, handler);
-        }
-        return null;
+        InvocationHandler handler = new LogInvocationHandler(obj, logMethods);
+        return (Logging) Proxy.newProxyInstance(ProxyCreator.class.getClassLoader(),
+                new Class<?>[]{Logging.class}, handler);
     }
 
-    private static class DemoInvocationHandler implements InvocationHandler {
+    private static class LogInvocationHandler implements InvocationHandler {
         private final Logging obj;
+        private final List<Method> logMethods;
 
-        DemoInvocationHandler(Logging obj) {
+        LogInvocationHandler(Logging obj, List<Method> logMethods) {
             this.obj = obj;
+            this.logMethods = logMethods;
         }
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            Type[] paramTypes = method.getGenericParameterTypes();
-            for(Type type : paramTypes){
-                System.out.println(type.getTypeName());
+            if (logMethods.contains(method)) {
+                StringBuilder params = new StringBuilder();
+                for (int i = 0; i < args.length; i++) {
+                    if (i != 0) params.append(", ");
+                    params.append(args[i].toString());
+                }
+                System.out.println("executed method: " + method.getName() + ", params: " + params);
             }
-            for(Object obj : args){
-                System.out.println(obj.toString());
-            }
-            System.out.println("executed method: " + method.getName() + "params: " + args);
-            return method.invoke(obj, args);
-        }
 
-        @Override
-        public String toString() {
-            return "DemoInvocationHandler{" +
-                    "myClass=" + obj +
-                    '}';
+            return method.invoke(obj, args);
         }
     }
 }
