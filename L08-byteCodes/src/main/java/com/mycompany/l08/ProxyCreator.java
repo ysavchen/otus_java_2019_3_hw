@@ -3,8 +3,8 @@ package com.mycompany.l08;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ProxyCreator {
 
@@ -15,7 +15,7 @@ public class ProxyCreator {
      * @return proxied class
      */
     public static <T extends Logging> Logging newInstance(Class<T> clazz) {
-        final List<Method> logMethods = new ArrayList<>();
+        final Set<Method> logMethods = new HashSet<>();
 
         //collect methods declared in interface, which marked with @Log in a class
         for (Method clazzMethod : clazz.getMethods()) {
@@ -36,9 +36,9 @@ public class ProxyCreator {
 
     private static class LogInvocationHandler implements InvocationHandler {
         private final Logging obj;
-        private final List<Method> logMethods;
+        private final Set<Method> logMethods;
 
-        LogInvocationHandler(Logging obj, List<Method> logMethods) {
+        LogInvocationHandler(Logging obj, Set<Method> logMethods) {
             this.obj = obj;
             this.logMethods = logMethods;
         }
