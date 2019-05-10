@@ -5,6 +5,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ProxyCreator {
 
@@ -46,11 +48,10 @@ public class ProxyCreator {
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             if (logMethods.contains(method)) {
-                StringBuilder params = new StringBuilder();
-                for (int i = 0; i < args.length; i++) {
-                    if (i != 0) params.append(", ");
-                    params.append(args[i].toString());
-                }
+                String params = Stream.of(args)
+                        .map(Object::toString)
+                        .collect(Collectors.joining(", "));
+
                 System.out.println("executed method: " + method.getName() + ", params: " + params);
             }
 
