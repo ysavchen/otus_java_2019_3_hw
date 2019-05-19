@@ -15,12 +15,13 @@ import java.util.List;
  * OpenJDK builds from Oracle disabled Shenandoah:
  * https://developers.redhat.com/blog/2019/04/19/not-all-openjdk-12-builds-include-shenandoah-heres-why/
  * <p>
- * -Xms2048m
- * -Xmx2048m
+ * -Xms512m
+ * -Xmx512m
  * -Xlog:gc=debug:file=L09-gc/logs/gc-%p-%t.log:tags,uptime,time,level:filecount=5,filesize=10m
  * -XX:+HeapDumpOnOutOfMemoryError
  * -XX:HeapDumpPath=L09-gc/logs/dump
  * <p>
+ * Garbage Collectors:
  * -XX:+UseSerialGC
  * -XX:+UseParallelGC
  * -XX:+UseG1GC
