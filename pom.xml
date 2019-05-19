@@ -10,7 +10,7 @@
     <!--parent>*</parent-->
 
     <groupId>com.mycompany</groupId>
-    <artifactId>OtusJavaHW_ysavchen</artifactId>
+    <artifactId>otus_java_2019_3_hw</artifactId>
     <version>2019-03-SNAPSHOT</version>
 
     <packaging>pom</packaging>
