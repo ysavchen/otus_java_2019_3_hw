@@ -1,9 +1,25 @@
+-XX:+UseSerialGC
+GC name:Copy
+GC name:MarkSweepCompact
 
+___________________________________________________________
+-XX:+UseParallelGC
+GC name:PS MarkSweep
+GC name:PS Scavenge
 
+___________________________________________________________
+-XX:+UseG1GC
+GC name:G1 Young Generation
+GC name:G1 Old Generation
 
+___________________________________________________________
+-XX:+UnlockExperimentalVMOptions -XX:+UseShenandoahG
+GC name:Shenandoah Pauses
+GC name:Shenandoah Cycles
 
+___________________________________________________________
 GC ranking for Throughput:
 
 
-
+___________________________________________________________
 GC ranking for Latency:
