@@ -1,25 +1,114 @@
 -XX:+UseSerialGC
 GC name:Copy
-GC name:MarkSweepCompact
+GC name:MarkSweepComp
+
+Number of Young GC: 233
+Number of Old GC: 83
+Time for young GC (per min): 7765ms
+Time for old GC (per min): 41143ms
+Overall GC time (per min): 48908ms
+
+Number of Young GC: 91
+Number of Old GC: 91
+Time for young GC (per min): 3ms
+Time for old GC (per min): 56522ms
+Overall GC time (per min): 56525ms
+
+Number of Young GC: 115
+Number of Old GC: 115
+Time for young GC (per min): 0ms
+Time for old GC (per min): 56903ms
+Overall GC time (per min): 56903ms
+java.lang.OutOfMemoryError: Java heap space
+
+Application worked: 196s
 
 ___________________________________________________________
 -XX:+UseParallelGC
 GC name:PS MarkSweep
 GC name:PS Scavenge
 
+Number of Young GC: 383
+Number of Old GC: 44
+Time for young GC (per min): 24503ms
+Time for old GC (per min): 25755ms
+Overall GC time (per min): 50258ms
+
+Number of Young GC: 0
+Number of Old GC: 62
+Time for young GC (per min): 0ms
+Time for old GC (per min): 56613ms
+Overall GC time (per min): 56613ms
+
+Number of Young GC: 0
+Number of Old GC: 61
+Time for young GC (per min): 0ms
+Time for old GC (per min): 58873ms
+Overall GC time (per min): 58873ms
+
+Number of Young GC: 0
+Number of Old GC: 56
+Time for young GC (per min): 0ms
+Time for old GC (per min): 58586ms
+Overall GC time (per min): 58586ms
+java.lang.OutOfMemoryError: Java heap space
+
+Application worked: 280s
+
 ___________________________________________________________
 -XX:+UseG1GC
 GC name:G1 Young Generation
 GC name:G1 Old Generation
 
+Number of Young GC: 166
+Number of Old GC: 78
+Time for young GC (per min): 4447ms
+Time for old GC (per min): 25243ms
+Overall GC time (per min): 29690ms
+
+Number of Young GC: 162
+Number of Old GC: 81
+Time for young GC (per min): 3404ms
+Time for old GC (per min): 40603ms
+Overall GC time (per min): 44007ms
+
+Number of Young GC: 160
+Number of Old GC: 81
+Time for young GC (per min): 2520ms
+Time for old GC (per min): 47944ms
+Overall GC time (per min): 50464ms
+java.lang.OutOfMemoryError: Java heap space
+
+Application worked: 204s
+
 ___________________________________________________________
--XX:+UnlockExperimentalVMOptions -XX:+UseShenandoahG
+-XX:+UnlockExperimentalVMOptions -XX:+UseShenandoahGC
 GC name:Shenandoah Pauses
 GC name:Shenandoah Cycles
 
-___________________________________________________________
-GC ranking for Throughput:
+Number of GC: 939
+Time for GC (per min): 58893ms
 
+Number of GC: 591
+Time for GC (per min): 70440ms
+
+Number of GC: 552
+Time for GC (per min): 73226ms
+java.lang.OutOfMemoryError: Java heap space
+
+Application worked: 226s
 
 ___________________________________________________________
-GC ranking for Latency:
+GC ranking for Throughput (more working time -> less throughput):
+1. G1
+2. SerialGC
+3. ParallelGC
+4. Shenandoah
+Note: this ranking looks doubtful. For more realistic data, I expect Shenandoah to have higher throughput (around 1/2).
+And ParallelGC/SerialGC - lower throughput (around 3/4).
+___________________________________________________________
+GC ranking for Latency (more collections per minute/time for gc -> less pauses):
+1. Shenandoah
+2. G1
+3. ParallelGC
+4. SerialGC

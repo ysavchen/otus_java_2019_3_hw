@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * Liberica JDK version 12.0.1
- * OpenJDK builds from Oracle disabled Shenandoah:
+ * OpenJDK builds from Oracle does not support Shenandoah:
  * https://developers.redhat.com/blog/2019/04/19/not-all-openjdk-12-builds-include-shenandoah-heres-why/
  * <p>
  * -Xms512m
@@ -29,13 +29,12 @@ import java.util.List;
  */
 public class GcLab {
 
-    private static boolean isAppRunning = true;
-
     private static int numYoungGcPerMin;
     private static int numOldGcPerMin;
     private static long timeYoungGcPerMin;
     private static long timeOlgGcPerMin;
 
+    //shenandoah does not distinguish young and old generations
     private static boolean isShenandoahUsed = false;
     private static int numShenandoahGcPerMin;
     private static long timeShenandoahGcPerMin;
@@ -45,12 +44,15 @@ public class GcLab {
         switchOnGcMonitoring();
         long beginTime = System.currentTimeMillis();
 
-        monitorLogging();
-        run();
-        //runToOutOfMemory();
-
-        isAppRunning = false;
-        System.out.println("Application worked: " + ((System.currentTimeMillis() - beginTime) / 1000) + "s");
+        Thread thread = getLoggingThread();
+        try {
+            thread.start();
+            runToOutOfMemory();
+        } finally {
+            thread.interrupt();
+            long appWorked = System.currentTimeMillis() - beginTime;
+            System.out.println("\nApplication worked: " + (appWorked / 1000) + "s");
+        }
     }
 
     private static void switchOnGcMonitoring() {
@@ -63,12 +65,8 @@ public class GcLab {
                     GarbageCollectionNotificationInfo info = GarbageCollectionNotificationInfo.from((CompositeData) notification.getUserData());
                     String gcName = info.getGcName();
                     String gcAction = info.getGcAction();
-                    String gcCause = info.getGcCause();
-
-                    long startTime = info.getGcInfo().getStartTime();
                     long duration = info.getGcInfo().getDuration();
 
-                    //System.out.println("start:" + startTime + " Name:" + gcName + ", action:" + gcAction + ", gcCause:" + gcCause + "(" + duration + " ms)");
                     if (gcAction.contains("minor")) {
                         numYoungGcPerMin++;
                         timeYoungGcPerMin += duration;
@@ -88,21 +86,9 @@ public class GcLab {
         }
     }
 
-    private static void run() {
-        int loopCounter = 1_000;
-        int numAdd = 5_000_000;
-
-        for (int i = 0; i < loopCounter; i++) {
-            String[] array = new String[numAdd];
-            for (int a = 0; a < numAdd; a++) {
-                array[a] = new String(new char[0]);
-            }
-        }
-    }
-
     private static void runToOutOfMemory() {
-        int numAdd = 50_000;
-        int numDelete = 25_000;
+        int numAdd = 20_000;
+        int numDelete = 10_000;
 
         String[] outer = new String[0];
         while (true) {
@@ -118,31 +104,36 @@ public class GcLab {
         }
     }
 
-    private static void monitorLogging() {
-        new Thread(() -> {
-            while (isAppRunning) {
+    private static Thread getLoggingThread() {
+        return new Thread(() -> {
+            while (true) {
                 try {
                     Thread.sleep(60_000);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                } catch (Throwable t) {
+                    throwAsUncheckedException(t);
                 }
 
                 if (isShenandoahUsed) {
                     System.out.println("\nNumber of GC: " + numShenandoahGcPerMin +
-                            "\nTime for GC: " + timeShenandoahGcPerMin + "ms");
+                            "\nTime for GC (per min): " + timeShenandoahGcPerMin + "ms");
                     numShenandoahGcPerMin = 0;
                     timeShenandoahGcPerMin = 0;
                 } else {
                     System.out.println("\nNumber of Young GC: " + numYoungGcPerMin +
                             "\nNumber of Old GC: " + numOldGcPerMin +
-                            "\nTime for young GC: " + timeYoungGcPerMin + "ms" +
-                            "\nTime for old GC: " + timeOlgGcPerMin + "ms" +
-                            "\nOverall GC time: " + (timeYoungGcPerMin + timeOlgGcPerMin) + "ms");
+                            "\nTime for young GC (per min): " + timeYoungGcPerMin + "ms" +
+                            "\nTime for old GC (per min): " + timeOlgGcPerMin + "ms" +
+                            "\nOverall GC time (per min): " + (timeYoungGcPerMin + timeOlgGcPerMin) + "ms");
                     numYoungGcPerMin = numOldGcPerMin = 0;
                     timeYoungGcPerMin = timeOlgGcPerMin = 0;
                 }
 
             }
-        }).start();
+        });
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Throwable> RuntimeException throwAsUncheckedException(Throwable t) throws T {
+        throw (T) t;
     }
 }
