@@ -1,3 +1,19 @@
+GC ranking for Throughput (more working time -> less throughput):
+1. G1
+2. SerialGC
+3. ParallelGC
+4. Shenandoah
+Note: looks doubtful. For more realistic data, I'd expect Shenandoah to have higher throughput (around 1/2).
+And ParallelGC/SerialGC - lower throughput (around 3/4).
+
+
+GC ranking for Latency (more collections per minute/time for gc -> less pauses):
+1. Shenandoah
+2. G1
+3. ParallelGC
+4. SerialGC
+
+___________________________________________________________
 -XX:+UseSerialGC
 GC name:Copy
 GC name:MarkSweepComp
@@ -97,18 +113,3 @@ Time for GC (per min): 73226ms
 java.lang.OutOfMemoryError: Java heap space
 
 Application worked: 226s
-
-___________________________________________________________
-GC ranking for Throughput (more working time -> less throughput):
-1. G1
-2. SerialGC
-3. ParallelGC
-4. Shenandoah
-Note: this ranking looks doubtful. For more realistic data, I expect Shenandoah to have higher throughput (around 1/2).
-And ParallelGC/SerialGC - lower throughput (around 3/4).
-___________________________________________________________
-GC ranking for Latency (more collections per minute/time for gc -> less pauses):
-1. Shenandoah
-2. G1
-3. ParallelGC
-4. SerialGC
