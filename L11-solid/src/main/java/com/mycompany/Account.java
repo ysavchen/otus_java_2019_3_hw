@@ -6,6 +6,7 @@ class Account {
 
     private Balance balance;
 
+    //todo: cells must be in ATM, but not in account
     private Cell fiftyNominalCell;
 
     private Cell hundredNominalCell;
