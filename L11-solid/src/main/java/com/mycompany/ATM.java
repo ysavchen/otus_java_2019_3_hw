@@ -1,6 +1,6 @@
 package com.mycompany;
 
-import java.util.Collection;
+import java.util.*;
 
 /**
  * Написать эмулятор АТМ (банкомата).
@@ -13,6 +13,19 @@ import java.util.Collection;
  * - выдавать сумму остатка денежных средств<p>
  */
 public class ATM {
+
+    private final Account account;
+
+    private final Cell cell_50 = new Cell(Nominal.FIFTY);
+    private final Cell cell_100 = new Cell(Nominal.HUNDRED);
+    private final Cell cell_500 = new Cell(Nominal.FIVE_HUNDRED);
+    private final Cell cell_1000 = new Cell(Nominal.THOUSAND);
+
+    //Map<Nominal, Cell> map = new HashMap<>();
+
+    public ATM(Account account) {
+        this.account = account;
+    }
 
     /**
      * Accepts banknotes.
@@ -28,19 +41,19 @@ public class ATM {
     /**
      * Dispenses banknotes.<p>
      *
-     * @param banknotes banknotes to be dispensed by ATM
-     * @return {@code true} for success, otherwise {@code false}
+     * @param amount amount of money to be dispensed by ATM
+     * @return list of banknotes
      */
-    public boolean dispenseBanknotes(Collection<Banknote> banknotes) {
-        return true;
+    public List<Banknote> dispenseBanknotes(long amount) {
+        return new ArrayList<>();
     }
 
     /**
-     * Checks balance.
+     * Gets the balance in the account.
      *
      * @return balance
      */
-    public long checkBalance() {
+    public long getBalance() {
         return 1L;
     }
 }

@@ -6,12 +6,21 @@ class Account {
 
     private Balance balance;
 
-    //todo: cells must be in ATM, but not in account
-    private Cell fiftyNominalCell;
+    public boolean isActive() {
+        return isActive;
+    }
 
-    private Cell hundredNominalCell;
+    public Account setActive(boolean active) {
+        isActive = active;
+        return this;
+    }
 
-    private Cell fiveHundredNominalCell;
+    public Balance getBalance() {
+        return balance;
+    }
 
-    private Cell thousandNominalCell;
+    public Account setBalance(Balance balance) {
+        this.balance = balance;
+        return this;
+    }
 }
