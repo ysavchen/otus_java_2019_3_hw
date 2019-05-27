@@ -1,0 +1,18 @@
+GC ranking for Throughput (more working time -> less throughput):
+1. SerialGC
+2. Shenandoah
+3. ParallelGC
+4. G1
+
+GC ranking for Latency (5 second log):
+1. Shenandoah
+3. ParallelGC
+4. SerialGC
+4. G1
+
+- concurrent GC has always higher CPU and memory usage, than a single-threaded one
+- more heap size, better throughput results for GC
+- no sense to use a concurrent GC on small heaps (in my load 2g and less)
+- SerialGC goes more often on small heap (in my load 2g and less) with less pause-time
+- Shenandoah has the lowest footprint among concurrent GC
+- G1 has the highest footprint among concurrent GC

@@ -1,0 +1,389 @@
+-XX:+UseSerialGC
+GC name:Copy
+GC name:MarkSweepComp
+
+CPU usage: 25-28%
+GC activity: 0.4-0.5%
+
+Application worked: 124s
+
+[2019-05-27T22:00:00.169+0300][4.273s][info][gc] GC(4) Pause Young (Allocation Failure) 255M->253M(494M) 540.782ms
+[2019-05-27T22:00:01.025+0300][5.129s][info][gc] GC(6) Pause Full (Allocation Failure) 390M->122M(494M) 734.502ms
+[2019-05-27T22:00:01.025+0300][5.129s][info][gc] GC(5) Pause Young (Allocation Failure) 390M->122M(494M) 734.652ms
+[2019-05-27T22:00:01.547+0300][5.652s][info][gc] GC(7) Pause Young (Allocation Failure) 259M->258M(494M) 423.062ms
+[2019-05-27T22:00:02.231+0300][6.336s][info][gc] GC(9) Pause Full (Allocation Failure) 395M->127M(494M) 621.557ms
+[2019-05-27T22:00:02.231+0300][6.336s][info][gc] GC(8) Pause Young (Allocation Failure) 395M->127M(494M) 621.698ms
+[2019-05-27T22:00:02.787+0300][6.892s][info][gc] GC(10) Pause Young (Allocation Failure) 263M->263M(494M) 411.096ms
+[2019-05-27T22:00:03.500+0300][7.604s][info][gc] GC(12) Pause Full (Allocation Failure) 400M->132M(494M) 617.015ms
+[2019-05-27T22:00:03.500+0300][7.604s][info][gc] GC(11) Pause Young (Allocation Failure) 400M->132M(494M) 617.162ms
+[2019-05-27T22:00:03.892+0300][7.996s][info][gc] GC(13) Pause Young (Allocation Failure) 268M->267M(494M) 308.284ms
+[2019-05-27T22:00:04.206+0300][8.310s][info][gc] GC(15) Pause Full (Allocation Failure) 404M->2M(494M) 198.621ms
+[2019-05-27T22:00:04.206+0300][8.311s][info][gc] GC(14) Pause Young (Allocation Failure) 404M->2M(494M) 198.757ms
+[2019-05-27T22:00:04.272+0300][8.376s][info][gc] GC(16) Pause Young (Allocation Failure) 137M->2M(494M) 1.710ms
+[2019-05-27T22:00:04.329+0300][8.433s][info][gc] GC(17) Pause Young (Allocation Failure) 137M->2M(494M) 0.371ms
+[2019-05-27T22:00:04.388+0300][8.492s][info][gc] GC(18) Pause Young (Allocation Failure) 137M->2M(494M) 0.455ms
+[2019-05-27T22:00:04.436+0300][8.541s][info][gc] GC(19) Pause Young (Allocation Failure) 137M->2M(494M) 0.706ms
+[2019-05-27T22:00:04.489+0300][8.593s][info][gc] GC(20) Pause Young (Allocation Failure) 137M->2M(494M) 0.585ms
+[2019-05-27T22:00:04.539+0300][8.644s][info][gc] GC(21) Pause Young (Allocation Failure) 137M->2M(494M) 0.533ms
+[2019-05-27T22:00:04.605+0300][8.709s][info][gc] GC(22) Pause Young (Allocation Failure) 138M->2M(494M) 1.654ms
+[2019-05-27T22:00:04.666+0300][8.770s][info][gc] GC(23) Pause Young (Allocation Failure) 137M->2M(494M) 1.633ms
+[2019-05-27T22:00:04.723+0300][8.827s][info][gc] GC(24) Pause Young (Allocation Failure) 136M->2M(494M) 0.855ms
+[2019-05-27T22:00:04.780+0300][8.884s][info][gc] GC(25) Pause Young (Allocation Failure) 137M->2M(494M) 0.817ms
+[2019-05-27T22:00:04.841+0300][8.945s][info][gc] GC(26) Pause Young (Allocation Failure) 137M->2M(494M) 0.885ms
+[2019-05-27T22:00:04.900+0300][9.004s][info][gc] GC(27) Pause Young (Allocation Failure) 137M->2M(494M) 1.433ms
+[2019-05-27T22:00:04.959+0300][9.063s][info][gc] GC(28) Pause Young (Allocation Failure) 138M->2M(494M) 2.555ms
+[2019-05-27T22:00:05.025+0300][9.129s][info][gc] GC(29) Pause Young (Allocation Failure) 138M->2M(494M) 2.334ms
+[2019-05-27T22:00:05.112+0300][9.216s][info][gc] GC(30) Pause Young (Allocation Failure) 138M->2M(494M) 3.121ms
+[2019-05-27T22:00:05.254+0300][9.359s][info][gc] GC(31) Pause Young (Allocation Failure) 137M->2M(494M) 3.097ms
+[2019-05-27T22:00:05.362+0300][9.467s][info][gc] GC(32) Pause Young (Allocation Failure) 137M->2M(494M) 5.788ms
+[2019-05-27T22:00:05.532+0300][9.637s][info][gc] GC(33) Pause Young (Allocation Failure) 138M->2M(494M) 3.811ms
+[2019-05-27T22:00:05.637+0300][9.742s][info][gc] GC(34) Pause Young (Allocation Failure) 137M->2M(494M) 3.383ms
+[2019-05-27T22:00:05.728+0300][9.832s][info][gc] GC(35) Pause Young (Allocation Failure) 137M->2M(494M) 4.461ms
+[2019-05-27T22:00:05.927+0300][10.032s][info][gc] GC(36) Pause Young (Allocation Failure) 137M->2M(494M) 5.262ms
+
+___________________________________________________________
+-XX:+UseParallelGC
+GC name:PS MarkSweep
+GC name:PS Scavenge
+
+CPU usage: 60-70%
+GC activity: 23-24%
+
+Application worked: more than 15 mins
+
+[2019-05-27T22:04:30.163+0300][6.448s][info][gc] GC(17) Pause Full (Ergonomics) 326M->59M(455M) 210.926ms
+[2019-05-27T22:04:30.397+0300][6.681s][info][gc] GC(18) Pause Young (Allocation Failure) 116M->116M(455M) 205.336ms
+[2019-05-27T22:04:30.657+0300][6.941s][info][gc] GC(19) Pause Young (Allocation Failure) 174M->173M(455M) 240.630ms
+[2019-05-27T22:04:30.920+0300][7.205s][info][gc] GC(20) Pause Young (Allocation Failure) 231M->231M(455M) 241.082ms
+[2019-05-27T22:04:31.379+0300][7.663s][info][gc] GC(21) Pause Young (Allocation Failure) 270M->269M(455M) 440.793ms
+[2019-05-27T22:04:31.575+0300][7.859s][info][gc] GC(22) Pause Young (Allocation Failure) 327M->327M(455M) 175.671ms
+[2019-05-27T22:04:31.790+0300][8.074s][info][gc] GC(23) Pause Full (Ergonomics) 327M->59M(455M) 215.110ms
+[2019-05-27T22:04:32.042+0300][8.327s][info][gc] GC(24) Pause Young (Allocation Failure) 116M->116M(455M) 218.057ms
+[2019-05-27T22:04:32.318+0300][8.602s][info][gc] GC(25) Pause Young (Allocation Failure) 174M->174M(455M) 253.115ms
+[2019-05-27T22:04:32.523+0300][8.807s][info][gc] GC(26) Pause Young (Allocation Failure) 231M->231M(455M) 172.138ms
+[2019-05-27T22:04:32.867+0300][9.152s][info][gc] GC(27) Pause Young (Allocation Failure) 270M->270M(455M) 326.313ms
+[2019-05-27T22:04:33.054+0300][9.339s][info][gc] GC(28) Pause Young (Allocation Failure) 327M->327M(455M) 163.347ms
+[2019-05-27T22:04:33.247+0300][9.532s][info][gc] GC(29) Pause Full (Ergonomics) 327M->60M(455M) 193.481ms
+[2019-05-27T22:04:33.510+0300][9.795s][info][gc] GC(30) Pause Young (Allocation Failure) 117M->117M(455M) 232.193ms
+[2019-05-27T22:04:33.809+0300][10.093s][info][gc] GC(31) Pause Young (Allocation Failure) 175M->175M(455M) 284.386ms
+[2019-05-27T22:04:34.026+0300][10.311s][info][gc] GC(32) Pause Young (Allocation Failure) 232M->232M(455M) 191.843ms
+[2019-05-27T22:04:34.468+0300][10.752s][info][gc] GC(33) Pause Young (Allocation Failure) 272M->270M(455M) 416.210ms
+[2019-05-27T22:04:34.723+0300][11.008s][info][gc] GC(34) Pause Young (Allocation Failure) 328M->327M(455M) 233.133ms
+[2019-05-27T22:04:35.019+0300][11.304s][info][gc] GC(35) Pause Full (Ergonomics) 327M->59M(455M) 295.719ms
+[2019-05-27T22:04:35.472+0300][11.757s][info][gc] GC(36) Pause Young (Allocation Failure) 117M->116M(455M) 415.446ms
+[2019-05-27T22:04:35.860+0300][12.145s][info][gc] GC(37) Pause Young (Allocation Failure) 174M->174M(455M) 359.626ms
+___________________________________________________________
+-XX:+UseG1GC
+GC name:G1 Young Generation
+GC name:G1 Old Generation
+
+CPU usage: 70-90%
+GC activity: 12-17%
+
+Application worked: more than 15 mins
+
+[2019-05-27T22:35:05.048+0300][34.153s][info ][gc] GC(208) Pause Young (Concurrent Start) (G1 Humongous Allocation) 155M->156M(512M) 138.599ms
+[2019-05-27T22:35:05.048+0300][34.153s][info ][gc] GC(209) Concurrent Cycle
+[2019-05-27T22:35:05.300+0300][34.404s][info ][gc] GC(210) Pause Young (Normal) (G1 Evacuation Pause) 239M->240M(512M) 131.045ms
+[2019-05-27T22:35:05.323+0300][34.427s][debug][gc] GC(209) Reclaimed 85 empty regions
+[2019-05-27T22:35:05.323+0300][34.427s][info ][gc] GC(209) Pause Remark 262M->177M(512M) 1.284ms
+[2019-05-27T22:35:05.498+0300][34.603s][info ][gc] GC(211) Pause Young (Normal) (G1 Evacuation Pause) 243M->243M(512M) 126.352ms
+[2019-05-27T22:35:05.753+0300][34.857s][info ][gc] GC(212) Pause Young (Normal) (G1 Evacuation Pause) 310M->311M(512M) 133.704ms
+[2019-05-27T22:35:06.028+0300][35.132s][info ][gc] GC(213) Pause Young (Normal) (G1 Evacuation Pause) 377M->378M(512M) 104.589ms
+[2019-05-27T22:35:06.071+0300][35.175s][info ][gc] GC(209) Pause Cleanup 378M->378M(512M) 0.159ms
+[2019-05-27T22:35:06.071+0300][35.176s][info ][gc] GC(209) Concurrent Cycle 1023.354ms
+[2019-05-27T22:35:06.169+0300][35.273s][info ][gc] GC(214) Pause Young (Normal) (G1 Evacuation Pause) 403M->403M(512M) 67.886ms
+[2019-05-27T22:35:06.234+0300][35.339s][info ][gc] GC(215) Pause Young (Concurrent Start) (G1 Evacuation Pause) 424M->425M(512M) 46.754ms
+[2019-05-27T22:35:06.234+0300][35.339s][info ][gc] GC(216) Concurrent Cycle
+[2019-05-27T22:35:06.310+0300][35.414s][info ][gc] GC(217) Pause Young (Normal) (G1 Evacuation Pause) 446M->448M(512M) 42.693ms
+[2019-05-27T22:35:06.375+0300][35.479s][info ][gc] GC(218) Pause Young (Normal) (G1 Evacuation Pause) 469M->470M(512M) 43.671ms
+[2019-05-27T22:35:06.416+0300][35.520s][info ][gc] GC(219) Pause Young (Normal) (G1 Humongous Allocation) 484M->484M(512M) 30.927ms
+[2019-05-27T22:35:06.417+0300][35.521s][debug][gc] GC(220) Clear Next Bitmap 0.627ms
+[2019-05-27T22:35:06.431+0300][35.535s][info ][gc] GC(220) Pause Full (G1 Humongous Allocation) 484M->3M(512M) 14.967ms
+[2019-05-27T22:35:06.432+0300][35.536s][info ][gc] GC(216) Concurrent Cycle 197.105ms
+[2019-05-27T22:35:06.704+0300][35.809s][info ][gc] GC(221) Pause Young (Normal) (G1 Evacuation Pause) 132M->133M(512M) 174.974ms
+[2019-05-27T22:35:06.744+0300][35.848s][info ][gc] GC(222) Pause Young (Concurrent Start) (G1 Humongous Allocation) 139M->141M(512M) 33.705ms
+[2019-05-27T22:35:06.744+0300][35.848s][info ][gc] GC(223) Concurrent Cycle
+[2019-05-27T22:35:06.793+0300][35.897s][debug][gc] GC(223) Reclaimed 115 empty regions
+[2019-05-27T22:35:06.793+0300][35.897s][info ][gc] GC(223) Pause Remark 210M->95M(512M) 1.178ms
+[2019-05-27T22:35:07.001+0300][36.106s][info ][gc] GC(224) Pause Young (Normal) (G1 Evacuation Pause) 144M->138M(512M) 167.737ms
+[2019-05-27T22:35:07.043+0300][36.147s][info ][gc] GC(223) Pause Cleanup 138M->138M(512M) 0.099ms
+[2019-05-27T22:35:07.046+0300][36.151s][info ][gc] GC(223) Concurrent Cycle 302.412ms
+[2019-05-27T22:35:07.151+0300][36.256s][info ][gc] GC(225) Pause Young (Concurrent Start) (G1 Humongous Allocation) 155M->156M(512M) 72.354ms
+[2019-05-27T22:35:07.151+0300][36.256s][info ][gc] GC(226) Concurrent Cycle
+[2019-05-27T22:35:07.235+0300][36.339s][debug][gc] GC(226) Reclaimed 118 empty regions
+[2019-05-27T22:35:07.235+0300][36.339s][info ][gc] GC(226) Pause Remark 230M->112M(512M) 1.364ms
+[2019-05-27T22:35:07.483+0300][36.588s][info ][gc] GC(227) Pause Young (Normal) (G1 Evacuation Pause) 152M->138M(512M) 202.809ms
+[2019-05-27T22:35:07.549+0300][36.653s][info ][gc] GC(226) Pause Cleanup 138M->138M(512M) 0.189ms
+[2019-05-27T22:35:07.570+0300][36.674s][info ][gc] GC(226) Concurrent Cycle 418.576ms
+[2019-05-27T22:35:07.722+0300][36.826s][info ][gc] GC(228) Pause Young (Concurrent Start) (G1 Humongous Allocation) 159M->159M(512M) 113.376ms
+[2019-05-27T22:35:07.722+0300][36.827s][info ][gc] GC(229) Concurrent Cycle
+[2019-05-27T22:35:07.818+0300][36.922s][debug][gc] GC(229) Reclaimed 116 empty regions
+[2019-05-27T22:35:07.818+0300][36.922s][info ][gc] GC(229) Pause Remark 220M->104M(512M) 1.492ms
+[2019-05-27T22:35:08.108+0300][37.213s][info ][gc] GC(230) Pause Young (Normal) (G1 Evacuation Pause) 147M->135M(512M) 205.540ms
+[2019-05-27T22:35:08.216+0300][37.320s][info ][gc] GC(229) Pause Cleanup 136M->136M(512M) 0.138ms
+[2019-05-27T22:35:08.217+0300][37.321s][info ][gc] GC(229) Concurrent Cycle 494.447ms
+[2019-05-27T22:35:08.345+0300][37.449s][info ][gc] GC(231) Pause Young (Concurrent Start) (G1 Humongous Allocation) 166M->167M(512M) 97.074ms
+[2019-05-27T22:35:08.345+0300][37.450s][info ][gc] GC(232) Concurrent Cycle
+[2019-05-27T22:35:08.621+0300][37.726s][info ][gc] GC(233) Pause Young (Normal) (G1 Evacuation Pause) 263M->263M(512M) 176.590ms
+[2019-05-27T22:35:08.630+0300][37.734s][debug][gc] GC(232) Reclaimed 112 empty regions
+[2019-05-27T22:35:08.630+0300][37.734s][info ][gc] GC(232) Pause Remark 271M->159M(512M) 1.286ms
+[2019-05-27T22:35:08.860+0300][37.965s][info ][gc] GC(234) Pause Young (Normal) (G1 Evacuation Pause) 231M->232M(512M) 148.506ms
+[2019-05-27T22:35:09.155+0300][38.259s][info ][gc] GC(235) Pause Young (Normal) (G1 Evacuation Pause) 302M->303M(512M) 155.544ms
+[2019-05-27T22:35:09.368+0300][38.473s][info ][gc] GC(236) Pause Young (Normal) (G1 Evacuation Pause) 370M->371M(512M) 93.716ms
+[2019-05-27T22:35:09.410+0300][38.514s][info ][gc] GC(232) Pause Cleanup 378M->378M(512M) 0.161ms
+[2019-05-27T22:35:09.411+0300][38.515s][info ][gc] GC(232) Concurrent Cycle 1065.448ms
+[2019-05-27T22:35:09.498+0300][38.602s][info ][gc] GC(237) Pause Young (Normal) (G1 Evacuation Pause) 397M->398M(512M) 68.151ms
+[2019-05-27T22:35:09.567+0300][38.670s][info ][gc] GC(238) Pause Young (Concurrent Start) (G1 Evacuation Pause) 418M->419M(512M) 51.067ms
+[2019-05-27T22:35:09.567+0300][38.671s][info ][gc] GC(239) Concurrent Cycle
+[2019-05-27T22:35:09.668+0300][38.773s][info ][gc] GC(240) Pause Young (Normal) (G1 Evacuation Pause) 440M->441M(512M) 49.845ms
+[2019-05-27T22:35:09.730+0300][38.834s][info ][gc] GC(241) Pause Young (Normal) (G1 Evacuation Pause) 462M->463M(512M) 43.518ms
+[2019-05-27T22:35:09.856+0300][38.960s][info ][gc] GC(242) To-space exhausted
+[2019-05-27T22:35:09.856+0300][38.960s][info ][gc] GC(242) Pause Young (Normal) (G1 Evacuation Pause) 504M->509M(512M) 102.678ms
+[2019-05-27T22:35:09.858+0300][38.962s][debug][gc] GC(243) Clear Next Bitmap 1.159ms
+[2019-05-27T22:35:09.917+0300][39.021s][info ][gc] GC(243) Pause Full (G1 Evacuation Pause) 509M->41M(512M) 60.413ms
+[2019-05-27T22:35:09.918+0300][39.022s][info ][gc] GC(239) Concurrent Cycle 351.391ms
+[2019-05-27T22:35:10.172+0300][39.276s][info ][gc] GC(244) Pause Young (Concurrent Start) (G1 Humongous Allocation) 138M->138M(512M) 150.450ms
+[2019-05-27T22:35:10.172+0300][39.276s][info ][gc] GC(245) Concurrent Cycle
+[2019-05-27T22:35:10.479+0300][39.584s][info ][gc] GC(246) Pause Young (Normal) (G1 Evacuation Pause) 252M->253M(512M) 183.333ms
+[2019-05-27T22:35:10.502+0300][39.606s][debug][gc] GC(245) Reclaimed 34 empty regions
+[2019-05-27T22:35:10.502+0300][39.606s][info ][gc] GC(245) Pause Remark 294M->260M(512M) 1.563ms
+[2019-05-27T22:35:10.673+0300][39.777s][info ][gc] GC(247) Pause Young (Normal) (G1 Evacuation Pause) 303M->304M(512M) 132.633ms
+[2019-05-27T22:35:10.891+0300][39.995s][info ][gc] GC(248) Pause Young (Normal) (G1 Evacuation Pause) 352M->353M(512M) 111.227ms
+
+___________________________________________________________
+-XX:+UnlockExperimentalVMOptions -XX:+UseShenandoahGC
+GC name:Shenandoah Pauses
+GC name:Shenandoah Cycles
+
+CPU usage: 65-75%
+GC activity: 12-17%
+
+Application worked: 608s (10 mins)
+
+[2019-05-27T22:55:10.111+0300][67.643s][info][gc] GC(379) Concurrent marking (update refs) 350M->350M(512M) 130.629ms
+[2019-05-27T22:55:10.112+0300][67.644s][info][gc] GC(379) Pause Final Mark (update refs) 0.534ms
+[2019-05-27T22:55:10.112+0300][67.644s][info][gc] GC(379) Concurrent cleanup 350M->172M(512M) 0.181ms
+[2019-05-27T22:55:10.173+0300][67.704s][info][gc] Trigger: Average GC time (117.01 ms) is above the time for allocation rate (938.63 MB/s) to deplete free headroom (108M)
+[2019-05-27T22:55:10.173+0300][67.705s][info][gc] GC(380) Concurrent reset 352M->352M(512M) 0.439ms
+[2019-05-27T22:55:10.174+0300][67.706s][info][gc] GC(380) Pause Init Mark (process weakrefs) 0.496ms
+[2019-05-27T22:55:10.291+0300][67.822s][info][gc] GC(380) Concurrent marking (process weakrefs) 353M->353M(512M) 116.383ms
+[2019-05-27T22:55:10.291+0300][67.823s][info][gc] GC(380) Concurrent precleaning 354M->354M(512M) 0.273ms
+[2019-05-27T22:55:10.291+0300][67.824s][info][gc] GC(380) Pause Final Mark (process weakrefs) 0.467ms
+[2019-05-27T22:55:10.291+0300][67.824s][info][gc] GC(380) Concurrent cleanup 354M->186M(512M) 0.214ms
+[2019-05-27T22:55:10.341+0300][67.873s][info][gc] Trigger: Average GC time (120.00 ms) is above the time for allocation rate (978.23 MB/s) to deplete free headroom (112M)
+[2019-05-27T22:55:10.342+0300][67.873s][info][gc] GC(381) Concurrent reset 348M->348M(512M) 0.325ms
+[2019-05-27T22:55:10.343+0300][67.874s][info][gc] GC(381) Pause Init Mark 0.436ms
+[2019-05-27T22:55:10.454+0300][67.986s][info][gc] GC(381) Concurrent marking 348M->349M(512M) 111.763ms
+[2019-05-27T22:55:10.455+0300][67.987s][info][gc] GC(381) Pause Final Mark 0.582ms
+[2019-05-27T22:55:10.455+0300][67.987s][info][gc] GC(381) Concurrent cleanup 349M->181M(512M) 0.173ms
+[2019-05-27T22:55:10.456+0300][67.988s][info][gc] GC(381) Concurrent evacuation 181M->182M(512M) 0.320ms
+[2019-05-27T22:55:10.456+0300][67.988s][info][gc] GC(381) Pause Final Evac 0.007ms
+[2019-05-27T22:55:10.456+0300][67.988s][info][gc] GC(381) Concurrent cleanup 182M->183M(512M) 0.069ms
+[2019-05-27T22:55:10.507+0300][68.039s][info][gc] Trigger: Average GC time (117.07 ms) is above the time for allocation rate (1009.06 MB/s) to deplete free headroom (114M)
+[2019-05-27T22:55:10.507+0300][68.039s][info][gc] GC(382) Concurrent reset 346M->346M(512M) 0.318ms
+[2019-05-27T22:55:10.508+0300][68.040s][info][gc] GC(382) Pause Init Mark (update refs) 0.603ms
+[2019-05-27T22:55:10.637+0300][68.169s][info][gc] GC(382) Concurrent marking (update refs) 347M->347M(512M) 128.614ms
+[2019-05-27T22:55:10.638+0300][68.170s][info][gc] GC(382) Pause Final Mark (update refs) 0.554ms
+[2019-05-27T22:55:10.638+0300][68.170s][info][gc] GC(382) Concurrent cleanup 347M->170M(512M) 0.167ms
+[2019-05-27T22:55:10.691+0300][68.223s][info][gc] Trigger: Average GC time (121.82 ms) is above the time for allocation rate (984.52 MB/s) to deplete free headroom (109M)
+[2019-05-27T22:55:10.691+0300][68.223s][info][gc] GC(383) Concurrent reset 350M->350M(512M) 0.309ms
+[2019-05-27T22:55:10.692+0300][68.224s][info][gc] GC(383) Pause Init Mark 0.453ms
+[2019-05-27T22:55:10.807+0300][68.338s][info][gc] GC(383) Concurrent marking 351M->351M(512M) 114.029ms
+[2019-05-27T22:55:10.807+0300][68.339s][info][gc] GC(383) Pause Final Mark 0.335ms
+[2019-05-27T22:55:10.807+0300][68.339s][info][gc] GC(383) Concurrent cleanup 351M->182M(512M) 0.173ms
+[2019-05-27T22:55:10.872+0300][68.404s][info][gc] Trigger: Average GC time (123.10 ms) is above the time for allocation rate (938.28 MB/s) to deplete free headroom (110M)
+[2019-05-27T22:55:10.872+0300][68.404s][info][gc] GC(384) Concurrent reset 350M->350M(512M) 0.362ms
+[2019-05-27T22:55:10.873+0300][68.405s][info][gc] GC(384) Pause Init Mark 0.645ms
+[2019-05-27T22:55:10.987+0300][68.518s][info][gc] GC(384) Concurrent marking 351M->351M(512M) 113.217ms
+[2019-05-27T22:55:10.988+0300][68.519s][info][gc] GC(384) Pause Final Mark 0.631ms
+[2019-05-27T22:55:10.988+0300][68.520s][info][gc] GC(384) Concurrent cleanup 351M->181M(512M) 0.171ms
+[2019-05-27T22:55:10.988+0300][68.520s][info][gc] GC(384) Concurrent evacuation 182M->182M(512M) 0.225ms
+[2019-05-27T22:55:10.988+0300][68.520s][info][gc] GC(384) Pause Final Evac 0.007ms
+[2019-05-27T22:55:10.989+0300][68.520s][info][gc] GC(384) Concurrent cleanup 183M->183M(512M) 0.046ms
+[2019-05-27T22:55:11.049+0300][68.581s][info][gc] Trigger: Average GC time (119.77 ms) is above the time for allocation rate (968.18 MB/s) to deplete free headroom (107M)
+[2019-05-27T22:55:11.049+0300][68.582s][info][gc] GC(385) Concurrent reset 353M->353M(512M) 0.351ms
+[2019-05-27T22:55:11.051+0300][68.582s][info][gc] GC(385) Pause Init Mark (update refs) (process weakrefs) 0.593ms
+[2019-05-27T22:55:11.185+0300][68.717s][info][gc] GC(385) Concurrent marking (update refs) (process weakrefs) 353M->354M(512M) 134.421ms
+[2019-05-27T22:55:11.185+0300][68.717s][info][gc] GC(385) Concurrent precleaning 354M->355M(512M) 0.301ms
+[2019-05-27T22:55:11.186+0300][68.718s][info][gc] GC(385) Pause Final Mark (update refs) (process weakrefs) 0.764ms
+[2019-05-27T22:55:11.194+0300][68.726s][info][gc] GC(385) Concurrent cleanup 355M->177M(512M) 0.246ms
+[2019-05-27T22:55:11.243+0300][68.775s][info][gc] Trigger: Average GC time (124.80 ms) is above the time for allocation rate (910.17 MB/s) to deplete free headroom (110M)
+[2019-05-27T22:55:11.243+0300][68.775s][info][gc] GC(386) Concurrent reset 350M->350M(512M) 0.321ms
+[2019-05-27T22:55:11.244+0300][68.776s][info][gc] GC(386) Pause Init Mark 0.392ms
+[2019-05-27T22:55:11.359+0300][68.891s][info][gc] GC(386) Concurrent marking 351M->351M(512M) 115.107ms
+[2019-05-27T22:55:11.360+0300][68.892s][info][gc] GC(386) Pause Final Mark 0.370ms
+[2019-05-27T22:55:11.360+0300][68.892s][info][gc] GC(386) Concurrent cleanup 351M->183M(512M) 0.187ms
+[2019-05-27T22:55:11.406+0300][68.937s][info][gc] Trigger: Average GC time (125.25 ms) is above the time for allocation rate (996.06 MB/s) to deplete free headroom (116M)
+[2019-05-27T22:55:11.406+0300][68.938s][info][gc] GC(387) Concurrent reset 343M->344M(512M) 0.378ms
+[2019-05-27T22:55:11.406+0300][68.938s][info][gc] GC(387) Pause Init Mark 0.450ms
+[2019-05-27T22:55:11.513+0300][69.045s][info][gc] GC(387) Concurrent marking 344M->344M(512M) 106.752ms
+[2019-05-27T22:55:11.514+0300][69.046s][info][gc] GC(387) Pause Final Mark 0.709ms
+[2019-05-27T22:55:11.514+0300][69.047s][info][gc] GC(387) Concurrent cleanup 345M->176M(512M) 0.155ms
+[2019-05-27T22:55:11.515+0300][69.047s][info][gc] GC(387) Concurrent evacuation 177M->177M(512M) 0.249ms
+[2019-05-27T22:55:11.515+0300][69.047s][info][gc] GC(387) Pause Final Evac 0.007ms
+[2019-05-27T22:55:11.515+0300][69.047s][info][gc] GC(387) Concurrent cleanup 177M->178M(512M) 0.052ms
+[2019-05-27T22:55:11.601+0300][69.133s][info][gc] Trigger: Average GC time (121.01 ms) is above the time for allocation rate (909.65 MB/s) to deplete free headroom (107M)
+[2019-05-27T22:55:11.601+0300][69.133s][info][gc] GC(388) Concurrent reset 353M->353M(512M) 0.559ms
+[2019-05-27T22:55:11.603+0300][69.135s][info][gc] GC(388) Pause Init Mark (update refs) 1.219ms
+[2019-05-27T22:55:11.758+0300][69.290s][info][gc] GC(388) Concurrent marking (update refs) 353M->353M(512M) 153.974ms
+[2019-05-27T22:55:11.759+0300][69.290s][info][gc] GC(388) Pause Final Mark (update refs) 0.436ms
+[2019-05-27T22:55:11.759+0300][69.291s][info][gc] GC(388) Concurrent cleanup 354M->175M(512M) 0.117ms
+[2019-05-27T22:55:11.831+0300][69.363s][info][gc] Trigger: Average GC time (129.29 ms) is above the time for allocation rate (802.67 MB/s) to deplete free headroom (101M)
+[2019-05-27T22:55:11.832+0300][69.364s][info][gc] GC(389) Concurrent reset 359M->359M(512M) 0.392ms
+[2019-05-27T22:55:11.832+0300][69.364s][info][gc] GC(389) Pause Init Mark 0.430ms
+[2019-05-27T22:55:11.960+0300][69.492s][info][gc] GC(389) Concurrent marking 359M->360M(512M) 127.446ms
+[2019-05-27T22:55:11.960+0300][69.493s][info][gc] GC(389) Pause Final Mark 0.325ms
+[2019-05-27T22:55:11.961+0300][69.493s][info][gc] GC(389) Concurrent cleanup 360M->191M(512M) 0.139ms
+[2019-05-27T22:55:12.012+0300][69.543s][info][gc] Trigger: Average GC time (131.89 ms) is above the time for allocation rate (909.43 MB/s) to deplete free headroom (106M)
+[2019-05-27T22:55:12.012+0300][69.544s][info][gc] GC(390) Concurrent reset 354M->354M(512M) 0.404ms
+[2019-05-27T22:55:12.013+0300][69.545s][info][gc] GC(390) Pause Init Mark (process weakrefs) 0.402ms
+[2019-05-27T22:55:12.132+0300][69.663s][info][gc] GC(390) Concurrent marking (process weakrefs) 354M->354M(512M) 118.293ms
+[2019-05-27T22:55:12.132+0300][69.664s][info][gc] GC(390) Concurrent precleaning 355M->356M(512M) 0.310ms
+[2019-05-27T22:55:12.133+0300][69.665s][info][gc] GC(390) Pause Final Mark (process weakrefs) 0.744ms
+[2019-05-27T22:55:12.133+0300][69.665s][info][gc] GC(390) Concurrent cleanup 356M->188M(512M) 0.158ms
+[2019-05-27T22:55:12.134+0300][69.665s][info][gc] GC(390) Concurrent evacuation 188M->189M(512M) 0.327ms
+[2019-05-27T22:55:12.134+0300][69.666s][info][gc] GC(390) Pause Final Evac 0.007ms
+[2019-05-27T22:55:12.134+0300][69.666s][info][gc] GC(390) Concurrent cleanup 189M->189M(512M) 0.129ms
+[2019-05-27T22:55:12.184+0300][69.716s][info][gc] Trigger: Average GC time (127.44 ms) is above the time for allocation rate (938.21 MB/s) to deplete free headroom (113M)
+[2019-05-27T22:55:12.184+0300][69.717s][info][gc] GC(391) Concurrent reset 347M->347M(512M) 0.368ms
+[2019-05-27T22:55:12.186+0300][69.717s][info][gc] GC(391) Pause Init Mark (update refs) 0.603ms
+[2019-05-27T22:55:12.315+0300][69.847s][info][gc] GC(391) Concurrent marking (update refs) 347M->347M(512M) 129.502ms
+[2019-05-27T22:55:12.316+0300][69.848s][info][gc] GC(391) Pause Final Mark (update refs) 0.444ms
+[2019-05-27T22:55:12.316+0300][69.848s][info][gc] GC(391) Concurrent cleanup 348M->170M(512M) 0.141ms
+[2019-05-27T22:55:12.383+0300][69.915s][info][gc] Trigger: Average GC time (130.35 ms) is above the time for allocation rate (898.57 MB/s) to deplete free headroom (112M)
+[2019-05-27T22:55:12.383+0300][69.915s][info][gc] GC(392) Concurrent reset 347M->347M(512M) 0.354ms
+[2019-05-27T22:55:12.384+0300][69.916s][info][gc] GC(392) Pause Init Mark 0.452ms
+[2019-05-27T22:55:12.496+0300][70.027s][info][gc] GC(392) Concurrent marking 348M->348M(512M) 111.544ms
+[2019-05-27T22:55:12.496+0300][70.028s][info][gc] GC(392) Pause Final Mark 0.339ms
+[2019-05-27T22:55:12.497+0300][70.028s][info][gc] GC(392) Concurrent cleanup 348M->180M(512M) 0.132ms
+[2019-05-27T22:55:12.565+0300][70.097s][info][gc] Trigger: Average GC time (131.09 ms) is above the time for allocation rate (910.22 MB/s) to deplete free headroom (116M)
+[2019-05-27T22:55:12.566+0300][70.097s][info][gc] GC(393) Concurrent reset 344M->344M(512M) 0.329ms
+[2019-05-27T22:55:12.566+0300][70.098s][info][gc] GC(393) Pause Init Mark 0.459ms
+[2019-05-27T22:55:12.677+0300][70.209s][info][gc] GC(393) Concurrent marking 345M->345M(512M) 110.875ms
+[2019-05-27T22:55:12.678+0300][70.210s][info][gc] GC(393) Pause Final Mark 0.547ms
+[2019-05-27T22:55:12.678+0300][70.210s][info][gc] GC(393) Concurrent cleanup 345M->177M(512M) 0.145ms
+[2019-05-27T22:55:12.678+0300][70.210s][info][gc] GC(393) Concurrent evacuation 177M->177M(512M) 0.201ms
+[2019-05-27T22:55:12.678+0300][70.211s][info][gc] GC(393) Pause Final Evac 0.008ms
+[2019-05-27T22:55:12.679+0300][70.211s][info][gc] GC(393) Concurrent cleanup 178M->178M(512M) 0.040ms
+[2019-05-27T22:55:12.751+0300][70.283s][info][gc] Trigger: Average GC time (122.32 ms) is above the time for allocation rate (934.91 MB/s) to deplete free headroom (111M)
+[2019-05-27T22:55:12.751+0300][70.283s][info][gc] GC(394) Concurrent reset 349M->349M(512M) 0.380ms
+[2019-05-27T22:55:12.752+0300][70.284s][info][gc] GC(394) Pause Init Mark (update refs) 0.630ms
+[2019-05-27T22:55:12.883+0300][70.414s][info][gc] GC(394) Concurrent marking (update refs) 350M->350M(512M) 130.218ms
+[2019-05-27T22:55:12.884+0300][70.415s][info][gc] GC(394) Pause Final Mark (update refs) 0.544ms
+[2019-05-27T22:55:12.884+0300][70.416s][info][gc] GC(394) Concurrent cleanup 350M->172M(512M) 0.230ms
+[2019-05-27T22:55:12.939+0300][70.471s][info][gc] Trigger: Average GC time (122.99 ms) is above the time for allocation rate (945.62 MB/s) to deplete free headroom (112M)
+[2019-05-27T22:55:12.940+0300][70.472s][info][gc] GC(395) Concurrent reset 348M->348M(512M) 0.467ms
+[2019-05-27T22:55:12.940+0300][70.472s][info][gc] GC(395) Pause Init Mark (process weakrefs) 0.559ms
+[2019-05-27T22:55:13.061+0300][70.593s][info][gc] GC(395) Concurrent marking (process weakrefs) 348M->348M(512M) 120.191ms
+[2019-05-27T22:55:13.061+0300][70.593s][info][gc] GC(395) Concurrent precleaning 349M->350M(512M) 0.313ms
+[2019-05-27T22:55:13.062+0300][70.594s][info][gc] GC(395) Pause Final Mark (process weakrefs) 0.363ms
+[2019-05-27T22:55:13.062+0300][70.594s][info][gc] GC(395) Concurrent cleanup 350M->182M(512M) 0.135ms
+[2019-05-27T22:55:13.120+0300][70.652s][info][gc] Trigger: Average GC time (123.14 ms) is above the time for allocation rate (969.68 MB/s) to deplete free headroom (105M)
+[2019-05-27T22:55:13.120+0300][70.652s][info][gc] GC(396) Concurrent reset 354M->355M(512M) 0.329ms
+[2019-05-27T22:55:13.121+0300][70.653s][info][gc] GC(396) Pause Init Mark 0.424ms
+[2019-05-27T22:55:13.249+0300][70.780s][info][gc] GC(396) Concurrent marking 355M->355M(512M) 127.502ms
+[2019-05-27T22:55:13.250+0300][70.781s][info][gc] GC(396) Pause Final Mark 0.618ms
+[2019-05-27T22:55:13.250+0300][70.782s][info][gc] GC(396) Concurrent cleanup 356M->186M(512M) 0.197ms
+[2019-05-27T22:55:13.250+0300][70.782s][info][gc] GC(396) Concurrent evacuation 186M->187M(512M) 0.122ms
+[2019-05-27T22:55:13.250+0300][70.782s][info][gc] GC(396) Pause Final Evac 0.007ms
+[2019-05-27T22:55:13.251+0300][70.782s][info][gc] GC(396) Concurrent cleanup 187M->187M(512M) 0.055ms
+[2019-05-27T22:55:13.306+0300][70.838s][info][gc] Trigger: Average GC time (122.88 ms) is above the time for allocation rate (900.20 MB/s) to deplete free headroom (107M)
+[2019-05-27T22:55:13.306+0300][70.839s][info][gc] GC(397) Concurrent reset 353M->353M(512M) 0.437ms
+[2019-05-27T22:55:13.307+0300][70.840s][info][gc] GC(397) Pause Init Mark (update refs) 0.816ms
+[2019-05-27T22:55:13.450+0300][70.982s][info][gc] GC(397) Concurrent marking (update refs) 354M->354M(512M) 141.690ms
+[2019-05-27T22:55:13.451+0300][70.983s][info][gc] GC(397) Pause Final Mark (update refs) 0.590ms
+[2019-05-27T22:55:13.451+0300][70.983s][info][gc] GC(397) Concurrent cleanup 354M->174M(512M) 0.183ms
+[2019-05-27T22:55:13.508+0300][71.040s][info][gc] Trigger: Average GC time (129.13 ms) is above the time for allocation rate (902.71 MB/s) to deplete free headroom (104M)
+[2019-05-27T22:55:13.508+0300][71.040s][info][gc] GC(398) Concurrent reset 355M->355M(512M) 0.349ms
+[2019-05-27T22:55:13.509+0300][71.041s][info][gc] GC(398) Pause Init Mark 0.468ms
+[2019-05-27T22:55:13.634+0300][71.166s][info][gc] GC(398) Concurrent marking 356M->356M(512M) 124.821ms
+[2019-05-27T22:55:13.635+0300][71.167s][info][gc] GC(398) Pause Final Mark 0.388ms
+[2019-05-27T22:55:13.635+0300][71.167s][info][gc] GC(398) Concurrent cleanup 357M->187M(512M) 0.202ms
+[2019-05-27T22:55:13.724+0300][71.256s][info][gc] Trigger: Average GC time (131.81 ms) is above the time for allocation rate (795.48 MB/s) to deplete free headroom (102M)
+[2019-05-27T22:55:13.724+0300][71.257s][info][gc] GC(399) Concurrent reset 358M->358M(512M) 0.635ms
+[2019-05-27T22:55:13.727+0300][71.258s][info][gc] GC(399) Pause Init Mark 0.951ms
+[2019-05-27T22:55:13.882+0300][71.414s][info][gc] GC(399) Concurrent marking 358M->358M(512M) 155.077ms
+[2019-05-27T22:55:13.883+0300][71.415s][info][gc] GC(399) Pause Final Mark 0.715ms
+[2019-05-27T22:55:13.883+0300][71.415s][info][gc] GC(399) Concurrent cleanup 358M->190M(512M) 0.204ms
+[2019-05-27T22:55:13.883+0300][71.415s][info][gc] GC(399) Concurrent evacuation 190M->190M(512M) 0.178ms
+[2019-05-27T22:55:13.884+0300][71.415s][info][gc] GC(399) Pause Final Evac 0.032ms
+[2019-05-27T22:55:13.884+0300][71.416s][info][gc] GC(399) Concurrent cleanup 191M->191M(512M) 0.048ms
+[2019-05-27T22:55:13.942+0300][71.473s][info][gc] Trigger: Average GC time (137.14 ms) is above the time for allocation rate (778.81 MB/s) to deplete free headroom (102M)
+[2019-05-27T22:55:13.943+0300][71.474s][info][gc] GC(400) Concurrent reset 358M->358M(512M) 0.348ms
+[2019-05-27T22:55:13.943+0300][71.475s][info][gc] GC(400) Pause Init Mark (update refs) (process weakrefs) 0.573ms
+[2019-05-27T22:55:14.083+0300][71.616s][info][gc] GC(400) Concurrent marking (update refs) (process weakrefs) 358M->359M(512M) 140.699ms
+[2019-05-27T22:55:14.084+0300][71.616s][info][gc] GC(400) Concurrent precleaning 359M->359M(512M) 0.340ms
+[2019-05-27T22:55:14.085+0300][71.617s][info][gc] GC(400) Pause Final Mark (update refs) (process weakrefs) 0.599ms
+[2019-05-27T22:55:14.085+0300][71.617s][info][gc] GC(400) Concurrent cleanup 359M->183M(512M) 0.149ms
+[2019-05-27T22:55:14.142+0300][71.674s][info][gc] Trigger: Average GC time (141.24 ms) is above the time for allocation rate (838.72 MB/s) to deplete free headroom (111M)
+[2019-05-27T22:55:14.142+0300][71.674s][info][gc] GC(401) Concurrent reset 349M->349M(512M) 0.332ms
+[2019-05-27T22:55:14.143+0300][71.675s][info][gc] GC(401) Pause Init Mark 0.430ms
+[2019-05-27T22:55:14.277+0300][71.809s][info][gc] GC(401) Concurrent marking 349M->350M(512M) 133.922ms
+[2019-05-27T22:55:14.278+0300][71.810s][info][gc] GC(401) Pause Final Mark 0.358ms
+[2019-05-27T22:55:14.278+0300][71.810s][info][gc] GC(401) Concurrent cleanup 350M->181M(512M) 0.149ms
+[2019-05-27T22:55:14.328+0300][71.859s][info][gc] Trigger: Average GC time (142.35 ms) is above the time for allocation rate (857.58 MB/s) to deplete free headroom (121M)
+[2019-05-27T22:55:14.329+0300][71.860s][info][gc] GC(402) Concurrent reset 338M->339M(512M) 0.754ms
+[2019-05-27T22:55:14.330+0300][71.862s][info][gc] GC(402) Pause Init Mark 0.746ms
+[2019-05-27T22:55:14.450+0300][71.983s][info][gc] GC(402) Concurrent marking 339M->339M(512M) 120.350ms
+[2019-05-27T22:55:14.451+0300][71.984s][info][gc] GC(402) Pause Final Mark 0.683ms
+[2019-05-27T22:55:14.451+0300][71.984s][info][gc] GC(402) Concurrent cleanup 340M->172M(512M) 0.191ms
+[2019-05-27T22:55:14.452+0300][71.984s][info][gc] GC(402) Concurrent evacuation 172M->172M(512M) 0.117ms
+[2019-05-27T22:55:14.453+0300][71.984s][info][gc] GC(402) Pause Final Evac 0.009ms
+[2019-05-27T22:55:14.453+0300][71.985s][info][gc] GC(402) Concurrent cleanup 173M->173M(512M) 0.058ms
+[2019-05-27T22:55:14.504+0300][72.036s][info][gc] Trigger: Average GC time (138.34 ms) is above the time for allocation rate (964.95 MB/s) to deplete free headroom (120M)
+[2019-05-27T22:55:14.504+0300][72.036s][info][gc] GC(403) Concurrent reset 340M->340M(512M) 0.325ms
+[2019-05-27T22:55:14.506+0300][72.037s][info][gc] GC(403) Pause Init Mark (update refs) 0.695ms
+[2019-05-27T22:55:14.637+0300][72.169s][info][gc] GC(403) Concurrent marking (update refs) 341M->341M(512M) 131.957ms
+[2019-05-27T22:55:14.638+0300][72.170s][info][gc] GC(403) Pause Final Mark (update refs) 0.430ms
+[2019-05-27T22:55:14.638+0300][72.170s][info][gc] GC(403) Concurrent cleanup 342M->163M(512M) 0.113ms
+[2019-05-27T22:55:14.716+0300][72.247s][info][gc] Trigger: Average GC time (139.76 ms) is above the time for allocation rate (852.92 MB/s) to deplete free headroom (118M)
+[2019-05-27T22:55:14.716+0300][72.248s][info][gc] GC(404) Concurrent reset 342M->342M(512M) 0.433ms
+[2019-05-27T22:55:14.717+0300][72.249s][info][gc] GC(404) Pause Init Mark 0.663ms
+[2019-05-27T22:55:14.854+0300][72.386s][info][gc] GC(404) Concurrent marking 342M->342M(512M) 136.983ms
+[2019-05-27T22:55:14.855+0300][72.387s][info][gc] GC(404) Pause Final Mark 0.386ms
+[2019-05-27T22:55:14.855+0300][72.387s][info][gc] GC(404) Concurrent cleanup 342M->172M(512M) 0.162ms
+[2019-05-27T22:55:14.910+0300][72.442s][info][gc] Trigger: Average GC time (135.77 ms) is above the time for allocation rate (900.81 MB/s) to deplete free headroom (113M)
+[2019-05-27T22:55:14.910+0300][72.442s][info][gc] GC(405) Concurrent reset 347M->347M(512M) 0.335ms
+[2019-05-27T22:55:14.911+0300][72.443s][info][gc] GC(405) Pause Init Mark (process weakrefs) 0.416ms
+[2019-05-27T22:55:15.026+0300][72.558s][info][gc] GC(405) Concurrent marking (process weakrefs) 347M->347M(512M) 115.055ms
+[2019-05-27T22:55:15.027+0300][72.558s][info][gc] GC(405) Concurrent precleaning 348M->349M(512M) 0.247ms
+[2019-05-27T22:55:15.027+0300][72.559s][info][gc] GC(405) Pause Final Mark (process weakrefs) 0.372ms
+[2019-05-27T22:55:15.028+0300][72.559s][info][gc] GC(405) Concurrent cleanup 349M->178M(512M) 0.199ms
+[2019-05-27T22:55:15.091+0300][72.622s][info][gc] Trigger: Average GC time (130.57 ms) is above the time for allocation rate (925.68 MB/s) to deplete free headroom (117M)
+[2019-05-27T22:55:15.092+0300][72.624s][info][gc] GC(406) Concurrent reset 342M->343M(512M) 0.908ms
+[2019-05-27T22:55:15.093+0300][72.624s][info][gc] GC(406) Pause Init Mark 0.450ms
+[2019-05-27T22:55:15.210+0300][72.742s][info][gc] GC(406) Concurrent marking 343M->343M(512M) 117.906ms
+[2019-05-27T22:55:15.211+0300][72.743s][info][gc] GC(406) Pause Final Mark 0.463ms
+[2019-05-27T22:55:15.211+0300][72.743s][info][gc] GC(406) Concurrent cleanup 344M->175M(512M) 0.216ms
+[2019-05-27T22:55:15.211+0300][72.744s][info][gc] GC(406) Concurrent evacuation 175M->175M(512M) 0.321ms
+[2019-05-27T22:55:15.212+0300][72.744s][info][gc] GC(406) Pause Final Evac 0.007ms
+[2019-05-27T22:55:15.212+0300][72.744s][info][gc] GC(406) Concurrent cleanup 175M->176M(512M) 0.066ms
+[2019-05-27T22:55:15.270+0300][72.802s][info][gc] Trigger: Average GC time (127.67 ms) is above the time for allocation rate (958.60 MB/s) to deplete free headroom (115M)
+[2019-05-27T22:55:15.273+0300][72.805s][info][gc] GC(407) Concurrent reset 349M->349M(512M) 0.489ms
+[2019-05-27T22:55:15.274+0300][72.807s][info][gc] GC(407) Pause Init Mark (update refs) 1.285ms
+[2019-05-27T22:55:15.405+0300][72.937s][info][gc] GC(407) Concurrent marking (update refs) 349M->349M(512M) 130.231ms
+[2019-05-27T22:55:15.406+0300][72.938s][info][gc] GC(407) Pause Final Mark (update refs) 0.459ms
+[2019-05-27T22:55:15.406+0300][72.938s][info][gc] GC(407) Concurrent cleanup 349M->170M(512M) 0.169ms
+[2019-05-27T22:55:15.480+0300][73.011s][info][gc] Trigger: Average GC time (129.42 ms) is above the time for allocation rate (876.02 MB/s) to deplete free headroom (110M)
+[2019-05-27T22:55:15.480+0300][73.012s][info][gc] GC(408) Concurrent reset 350M->350M(512M) 0.369ms
+[2019-05-27T22:55:15.481+0300][73.013s][info][gc] GC(408) Pause Init Mark 0.503ms
+[2019-05-27T22:55:15.606+0300][73.138s][info][gc] GC(408) Concurrent marking 350M->351M(512M) 125.268ms
+[2019-05-27T22:55:15.606+0300][73.139s][info][gc] GC(408) Pause Final Mark 0.251ms
+[2019-05-27T22:55:15.606+0300][73.139s][info][gc] GC(408) Concurrent cleanup 351M->183M(512M) 0.144ms
+[2019-05-27T22:55:15.652+0300][73.184s][info][gc] Trigger: Average GC time (128.03 ms) is above the time for allocation rate (929.76 MB/s) to deplete free headroom (118M)
+[2019-05-27T22:55:15.653+0300][73.184s][info][gc] GC(409) Concurrent reset 341M->341M(512M) 0.393ms
+[2019-05-27T22:55:15.653+0300][73.185s][info][gc] GC(409) Pause Init Mark 0.447ms
+[2019-05-27T22:55:15.764+0300][73.295s][info][gc] GC(409) Concurrent marking 342M->342M(512M) 110.303ms
+[2019-05-27T22:55:15.764+0300][73.296s][info][gc] GC(409) Pause Final Mark 0.430ms
+[2019-05-27T22:55:15.764+0300][73.296s][info][gc] GC(409) Concurrent cleanup 342M->174M(512M) 0.131ms
+[2019-05-27T22:55:15.765+0300][73.297s][info][gc] GC(409) Concurrent evacuation 174M->174M(512M) 0.193ms
+[2019-05-27T22:55:15.765+0300][73.297s][info][gc] GC(409) Pause Final Evac 0.005ms
+[2019-05-27T22:55:15.765+0300][73.297s][info][gc] GC(409) Concurrent cleanup 175M->175M(512M) 0.031ms
+[2019-05-27T22:55:15.824+0300][73.355s][info][gc] Trigger: Average GC time (122.72 ms) is above the time for allocation rate (987.68 MB/s) to deplete free headroom (118M)
+[2019-05-27T22:55:15.825+0300][73.357s][info][gc] GC(410) Concurrent reset 342M->342M(512M) 1.118ms
+[2019-05-27T22:55:15.826+0300][73.358s][info][gc] GC(410) Pause Init Mark (update refs) (process weakrefs) 0.742ms
+[2019-05-27T22:55:15.966+0300][73.498s][info][gc] GC(410) Concurrent marking (update refs) (process weakrefs) 342M->342M(512M) 140.032ms
+[2019-05-27T22:55:15.966+0300][73.498s][info][gc] GC(410) Concurrent precleaning 342M->343M(512M) 0.330ms
+[2019-05-27T22:55:15.968+0300][73.499s][info][gc] GC(410) Pause Final Mark (update refs) (process weakrefs) 0.752ms
+[2019-05-27T22:55:15.968+0300][73.500s][info][gc] GC(410) Concurrent cleanup 343M->166M(512M) 0.174ms

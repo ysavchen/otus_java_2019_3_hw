@@ -47,7 +47,8 @@ public class GcLab {
         Thread thread = getLoggingThread();
         try {
             thread.start();
-            runToOutOfMemory();
+            run();
+            //runToOutOfMemory();
         } finally {
             thread.interrupt();
             long appWorked = System.currentTimeMillis() - beginTime;
@@ -83,6 +84,19 @@ public class GcLab {
                 }
             };
             emitter.addNotificationListener(listener, null, null);
+        }
+    }
+
+    private static void run() {
+        int loopCounter = 3000;
+        int size = 5_000_000;
+
+        for (int idx = 0; idx < loopCounter; idx++) {
+            int local = size;
+            Object[] array = new Object[local];
+            for (int i = 0; i < local; i++) {
+                array[i] = new String(new char[0]);
+            }
         }
     }
 
