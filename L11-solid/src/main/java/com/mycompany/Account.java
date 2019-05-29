@@ -6,20 +6,20 @@ class Account {
 
     private Balance balance;
 
-    public boolean isActive() {
+    boolean isActive() {
         return isActive;
     }
 
-    public Account setActive(boolean active) {
+    Account setActive(boolean active) {
         isActive = active;
         return this;
     }
 
-    public Balance getBalance() {
+    Balance getBalance() {
         return balance;
     }
 
-    public Account setBalance(Balance balance) {
+    Account setBalance(Balance balance) {
         this.balance = balance;
         return this;
     }

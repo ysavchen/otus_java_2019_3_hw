@@ -7,7 +7,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class AcceptBanknotesTests {
+class AcceptBanknotesTests {
 
     @Test
     void acceptSuccessfully() {

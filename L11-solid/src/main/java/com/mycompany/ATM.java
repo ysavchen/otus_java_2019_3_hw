@@ -1,6 +1,12 @@
 package com.mycompany;
 
-import java.util.*;
+import com.mycompany.exceptions.InactiveAccountException;
+import com.mycompany.exceptions.InsufficientFundsException;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Написать эмулятор АТМ (банкомата).
@@ -14,17 +20,21 @@ import java.util.*;
  */
 public class ATM {
 
-    private final Account account;
+    private final Account clientAccount;
 
-    private final Cell cell_50 = new Cell(Nominal.FIFTY);
-    private final Cell cell_100 = new Cell(Nominal.HUNDRED);
-    private final Cell cell_500 = new Cell(Nominal.FIVE_HUNDRED);
-    private final Cell cell_1000 = new Cell(Nominal.THOUSAND);
+    private final Account atmAccount = new Account();
 
-    //Map<Nominal, Cell> map = new HashMap<>();
+    private static Map<Nominal, Cell> map = Map.of(
+            Nominal.FIFTY, new Cell(),
+            Nominal.HUNDRED, new Cell(),
+            Nominal.FIVE_HUNDRED, new Cell(),
+            Nominal.THOUSAND, new Cell()
+    );
 
-    public ATM(Account account) {
-        this.account = account;
+    public ATM(Account clientAccount) {
+
+        this.clientAccount = clientAccount;
+        atmAccount.setActive(true);
     }
 
     /**
@@ -34,7 +44,11 @@ public class ATM {
      * @return {@code true} for success, otherwise {@code false}
      */
     public boolean acceptBanknotes(Collection<Banknote> banknotes) {
-
+        for (Banknote note : banknotes) {
+            if (!map.get(note.getNominal()).putBanknote(note)) {
+                return false;
+            }
+        }
         return true;
     }
 
@@ -45,15 +59,30 @@ public class ATM {
      * @return list of banknotes
      */
     public List<Banknote> dispenseBanknotes(long amount) {
+        long clientBalance = clientAccount.getBalance().getAmount();
+        long atmBalance = atmAccount.getBalance().getAmount();
+        if (clientBalance < amount) {
+            throw new InsufficientFundsException(
+                    "Client balance(amount: " + clientBalance + ") is less than requested amount - " + amount);
+        }
+        if (atmBalance < amount) {
+            throw new InsufficientFundsException(
+                    "ATM balance(amount: " + atmBalance + ") is less than requested amount - " + amount);
+        }
+
+
         return new ArrayList<>();
     }
 
     /**
-     * Gets the balance in the account.
+     * Checks the balance in the account.
      *
      * @return balance
      */
-    public long getBalance() {
-        return 1L;
+    public long checkBalance() {
+        if (!clientAccount.isActive()) {
+            throw new InactiveAccountException("Client account is not active");
+        }
+        return clientAccount.getBalance().getAmount();
     }
 }
