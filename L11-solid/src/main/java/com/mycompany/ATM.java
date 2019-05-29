@@ -18,11 +18,10 @@ import java.util.Map;
  * Поэтому оптимизировать выдачу не надо.<p>
  * - выдавать сумму остатка денежных средств<p>
  */
-public class ATM {
+public class ATM implements ClientOperations {
 
     private final Account clientAccount;
-
-    private final Account atmAccount = new Account();
+    private final Account atmAccount = new Account(true, new Balance(0L));
 
     private static Map<Nominal, Cell> map = Map.of(
             Nominal.FIFTY, new Cell(),
@@ -31,10 +30,12 @@ public class ATM {
             Nominal.THOUSAND, new Cell()
     );
 
-    public ATM(Account clientAccount) {
-
+    private ATM(Account clientAccount) {
         this.clientAccount = clientAccount;
-        atmAccount.setActive(true);
+    }
+
+    public static ClientOperations loginWith(Account clientAccount) {
+        return new ATM(clientAccount);
     }
 
     /**
@@ -44,12 +45,29 @@ public class ATM {
      * @return {@code true} for success, otherwise {@code false}
      */
     public boolean acceptBanknotes(Collection<Banknote> banknotes) {
+        long banknotesValue = calculateBanknotesValue(banknotes);
         for (Banknote note : banknotes) {
             if (!map.get(note.getNominal()).putBanknote(note)) {
+                dispenseBanknotes(banknotesValue);
                 return false;
             }
         }
+        atmAccount.getBalance().addToAmount(banknotesValue);
         return true;
+    }
+
+    /**
+     * Calculates the overall value of banknotes with different nominal.
+     *
+     * @param banknotes banknotes for value calculation
+     * @return value
+     */
+    long calculateBanknotesValue(Collection<Banknote> banknotes) {
+        long banknotesValue = 0L;
+        for (Banknote note : banknotes) {
+            banknotesValue += note.getNominal().getValue();
+        }
+        return banknotesValue;
     }
 
     /**

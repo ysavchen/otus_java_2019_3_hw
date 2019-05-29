@@ -10,18 +10,16 @@ class CheckBalanceTests {
 
     @Test
     void checkBalanceOfActiveAccount() {
-        final Account account = new Account()
-                .setActive(true)
-                .setBalance(new Balance().setAmount(100L));
-        assertEquals(new ATM(account).checkBalance(), 100L);
+        final Account account = new Account(true, new Balance(100L));
+        assertEquals(ATM.loginWith(account).checkBalance(), 100L,
+                "Balance is not correct");
     }
 
     @Test
     void checkBalanceOfInactiveAccount() {
-        final Account account = new Account()
-                .setActive(false)
-                .setBalance(new Balance().setAmount(100L));
+        final Account account = new Account(false, new Balance(100L));
         assertThrows(InactiveAccountException.class,
-                () -> new ATM(account).checkBalance());
+                () -> ATM.loginWith(account).checkBalance(),
+                "Exception is not thrown");
     }
 }

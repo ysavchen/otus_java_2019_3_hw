@@ -11,15 +11,14 @@ class AcceptBanknotesTests {
 
     @Test
     void acceptSuccessfully() {
-        final Account account = new Account()
-                .setActive(true)
-                .setBalance(new Balance().setAmount(100L));
+        final Account account = new Account(true, new Balance(100L));
 
         Collection<Banknote> banknotes = List.of(
                 new Banknote(Nominal.FIFTY),
                 new Banknote(Nominal.HUNDRED),
                 new Banknote(Nominal.FIVE_HUNDRED),
                 new Banknote(Nominal.THOUSAND));
-        assertTrue(new ATM(account).acceptBanknotes(banknotes));
+        assertTrue(ATM.loginWith(account).acceptBanknotes(banknotes),
+                "Banknotes are not accepted");
     }
 }

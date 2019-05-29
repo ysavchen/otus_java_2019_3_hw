@@ -2,14 +2,17 @@ package com.mycompany;
 
 class Balance {
 
-    private long amount;
+    private final long amount;
+
+    Balance(long amount) {
+        this.amount = amount;
+    }
 
     public long getAmount() {
         return amount;
     }
 
-    public Balance setAmount(long amount) {
-        this.amount = amount;
-        return this;
+    public Balance addToAmount(long amountToAdd) {
+        return new Balance(amountToAdd + amount);
     }
 }
