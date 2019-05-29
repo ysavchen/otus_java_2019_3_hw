@@ -2,8 +2,8 @@ package com.mycompany;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -13,7 +13,7 @@ class AcceptBanknotesTests {
     void acceptSuccessfully() {
         final Account account = new Account(true, new Balance(100L));
 
-        Collection<Banknote> banknotes = List.of(
+        Collection<Banknote> banknotes = Arrays.asList(
                 new Banknote(Nominal.FIFTY),
                 new Banknote(Nominal.HUNDRED),
                 new Banknote(Nominal.FIVE_HUNDRED),
