@@ -23,6 +23,9 @@ public class ATM implements ClientOperations {
     private final Account clientAccount;
     private final Account atmAccount = new Account(true, new Balance(0L));
 
+    /**
+     * Stores cells with different {@link Nominal}
+     */
     private static Map<Nominal, Cell> map = Map.of(
             Nominal.FIFTY, new Cell(),
             Nominal.HUNDRED, new Cell(),
@@ -45,15 +48,26 @@ public class ATM implements ClientOperations {
      * @return {@code true} for success, otherwise {@code false}
      */
     public boolean acceptBanknotes(Collection<Banknote> banknotes) {
-        long banknotesValue = calculateBanknotesValue(banknotes);
+        final List<Banknote> nonAcceptedNotes = new ArrayList<>();
+
         for (Banknote note : banknotes) {
             if (!map.get(note.getNominal()).putBanknote(note)) {
-                dispenseBanknotes(banknotesValue);
-                return false;
+                nonAcceptedNotes.add(note);
             }
         }
-        atmAccount.getBalance().addToAmount(banknotesValue);
-        return true;
+
+        banknotes.removeAll(nonAcceptedNotes);
+        atmAccount.getBalance().addToAmount(calculateBanknotesValue(banknotes));
+        if (!nonAcceptedNotes.isEmpty()) {
+            returnUnacceptedNotes(nonAcceptedNotes);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    void returnUnacceptedNotes(List<Banknote> notes) {
+        //code to return banknotes
     }
 
     /**
