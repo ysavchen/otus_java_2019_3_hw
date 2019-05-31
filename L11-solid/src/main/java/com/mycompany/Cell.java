@@ -21,7 +21,7 @@ class Cell {
         return new ArrayList<>(banknotes);
     }
 
-    int numNotes() {
+    int numAvailableNotes() {
         return banknotes.size();
     }
 }
