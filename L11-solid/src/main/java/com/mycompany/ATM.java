@@ -2,10 +2,13 @@ package com.mycompany;
 
 import com.mycompany.exceptions.InsufficientFundsException;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Написать эмулятор АТМ (банкомата).
@@ -56,7 +59,7 @@ public class ATM {
      * @param banknotes banknotes for value calculation
      * @return value
      */
-    long calculateBanknotesValue(Collection<Banknote> banknotes) {
+    private long calculateBanknotesValue(Collection<Banknote> banknotes) {
         long banknotesValue = 0L;
         for (Banknote note : banknotes) {
             banknotesValue += note.getNominal().getValue();
@@ -76,68 +79,30 @@ public class ATM {
                     "Amount(" + this.amount + ") is less than requested amount - " + amountToDispense);
         }
 
-        //todo: state pattern?
-        long tempAmount = amount;
+        List<Banknote> thousands = getAvailableNotes(amountToDispense, Nominal.THOUSAND);
+        amountToDispense -= calculateBanknotesValue(thousands);
+        List<Banknote> fiveHundreds = getAvailableNotes(amountToDispense, Nominal.FIVE_HUNDRED);
+        amountToDispense -= calculateBanknotesValue(fiveHundreds);
+        List<Banknote> hundreds = getAvailableNotes(amountToDispense, Nominal.HUNDRED);
+        amountToDispense -= calculateBanknotesValue(hundreds);
+        List<Banknote> fifties = getAvailableNotes(amountToDispense, Nominal.FIFTY);
+        amountToDispense -= calculateBanknotesValue(fifties);
+        amount -= amountToDispense;
 
-        long numThousands = tempAmount / 1000L;
-        long numThousandsDispense = amountToDispense / 1000L;
-        if (tempAmount > 0 && numThousands > 0 && numThousandsDispense > 0) {
-            tempAmount -= (numThousandsDispense * 1000L);
-            amountToDispense -= (numThousandsDispense * 1000L);
-        }
+        return Stream.of(thousands, fiveHundreds, hundreds, fifties)
+                .flatMap(Collection::stream)
+                .collect(toList());
+    }
 
-        long numFiveHundreds = tempAmount / 500L;
-        long numFiveHundredsDispense = amountToDispense / 500L;
-        if (tempAmount > 0 && numFiveHundreds > 0 && numFiveHundredsDispense > 0) {
-            tempAmount -= (numFiveHundredsDispense * 500L);
-            amountToDispense -= (numFiveHundredsDispense * 500L);
-        }
-
-        long numHundreds = tempAmount / 100L;
-        long numHundredsDispense = amountToDispense / 100L;
-        if (tempAmount > 0 && numHundreds > 0 && amountToDispense > 0) {
-            tempAmount -= (numHundredsDispense * 100L);
-            amountToDispense -= (numHundredsDispense * 100L);
-        }
-
-        long numFifties = tempAmount / 50L;
-        long numFiftiesDispense = amountToDispense / 50L;
-        if (tempAmount > 0 && numFifties > 0 && numFiftiesDispense > 0) {
-            tempAmount -= (numFiftiesDispense * 50L);
-            amountToDispense -= (numFiftiesDispense * 50L);
-        }
-        amount -= tempAmount;
-
-        final List<Banknote> notes = new ArrayList<>();
-        Cell cell_1000 = map.get(Nominal.THOUSAND);
-        if (numThousandsDispense > 0) {
-            for (int i = 0; i < cell_1000.numNotes() && i < numThousandsDispense; i++) {
-                notes.add(cell_1000.getBanknote());
+    private List<Banknote> getAvailableNotes(long amountToDispense, Nominal nominal) {
+        var cell = map.get(nominal);
+        int numNeededNotes = Math.toIntExact(amountToDispense / nominal.getValue());
+        if (cell.numNotes() > 0 && numNeededNotes > 0) {
+            if (cell.numNotes() > numNeededNotes) {
+                return cell.getBanknotes(numNeededNotes);
             }
         }
-
-        Cell cell_500 = map.get(Nominal.FIVE_HUNDRED);
-        if (numFiveHundredsDispense > 0) {
-            for (int i = 0; i < cell_500.numNotes() && i < numFiveHundredsDispense; i++) {
-                notes.add(cell_500.getBanknote());
-            }
-        }
-
-        Cell cell_100 = map.get(Nominal.HUNDRED);
-        if (numHundredsDispense > 0) {
-            for (int i = 0; i < cell_100.numNotes() && i < numHundredsDispense; i++) {
-                notes.add(cell_100.getBanknote());
-            }
-        }
-
-        Cell cell_50 = map.get(Nominal.FIFTY);
-        if (numFiftiesDispense > 0) {
-            for (int i = 0; i < cell_50.numNotes() && i < numFiftiesDispense; i++) {
-                notes.add(cell_50.getBanknote());
-            }
-        }
-
-        return notes;
+        return Collections.emptyList();
     }
 
     /**
