@@ -18,7 +18,7 @@ class Cell {
         if (maxNumNotes < banknotes.size()) {
             return banknotes.subList(0, maxNumNotes);
         }
-        return new ArrayList<>(banknotes);
+        return banknotes;
     }
 
     int numAvailableNotes() {
