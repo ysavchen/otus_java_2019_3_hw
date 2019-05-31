@@ -35,19 +35,4 @@ class CheckBalanceTests {
         assertEquals(1100L, atm.checkBalance(),
                 "Balance is not correct");
     }
-
-    @Test
-    void checkNotAllNeededAmountDispensed() {
-        final ATM atm = new ATM();
-        final var banknotes = List.of(
-                Banknote.with(Nominal.HUNDRED),
-                Banknote.with(Nominal.HUNDRED));
-
-        assertTrue(atm.acceptBanknotes(banknotes),
-                "Banknotes are not accepted");
-        assertEquals(1, atm.dispenseBanknotes(150).size(),
-                "Invalid number of dispensed banknotes");
-        assertEquals(100L, atm.checkBalance(),
-                "Balance is not correct");
-    }
 }

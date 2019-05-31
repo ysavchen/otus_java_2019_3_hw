@@ -39,4 +39,33 @@ class DispenseBanknotesTests {
         assertThrows(NoBanknotesException.class,
                 () -> atm.dispenseBanknotes(100));
     }
+
+    @Test
+    void checkNotAllNeededAmountDispensed() {
+        final ATM atm = new ATM();
+        final var banknotes = List.of(
+                Banknote.with(Nominal.HUNDRED),
+                Banknote.with(Nominal.HUNDRED));
+
+        assertTrue(atm.acceptBanknotes(banknotes),
+                "Banknotes are not accepted");
+        assertEquals(1, atm.dispenseBanknotes(150).size(),
+                "Invalid number of dispensed banknotes");
+    }
+
+    @Test
+    void checkMinimalNumBanknotesDispensed() {
+        final ATM atm = new ATM();
+        final var banknotes = List.of(
+                Banknote.with(Nominal.HUNDRED),
+                Banknote.with(Nominal.HUNDRED),
+                Banknote.with(Nominal.HUNDRED),
+                Banknote.with(Nominal.HUNDRED),
+                Banknote.with(Nominal.HUNDRED),
+                Banknote.with(Nominal.FIVE_HUNDRED));
+        assertTrue(atm.acceptBanknotes(banknotes),
+                "Banknotes are not accepted");
+        assertEquals(1, atm.dispenseBanknotes(500).size(),
+                "Invalid number of dispensed banknotes");
+    }
 }
