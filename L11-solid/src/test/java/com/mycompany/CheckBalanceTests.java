@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CheckBalanceTests {
 
     @Test
-    void checkBalanceOfActiveAccount() {
+    void checkBalancePositive() {
         final ATM atm = new ATM();
         assertTrue(atm.acceptBanknotes(new Banknote(Nominal.HUNDRED)),
                 "Banknotes are not accepted");
