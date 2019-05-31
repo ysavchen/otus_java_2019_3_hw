@@ -4,7 +4,6 @@ import com.mycompany.exceptions.InsufficientFundsException;
 import com.mycompany.exceptions.NoBanknotesException;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collection;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,10 +13,10 @@ class DispenseBanknotesTests {
     @Test
     void dispenseNotesPositive() {
         final ATM atm = new ATM();
-        Collection<Banknote> banknotes = List.of(
-                new Banknote(Nominal.THOUSAND),
-                new Banknote(Nominal.THOUSAND),
-                new Banknote(Nominal.THOUSAND));
+        final var banknotes = List.of(
+                Banknote.with(Nominal.THOUSAND),
+                Banknote.with(Nominal.THOUSAND),
+                Banknote.with(Nominal.THOUSAND));
         assertTrue(atm.acceptBanknotes(banknotes),
                 "Banknotes are not accepted");
 
@@ -35,7 +34,7 @@ class DispenseBanknotesTests {
     @Test
     void testNoBanknotesException() {
         final ATM atm = new ATM();
-        assertTrue(atm.acceptBanknotes(new Banknote(Nominal.THOUSAND)),
+        assertTrue(atm.acceptBanknotes(Banknote.with(Nominal.THOUSAND)),
                 "Banknotes are not accepted");
         assertThrows(NoBanknotesException.class,
                 () -> atm.dispenseBanknotes(100));
