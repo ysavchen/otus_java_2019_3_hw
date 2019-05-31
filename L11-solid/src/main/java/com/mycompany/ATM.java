@@ -22,7 +22,7 @@ public class ATM {
     /**
      * Stores cells with different {@link Nominal}
      */
-    private static Map<Nominal, Cell> nominalCellMap = Map.of(
+    private Map<Nominal, Cell> nominalCellMap = Map.of(
             Nominal.FIFTY, new Cell(),
             Nominal.HUNDRED, new Cell(),
             Nominal.FIVE_HUNDRED, new Cell(),
@@ -91,10 +91,9 @@ public class ATM {
     private List<Banknote> getAvailableNotes(long amountToDispense, Nominal nominal) {
         var cell = nominalCellMap.get(nominal);
         int numNeededNotes = Math.toIntExact(amountToDispense / nominal.getValue());
-        if (cell.numNotes() > 0 && numNeededNotes > 0) {
-            if (cell.numNotes() > numNeededNotes) {
-                return cell.getBanknotes(numNeededNotes);
-            }
+
+        if (cell.numAvailableNotes() > 0 && numNeededNotes > 0) {
+            return cell.getBanknotes(numNeededNotes);
         }
         return Collections.emptyList();
     }
