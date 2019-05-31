@@ -18,7 +18,7 @@ class Cell {
         return banknotes.getFirst();
     }
 
-    int numAvailableBanknotes() {
+    int numNotes() {
         return banknotes.size();
     }
 }

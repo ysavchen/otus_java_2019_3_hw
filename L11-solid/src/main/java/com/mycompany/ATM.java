@@ -109,26 +109,31 @@ public class ATM {
         amount -= tempAmount;
 
         final List<Banknote> notes = new ArrayList<>();
+        Cell cell_1000 = map.get(Nominal.THOUSAND);
         if (numThousandsDispense > 0) {
-            for (int i = 0; i < numThousandsDispense; i++) {
-                notes.add(map.get(Nominal.THOUSAND).getBanknote());
+            for (int i = 0; i < cell_1000.numNotes() && i < numThousandsDispense; i++) {
+                notes.add(cell_1000.getBanknote());
             }
         }
 
+        Cell cell_500 = map.get(Nominal.FIVE_HUNDRED);
         if (numFiveHundredsDispense > 0) {
-            for (int i = 0; i < numFiveHundredsDispense; i++) {
-                notes.add(map.get(Nominal.FIVE_HUNDRED).getBanknote());
-            }
-        }
-        if (numHundredsDispense > 0) {
-            for (int i = 0; i < numHundredsDispense; i++) {
-                notes.add(map.get(Nominal.HUNDRED).getBanknote());
+            for (int i = 0; i < cell_500.numNotes() && i < numFiveHundredsDispense; i++) {
+                notes.add(cell_500.getBanknote());
             }
         }
 
+        Cell cell_100 = map.get(Nominal.HUNDRED);
+        if (numHundredsDispense > 0) {
+            for (int i = 0; i < cell_100.numNotes() && i < numHundredsDispense; i++) {
+                notes.add(cell_100.getBanknote());
+            }
+        }
+
+        Cell cell_50 = map.get(Nominal.FIFTY);
         if (numFiftiesDispense > 0) {
-            for (int i = 0; i < numFiftiesDispense; i++) {
-                notes.add(map.get(Nominal.FIFTY).getBanknote());
+            for (int i = 0; i < cell_50.numNotes() && i < numFiftiesDispense; i++) {
+                notes.add(cell_50.getBanknote());
             }
         }
 
