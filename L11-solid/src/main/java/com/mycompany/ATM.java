@@ -1,14 +1,9 @@
 package com.mycompany;
 
 import com.mycompany.exceptions.InsufficientFundsException;
+import com.mycompany.exceptions.NoBanknotesException;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.toList;
+import java.util.*;
 
 /**
  * Написать эмулятор АТМ (банкомата).
@@ -27,7 +22,7 @@ public class ATM {
     /**
      * Stores cells with different {@link Nominal}
      */
-    private static Map<Nominal, Cell> map = Map.of(
+    private static Map<Nominal, Cell> nominalCellMap = Map.of(
             Nominal.FIFTY, new Cell(),
             Nominal.HUNDRED, new Cell(),
             Nominal.FIVE_HUNDRED, new Cell(),
@@ -46,7 +41,7 @@ public class ATM {
      */
     public boolean acceptBanknotes(Collection<Banknote> banknotes) {
         for (Banknote note : banknotes) {
-            map.get(note.getNominal()).putBanknote(note);
+            nominalCellMap.get(note.getNominal()).putBanknote(note);
         }
 
         amount += calculateBanknotesValue(banknotes);
@@ -79,23 +74,22 @@ public class ATM {
                     "Amount(" + this.amount + ") is less than requested amount - " + amountToDispense);
         }
 
-        List<Banknote> thousands = getAvailableNotes(amountToDispense, Nominal.THOUSAND);
-        amountToDispense -= calculateBanknotesValue(thousands);
-        List<Banknote> fiveHundreds = getAvailableNotes(amountToDispense, Nominal.FIVE_HUNDRED);
-        amountToDispense -= calculateBanknotesValue(fiveHundreds);
-        List<Banknote> hundreds = getAvailableNotes(amountToDispense, Nominal.HUNDRED);
-        amountToDispense -= calculateBanknotesValue(hundreds);
-        List<Banknote> fifties = getAvailableNotes(amountToDispense, Nominal.FIFTY);
-        amountToDispense -= calculateBanknotesValue(fifties);
-        amount -= amountToDispense;
+        final List<Banknote> notesToDispense = new ArrayList<>();
+        for (var entry : nominalCellMap.entrySet()) {
+            List<Banknote> notes = getAvailableNotes(amountToDispense, entry.getKey());
+            amountToDispense -= calculateBanknotesValue(notes);
+            notesToDispense.addAll(notes);
+        }
 
-        return Stream.of(thousands, fiveHundreds, hundreds, fifties)
-                .flatMap(Collection::stream)
-                .collect(toList());
+        if (notesToDispense.isEmpty())
+            throw new NoBanknotesException();
+
+        amount -= amountToDispense;
+        return notesToDispense;
     }
 
     private List<Banknote> getAvailableNotes(long amountToDispense, Nominal nominal) {
-        var cell = map.get(nominal);
+        var cell = nominalCellMap.get(nominal);
         int numNeededNotes = Math.toIntExact(amountToDispense / nominal.getValue());
         if (cell.numNotes() > 0 && numNeededNotes > 0) {
             if (cell.numNotes() > numNeededNotes) {
