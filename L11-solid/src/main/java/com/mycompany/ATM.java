@@ -1,6 +1,5 @@
 package com.mycompany;
 
-import com.mycompany.exceptions.InactiveAccountException;
 import com.mycompany.exceptions.InsufficientFundsException;
 
 import java.util.ArrayList;
@@ -18,10 +17,9 @@ import java.util.Map;
  * Поэтому оптимизировать выдачу не надо.<p>
  * - выдавать сумму остатка денежных средств<p>
  */
-public class ATM implements ClientOperations {
+public class ATM {
 
-    private final Account clientAccount;
-    private final Account atmAccount = new Account(true, new Balance(0L));
+    private long amount;
 
     /**
      * Stores cells with different {@link Nominal}
@@ -33,12 +31,8 @@ public class ATM implements ClientOperations {
             Nominal.THOUSAND, new Cell()
     );
 
-    private ATM(Account clientAccount) {
-        this.clientAccount = clientAccount;
-    }
-
-    public static ClientOperations loginWith(Account clientAccount) {
-        return new ATM(clientAccount);
+    public boolean acceptBanknotes(Banknote banknote) {
+        return acceptBanknotes(List.of(banknote));
     }
 
     /**
@@ -48,26 +42,12 @@ public class ATM implements ClientOperations {
      * @return {@code true} for success, otherwise {@code false}
      */
     public boolean acceptBanknotes(Collection<Banknote> banknotes) {
-        final List<Banknote> nonAcceptedNotes = new ArrayList<>();
-
         for (Banknote note : banknotes) {
-            if (!map.get(note.getNominal()).putBanknote(note)) {
-                nonAcceptedNotes.add(note);
-            }
+            map.get(note.getNominal()).putBanknote(note);
         }
 
-        banknotes.removeAll(nonAcceptedNotes);
-        atmAccount.getBalance().addToAmount(calculateBanknotesValue(banknotes));
-        if (!nonAcceptedNotes.isEmpty()) {
-            returnUnacceptedNotes(nonAcceptedNotes);
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    void returnUnacceptedNotes(List<Banknote> notes) {
-        //code to return banknotes
+        amount += calculateBanknotesValue(banknotes);
+        return true;
     }
 
     /**
@@ -87,23 +67,72 @@ public class ATM implements ClientOperations {
     /**
      * Dispenses banknotes.<p>
      *
-     * @param amount amount of money to be dispensed by ATM
+     * @param amountToDispense amount of money to be dispensed by ATM
      * @return list of banknotes
      */
-    public List<Banknote> dispenseBanknotes(long amount) {
-        long clientBalance = clientAccount.getBalance().getAmount();
-        long atmBalance = atmAccount.getBalance().getAmount();
-        if (clientBalance < amount) {
+    public List<Banknote> dispenseBanknotes(long amountToDispense) {
+        if (this.amount < amountToDispense) {
             throw new InsufficientFundsException(
-                    "Client balance(amount: " + clientBalance + ") is less than requested amount - " + amount);
-        }
-        if (atmBalance < amount) {
-            throw new InsufficientFundsException(
-                    "ATM balance(amount: " + atmBalance + ") is less than requested amount - " + amount);
+                    "Amount(" + this.amount + ") is less than requested amount - " + amountToDispense);
         }
 
+        //todo: state pattern?
+        long tempAmount = amount;
 
-        return new ArrayList<>();
+        long numThousands = tempAmount / 1000L;
+        long numThousandsDispense = amountToDispense / 1000L;
+        if (tempAmount > 0 && numThousands > 0 && numThousandsDispense > 0) {
+            tempAmount -= (numThousandsDispense * 1000L);
+            amountToDispense -= (numThousandsDispense * 1000L);
+        }
+
+        long numFiveHundreds = tempAmount / 500L;
+        long numFiveHundredsDispense = amountToDispense / 500L;
+        if (tempAmount > 0 && numFiveHundreds > 0 && numFiveHundredsDispense > 0) {
+            tempAmount -= (numFiveHundredsDispense * 500L);
+            amountToDispense -= (numFiveHundredsDispense * 500L);
+        }
+
+        long numHundreds = tempAmount / 100L;
+        long numHundredsDispense = amountToDispense / 100L;
+        if (tempAmount > 0 && numHundreds > 0 && amountToDispense > 0) {
+            tempAmount -= (numHundredsDispense * 100L);
+            amountToDispense -= (numHundredsDispense * 100L);
+        }
+
+        long numFifties = tempAmount / 50L;
+        long numFiftiesDispense = amountToDispense / 50L;
+        if (tempAmount > 0 && numFifties > 0 && numFiftiesDispense > 0) {
+            tempAmount -= (numFiftiesDispense * 50L);
+            amountToDispense -= (numFiftiesDispense * 50L);
+        }
+        amount -= tempAmount;
+
+        final List<Banknote> notes = new ArrayList<>();
+        if (numThousandsDispense > 0) {
+            for (int i = 0; i < numThousandsDispense; i++) {
+                notes.add(map.get(Nominal.THOUSAND).getBanknote());
+            }
+        }
+
+        if (numFiveHundredsDispense > 0) {
+            for (int i = 0; i < numFiveHundredsDispense; i++) {
+                notes.add(map.get(Nominal.FIVE_HUNDRED).getBanknote());
+            }
+        }
+        if (numHundredsDispense > 0) {
+            for (int i = 0; i < numHundredsDispense; i++) {
+                notes.add(map.get(Nominal.HUNDRED).getBanknote());
+            }
+        }
+
+        if (numFiftiesDispense > 0) {
+            for (int i = 0; i < numFiftiesDispense; i++) {
+                notes.add(map.get(Nominal.FIFTY).getBanknote());
+            }
+        }
+
+        return notes;
     }
 
     /**
@@ -112,9 +141,6 @@ public class ATM implements ClientOperations {
      * @return balance
      */
     public long checkBalance() {
-        if (!clientAccount.isActive()) {
-            throw new InactiveAccountException("Client account is not active");
-        }
-        return clientAccount.getBalance().getAmount();
+        return amount;
     }
 }
