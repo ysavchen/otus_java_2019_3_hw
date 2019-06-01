@@ -64,7 +64,7 @@ public class Dispenser {
      * @return dispenser
      */
     Dispenser getBanknotes(Nominal nominal) {
-        final List<Banknote> notes = getNotesFromCell(neededAmount, nominal);
+        final List<Banknote> notes = getNotesFromCell(nominal);
         long notesValue = calculateBanknotesValue(notes);
         neededAmount -= notesValue;
         atmAmount -= notesValue;
@@ -90,13 +90,12 @@ public class Dispenser {
      * Calculates and returns a number of banknotes depending on the needed amount.
      * If a cell doesn't store any, or amountToDispense is less than the nominal, then an emptyList is returned.
      *
-     * @param amountToDispense amount left to be dispensed as banknotes
-     * @param nominal          nominal of banknote
+     * @param nominal nominal of banknote
      * @return retrieved banknotes
      */
-    private List<Banknote> getNotesFromCell(long amountToDispense, Nominal nominal) {
+    private List<Banknote> getNotesFromCell(Nominal nominal) {
         Cell cell = nominalCellMap.get(nominal);
-        int numNeededNotes = Math.toIntExact(amountToDispense / nominal.getValue());
+        int numNeededNotes = Math.toIntExact(neededAmount / nominal.getValue());
 
         if (cell.numAvailableNotes() > 0 && numNeededNotes > 0) {
             return cell.retrieveBanknotes(numNeededNotes);
