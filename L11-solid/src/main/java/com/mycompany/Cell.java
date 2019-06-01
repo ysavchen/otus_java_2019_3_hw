@@ -14,7 +14,7 @@ class Cell {
         return banknotes.add(banknote);
     }
 
-    List<Banknote> getBanknotes(int maxNumNotes) {
+    List<Banknote> retrieveBanknotes(int maxNumNotes) {
         if (maxNumNotes < banknotes.size()) {
             return banknotes.subList(0, maxNumNotes);
         }

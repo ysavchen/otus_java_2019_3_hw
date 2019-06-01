@@ -17,7 +17,6 @@ public class ATM {
 
     private final Dispenser dispenser = new Dispenser();
 
-
     public boolean acceptBanknotes(Banknote banknote) {
         return acceptBanknotes(List.of(banknote));
     }

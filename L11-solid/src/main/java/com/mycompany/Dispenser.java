@@ -25,6 +25,12 @@ public class Dispenser {
     Dispenser() {
     }
 
+    /**
+     * Distributes banknotes to a specific cell depending on their nominal.
+     *
+     * @param banknotes
+     * @return true for success, otherwise false
+     */
     boolean putBanknotes(Collection<Banknote> banknotes) {
         for (Banknote note : banknotes) {
             nominalCellMap.get(note.getNominal()).putBanknote(note);
@@ -34,6 +40,13 @@ public class Dispenser {
         return true;
     }
 
+    /**
+     * Checks the dispenser has enough funds to give the needed amount.
+     *
+     * @param neededAmount amount requester by a client
+     * @return dispenser
+     * @throws InsufficientFundsException if the stored amount < needed amount
+     */
     Dispenser checkFunds(long neededAmount) {
         if (atmAmount < neededAmount) {
             throw new InsufficientFundsException(
@@ -44,11 +57,17 @@ public class Dispenser {
         return this;
     }
 
+    /**
+     * Prepares banknotes for dispensing.
+     *
+     * @param nominal nominal of banknotes
+     * @return dispenser
+     */
     Dispenser getBanknotes(Nominal nominal) {
-        List<Banknote> notes = getNotesFromCell(neededAmount, nominal);
-        long calcAmount = calculateBanknotesValue(notes);
-        neededAmount -= calcAmount;
-        atmAmount -= calcAmount;
+        final List<Banknote> notes = getNotesFromCell(neededAmount, nominal);
+        long notesValue = calculateBanknotesValue(notes);
+        neededAmount -= notesValue;
+        atmAmount -= notesValue;
         notesToDispense.addAll(notes);
         return this;
     }
@@ -80,11 +99,16 @@ public class Dispenser {
         int numNeededNotes = Math.toIntExact(amountToDispense / nominal.getValue());
 
         if (cell.numAvailableNotes() > 0 && numNeededNotes > 0) {
-            return cell.getBanknotes(numNeededNotes);
+            return cell.retrieveBanknotes(numNeededNotes);
         }
         return Collections.emptyList();
     }
 
+    /**
+     * Dispenses banknotes if there is any
+     *
+     * @return list of banknotes
+     */
     List<Banknote> dispense() {
         if (notesToDispense.isEmpty())
             throw new NoBanknotesException();
