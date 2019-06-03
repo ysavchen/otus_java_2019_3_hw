@@ -1,19 +1,27 @@
 package com.mycompany;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.List;
+import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 class AtmTests {
 
     private Dispenser dispenser;
     private ATM atm;
+
+    private Map<Banknote, Cell> noteCellMap = Map.of(
+            Banknote.FIFTY_RUB, new Cell(Banknote.FIFTY_RUB),
+            Banknote.HUNDRED_RUB, new Cell(Banknote.HUNDRED_RUB),
+            Banknote.FIVE_HUNDRED_RUB, new Cell(Banknote.FIVE_HUNDRED_RUB),
+            Banknote.THOUSAND_RUB, new Cell(Banknote.THOUSAND_RUB)
+    );
 
     @BeforeEach
     void prepareAtm() {
@@ -26,41 +34,34 @@ class AtmTests {
         final var banknotes = List.of(
                 Banknote.FIFTY_RUB,
                 Banknote.HUNDRED_RUB);
-        when(dispenser.putBanknotes(banknotes)).thenReturn(true);
+        when(dispenser.getStorage()).thenReturn(noteCellMap);
         assertTrue(atm.acceptBanknotes(banknotes),
                 "Banknotes are not accepted");
     }
 
     @Test
-    void acceptUnsuccessfully() {
-        final var banknotes = List.of(
-                Banknote.FIVE_HUNDRED_RUB,
-                Banknote.THOUSAND_RUB);
-        when(dispenser.putBanknotes(banknotes)).thenReturn(false);
-        assertFalse(atm.acceptBanknotes(banknotes),
-                "Banknotes are accepted");
-    }
-
-    @Test
     void checkBalance() {
-        when(dispenser.getAtmAmount()).thenReturn(100L);
-        assertEquals(atm.checkBalance(), 100L,
+        final var banknotes = List.of(
+                Banknote.FIFTY_RUB,
+                Banknote.HUNDRED_RUB);
+        when(dispenser.getStorage()).thenReturn(noteCellMap);
+
+        assertTrue(atm.acceptBanknotes(banknotes),
+                "Banknotes are not accepted");
+        assertEquals(atm.getBalance(), 150L,
                 "Balance is not correct");
     }
 
-    //todo: update api and fix the test
     @Test
-    @Disabled
     void dispenseBanknotes() {
         final var banknotes = List.of(
                 Banknote.FIVE_HUNDRED_RUB,
                 Banknote.THOUSAND_RUB);
-//        when(dispenser.checkFunds(1500L)).thenCallRealMethod();
-//        when(dispenser.getBanknotes(Banknote.THOUSAND_RUB)).thenCallRealMethod();
-//        when(dispenser.getBanknotes(Banknote.FIVE_HUNDRED_RUB)).thenCallRealMethod();
-//        when(dispenser.getBanknotes(Banknote.HUNDRED_RUB)).thenCallRealMethod();
-//        when(dispenser.getBanknotes(Banknote.FIFTY_RUB)).thenCallRealMethod();
-        when(dispenser.dispense()).thenReturn(banknotes);
+        when(dispenser.getStorage()).thenReturn(noteCellMap);
+        when(dispenser.dispense(1500L)).thenReturn(banknotes);
+
+        assertTrue(atm.acceptBanknotes(banknotes),
+                "Banknotes are not accepted");
         assertTrue(atm.dispenseBanknotes(1500L).containsAll(banknotes));
     }
 }

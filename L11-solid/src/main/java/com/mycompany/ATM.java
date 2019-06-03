@@ -34,9 +34,9 @@ public interface ATM {
     List<Banknote> dispenseBanknotes(long neededAmount);
 
     /**
-     * Checks the balance.
+     * Gets the balance.
      *
      * @return balance
      */
-    long checkBalance();
+    long getBalance();
 }

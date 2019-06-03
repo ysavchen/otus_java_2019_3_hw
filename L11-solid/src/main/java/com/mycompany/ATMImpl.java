@@ -1,5 +1,7 @@
 package com.mycompany;
 
+import com.mycompany.exceptions.InsufficientFundsException;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -8,28 +10,38 @@ public class ATMImpl implements ATM {
     private final Dispenser dispenser;
 
     ATMImpl(Dispenser dispenser) {
+
         this.dispenser = dispenser;
     }
 
     public boolean acceptBanknotes(Banknote banknote) {
+
         return acceptBanknotes(List.of(banknote));
     }
 
     public boolean acceptBanknotes(Collection<Banknote> banknotes) {
-        return dispenser.putBanknotes(banknotes);
+        var noteCellMap = dispenser.getStorage();
+        banknotes.forEach(note -> noteCellMap.get(note).putBanknote());
+        return true;
     }
 
     public List<Banknote> dispenseBanknotes(long neededAmount) {
-        return dispenser
-                .checkFunds(neededAmount)
-                .getBanknotes(Banknote.THOUSAND_RUB)
-                .getBanknotes(Banknote.FIVE_HUNDRED_RUB)
-                .getBanknotes(Banknote.HUNDRED_RUB)
-                .getBanknotes(Banknote.FIFTY_RUB)
-                .dispense();
+        long balance = getBalance();
+        if (balance < neededAmount) {
+            throw new InsufficientFundsException(
+                    "Amount(" + balance + ") is less than requested amount - " + neededAmount);
+        }
+
+        return dispenser.dispense(neededAmount);
     }
 
-    public long checkBalance() {
-        return dispenser.getAtmAmount();
+    public long getBalance() {
+        var noteCellMap = dispenser.getStorage();
+
+        long balance = 0;
+        for (var entry : noteCellMap.entrySet()) {
+            balance += (entry.getKey().getValue() * entry.getValue().numAvailableNotes());
+        }
+        return balance;
     }
 }

@@ -1,18 +1,29 @@
 package com.mycompany;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
-//todo: analyze and update api
-public interface Dispenser {
+abstract class Dispenser {
 
-    boolean putBanknotes(Collection<Banknote> banknotes);
+    /**
+     * Stores banknotes in their own cells
+     */
+    private final Map<Banknote, Cell> noteCellMap;
 
-    DispenserImpl checkFunds(long neededAmount);
+    Dispenser(Map<Banknote, Cell> noteCellMap) {
+        this.noteCellMap = noteCellMap;
+    }
 
-    long getAtmAmount();
+    /**
+     * Dispenses neededAmount from cells.
+     *
+     * @param neededAmount amount needed for a client
+     * @return banknotes for dispensation
+     */
+    abstract List<Banknote> dispense(long neededAmount);
 
-    Dispenser getBanknotes(Banknote banknote);
+    Map<Banknote, Cell> getStorage() {
+        return noteCellMap;
+    }
 
-    List<Banknote> dispense();
 }

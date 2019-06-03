@@ -3,6 +3,7 @@ package com.mycompany;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CellTests {
 
@@ -28,5 +29,11 @@ class CellTests {
         for (int i = 0; i < 5; i++) cell.putBanknote();
         assertEquals(5, cell.retrieveBanknotes(10).size(),
                 "Retrieved incorrect number of banknotes");
+    }
+
+    @Test
+    void cellWithNullBanknoteNotCreated() {
+        assertThrows(NullPointerException.class,
+                () -> new Cell(null));
     }
 }

@@ -2,6 +2,7 @@ package com.mycompany;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 class Cell {
 
@@ -16,6 +17,7 @@ class Cell {
     private long numAvailableNotes;
 
     Cell(Banknote banknote) {
+        Objects.requireNonNull(banknote);
         this.banknote = banknote;
     }
 
