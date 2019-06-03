@@ -1,18 +1,18 @@
 package com.mycompany;
 
-public class Banknote {
+public enum Banknote {
+    FIFTY_RUB(50),
+    HUNDRED_RUB(100),
+    FIVE_HUNDRED_RUB(500),
+    THOUSAND_RUB(1000);
 
-    private final Nominal nominal;
+    private final long value;
 
-    private Banknote(Nominal nominal) {
-        this.nominal = nominal;
+    Banknote(long value) {
+        this.value = value;
     }
 
-    public static Banknote with(Nominal nominal) {
-        return new Banknote(nominal);
-    }
-
-    public Nominal getNominal() {
-        return nominal;
+    public long getValue() {
+        return value;
     }
 }

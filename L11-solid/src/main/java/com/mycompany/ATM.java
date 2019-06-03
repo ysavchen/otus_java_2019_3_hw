@@ -13,13 +13,9 @@ import java.util.List;
  * Поэтому оптимизировать выдачу не надо.<p>
  * - выдавать сумму остатка денежных средств<p>
  */
-public class ATM {
+public interface ATM {
 
-    private final Dispenser dispenser = new Dispenser();
-
-    public boolean acceptBanknotes(Banknote banknote) {
-        return acceptBanknotes(List.of(banknote));
-    }
+    boolean acceptBanknotes(Banknote banknote);
 
     /**
      * Accepts banknotes.
@@ -27,9 +23,7 @@ public class ATM {
      * @param banknotes banknotes to be accepted by ATM
      * @return {@code true} for success, otherwise {@code false}
      */
-    public boolean acceptBanknotes(Collection<Banknote> banknotes) {
-        return dispenser.putBanknotes(banknotes);
-    }
+    boolean acceptBanknotes(Collection<Banknote> banknotes);
 
     /**
      * Dispenses banknotes.<p>
@@ -37,22 +31,12 @@ public class ATM {
      * @param neededAmount amount of money needed for a user
      * @return list of banknotes
      */
-    public List<Banknote> dispenseBanknotes(long neededAmount) {
-        return dispenser
-                .checkFunds(neededAmount)
-                .getBanknotes(Nominal.THOUSAND)
-                .getBanknotes(Nominal.FIVE_HUNDRED)
-                .getBanknotes(Nominal.HUNDRED)
-                .getBanknotes(Nominal.FIFTY)
-                .dispense();
-    }
+    List<Banknote> dispenseBanknotes(long neededAmount);
 
     /**
      * Checks the balance in the account.
      *
      * @return balance
      */
-    public long checkBalance() {
-        return dispenser.getAtmAmount();
-    }
+    long checkBalance();
 }

@@ -6,8 +6,6 @@ import org.junit.runner.RunWith;
 
 @RunWith(JUnitPlatform.class)
 @SelectClasses({
-        AcceptBanknotesTests.class,
-        CheckBalanceTests.class,
-        DispenseBanknotesTests.class})
+        AtmTests.class})
 public class AtmTestSuite {
 }
