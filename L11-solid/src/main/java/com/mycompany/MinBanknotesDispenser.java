@@ -15,6 +15,10 @@ class MinBanknotesDispenser extends Dispenser {
 
     @Override
     List<Banknote> dispense(long neededAmount) {
+        if (neededAmount <= 0) {
+            return Collections.emptyList();
+        }
+
         final List<Banknote> notesToDispense = new ArrayList<>();
         final SortedMap<Banknote, Cell> sortedMap = new TreeMap<>(Collections.reverseOrder());
         sortedMap.putAll(getStorage());

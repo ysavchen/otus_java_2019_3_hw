@@ -1,6 +1,7 @@
 package com.mycompany;
 
 import com.mycompany.exceptions.InsufficientFundsException;
+import com.mycompany.exceptions.NoSuchCellException;
 
 import java.util.Collection;
 import java.util.List;
@@ -21,7 +22,14 @@ public class ATMImpl implements ATM {
 
     public boolean acceptBanknotes(Collection<Banknote> banknotes) {
         var noteCellMap = dispenser.getStorage();
-        banknotes.forEach(note -> noteCellMap.get(note).putBanknote());
+
+        for (Banknote note : banknotes) {
+            Cell cell = noteCellMap.get(note);
+            if (cell == null) {
+                throw new NoSuchCellException("No cell for a banknote with value: " + note.getValue());
+            }
+            cell.putBanknote();
+        }
         return true;
     }
 

@@ -1,100 +1,69 @@
 package com.mycompany;
 
-import com.mycompany.exceptions.InsufficientFundsException;
 import com.mycompany.exceptions.NoBanknotesException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DispenserTests {
+class DispenserTests {
 
     private Dispenser dispenser;
-    private ATM atm;
+
+    private final Cell cell_50 = new Cell(Banknote.FIFTY_RUB);
+    private final Cell cell_100 = new Cell(Banknote.HUNDRED_RUB);
+    private final Cell cell_500 = new Cell(Banknote.FIVE_HUNDRED_RUB);
+    private final Cell cell_1000 = new Cell(Banknote.THOUSAND_RUB);
 
     private Map<Banknote, Cell> noteCellMap = Map.of(
-            Banknote.FIFTY_RUB, new Cell(Banknote.FIFTY_RUB),
-            Banknote.HUNDRED_RUB, new Cell(Banknote.HUNDRED_RUB),
-            Banknote.FIVE_HUNDRED_RUB, new Cell(Banknote.FIVE_HUNDRED_RUB),
-            Banknote.THOUSAND_RUB, new Cell(Banknote.THOUSAND_RUB)
+            Banknote.FIVE_HUNDRED_RUB, cell_500,
+            Banknote.FIFTY_RUB, cell_50,
+            Banknote.THOUSAND_RUB, cell_1000,
+            Banknote.HUNDRED_RUB, cell_100
     );
 
     @BeforeEach
-    void prepareAtm() {
-        dispenser = Mockito.mock(Dispenser.class);
-        atm = new ATMImpl(dispenser);
+    void prepareDispenser() {
+        dispenser = new MinBanknotesDispenser(noteCellMap);
     }
 
-
-//    @Test
-//    void testBrokenDispense() {
-//        final Dispenser dispenser = new MinBanknotesDispenser(noteCellMap);
-//        dispenser.putBanknotes(List.of(Banknote.FIVE_HUNDRED_RUB, Banknote.THOUSAND_RUB));
-//        assertThrows(NullPointerException.class, () -> dispenser.checkFunds(1500).getBanknotes(Banknote.THOUSAND_RUB).getBanknotes(null).dispense());
-//        assertDoesNotThrow(
-//                () -> dispenser.checkFunds(1500)
-//                        .getBanknotes(Banknote.THOUSAND_RUB)
-//                        .getBanknotes(Banknote.THOUSAND_RUB)
-//                        .dispense()
-//        );
-//    }
-
     @Test
-    void dispenseNotesPositive() {
-        final var banknotes = List.of(
-                Banknote.THOUSAND_RUB,
-                Banknote.THOUSAND_RUB,
-                Banknote.THOUSAND_RUB);
-
-        assertTrue(atm.acceptBanknotes(banknotes),
-                "Banknotes are not accepted");
-
-        assertEquals(1, atm.dispenseBanknotes(1500).size(),
+    void dispenseFullNeededAmount() {
+        cell_1000.putBanknote();
+        cell_100.putBanknote();
+        assertEquals(2, dispenser.dispense(1500).size(),
                 "Invalid number of dispensed banknotes");
     }
 
     @Test
-    void testInsufficientFundsException() {
-        assertThrows(InsufficientFundsException.class,
-                () -> atm.dispenseBanknotes(100));
-    }
-
-    @Test
-    void testNoBanknotesException() {
-        assertTrue(atm.acceptBanknotes(Banknote.THOUSAND_RUB),
-                "Banknotes are not accepted");
-        assertThrows(NoBanknotesException.class,
-                () -> atm.dispenseBanknotes(100));
-    }
-
-    @Test
-    void checkNotAllNeededAmountDispensed() {
-        final var banknotes = List.of(
-                Banknote.HUNDRED_RUB,
-                Banknote.HUNDRED_RUB);
-
-        assertTrue(atm.acceptBanknotes(banknotes),
-                "Banknotes are not accepted");
-        assertEquals(1, atm.dispenseBanknotes(150).size(),
+    void dispensePartNeededAmount() {
+        for (int i = 0; i < 3; i++) cell_100.putBanknote();
+        assertEquals(2, dispenser.dispense(250).size(),
                 "Invalid number of dispensed banknotes");
     }
 
     @Test
     void checkMinimalNumBanknotesDispensed() {
-        final var banknotes = List.of(
-                Banknote.HUNDRED_RUB,
-                Banknote.HUNDRED_RUB,
-                Banknote.HUNDRED_RUB,
-                Banknote.HUNDRED_RUB,
-                Banknote.HUNDRED_RUB,
-                Banknote.FIVE_HUNDRED_RUB);
-        assertTrue(atm.acceptBanknotes(banknotes),
-                "Banknotes are not accepted");
-        assertEquals(1, atm.dispenseBanknotes(500).size(),
+        for (int i = 0; i < 5; i++) cell_100.putBanknote();
+        cell_500.putBanknote();
+        assertEquals(1, dispenser.dispense(500).size(),
                 "Invalid number of dispensed banknotes");
+    }
+
+    @Test
+    void testNoBanknotesException() {
+        cell_1000.putBanknote();
+        assertThrows(NoBanknotesException.class,
+                () -> dispenser.dispense(100));
+    }
+
+    @Test
+    void testSomeErrors() {
+        assertTrue(dispenser.dispense(0L).isEmpty(),
+                "Banknotes for 0 amount is not empty");
+        assertTrue(dispenser.dispense(-5L).isEmpty(),
+                "Banknotes for -5 amount is not empty");
     }
 }

@@ -1,5 +1,7 @@
 package com.mycompany;
 
+import com.mycompany.exceptions.InsufficientFundsException;
+import com.mycompany.exceptions.NoSuchCellException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -7,8 +9,7 @@ import org.mockito.Mockito;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 class AtmTests {
@@ -63,5 +64,19 @@ class AtmTests {
         assertTrue(atm.acceptBanknotes(banknotes),
                 "Banknotes are not accepted");
         assertTrue(atm.dispenseBanknotes(1500L).containsAll(banknotes));
+    }
+
+    @Test
+    void testNoSuchCellException() {
+        when(dispenser.getStorage()).thenReturn(
+                Map.of(Banknote.THOUSAND_RUB, new Cell(Banknote.THOUSAND_RUB)));
+        assertThrows(NoSuchCellException.class,
+                () -> atm.acceptBanknotes(Banknote.HUNDRED_RUB));
+    }
+
+    @Test
+    void testInsufficientFundsException() {
+        assertThrows(InsufficientFundsException.class,
+                () -> atm.dispenseBanknotes(100L));
     }
 }
