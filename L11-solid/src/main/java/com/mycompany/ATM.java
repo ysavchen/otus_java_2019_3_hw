@@ -26,15 +26,15 @@ public interface ATM {
     boolean acceptBanknotes(Collection<Banknote> banknotes);
 
     /**
-     * Dispenses banknotes.<p>
+     * Dispenses banknotes.
      *
-     * @param neededAmount amount of money needed for a user
+     * @param neededAmount amount of money needed for a client
      * @return list of banknotes
      */
     List<Banknote> dispenseBanknotes(long neededAmount);
 
     /**
-     * Checks the balance in the account.
+     * Checks the balance.
      *
      * @return balance
      */
