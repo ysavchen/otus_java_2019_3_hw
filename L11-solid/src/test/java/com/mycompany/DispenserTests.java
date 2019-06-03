@@ -23,10 +23,10 @@ public class DispenserTests {
     }
 
     private Map<Banknote, Cell> noteCellMap = Map.of(
-            Banknote.FIFTY_RUB, new Cell(),
-            Banknote.HUNDRED_RUB, new Cell(),
-            Banknote.FIVE_HUNDRED_RUB, new Cell(),
-            Banknote.THOUSAND_RUB, new Cell()
+            Banknote.FIFTY_RUB, new Cell(Banknote.FIFTY_RUB),
+            Banknote.HUNDRED_RUB, new Cell(Banknote.HUNDRED_RUB),
+            Banknote.FIVE_HUNDRED_RUB, new Cell(Banknote.FIVE_HUNDRED_RUB),
+            Banknote.THOUSAND_RUB, new Cell(Banknote.THOUSAND_RUB)
     );
 
     @Test
