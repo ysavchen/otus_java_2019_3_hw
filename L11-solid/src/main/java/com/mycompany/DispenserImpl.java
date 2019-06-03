@@ -7,7 +7,6 @@ import java.util.*;
 
 class DispenserImpl implements Dispenser {
 
-    private long atmAmount;
     private long neededAmount;
 
     private final List<Banknote> notesToDispense = new ArrayList<>();
@@ -28,11 +27,7 @@ class DispenserImpl implements Dispenser {
      * @return true for success, otherwise false
      */
     public boolean putBanknotes(Collection<Banknote> banknotes) {
-        for (Banknote note : banknotes) {
-            noteCellMap.get(note).putBanknote(note);
-        }
-
-        atmAmount += calculateBanknotesValue(banknotes);
+        banknotes.forEach(note -> noteCellMap.get(note).putBanknote());
         return true;
     }
 
@@ -44,6 +39,7 @@ class DispenserImpl implements Dispenser {
      * @throws InsufficientFundsException if the stored amount < needed amount
      */
     public DispenserImpl checkFunds(long neededAmount) {
+        long atmAmount = getAtmAmount();
         if (atmAmount < neededAmount) {
             throw new InsufficientFundsException(
                     "Amount(" + atmAmount + ") is less than requested amount - " + neededAmount);
@@ -63,7 +59,6 @@ class DispenserImpl implements Dispenser {
         final List<Banknote> notes = getNotesFromCell(nominal);
         long notesValue = calculateBanknotesValue(notes);
         neededAmount -= notesValue;
-        atmAmount -= notesValue;
         notesToDispense.addAll(notes);
         return this;
     }
@@ -110,6 +105,10 @@ class DispenserImpl implements Dispenser {
     }
 
     public long getAtmAmount() {
+        long atmAmount = 0;
+        for (var entry : noteCellMap.entrySet()) {
+            atmAmount += (entry.getKey().getValue() * entry.getValue().numAvailableNotes());
+        }
         return atmAmount;
     }
 }
