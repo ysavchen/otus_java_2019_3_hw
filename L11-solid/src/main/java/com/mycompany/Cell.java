@@ -6,22 +6,42 @@ import java.util.List;
 class Cell {
 
     /**
-     * Banknotes to store
+     * Banknote type stored by a cell
      */
-    private final List<Banknote> banknotes = new ArrayList<>();
+    private final Banknote banknote;
 
-    boolean putBanknote(Banknote banknote) {
-        return banknotes.add(banknote);
+    /**
+     * Number of banknotes stored by a cell
+     */
+    private long numAvailableNotes;
+
+    Cell(Banknote banknote) {
+        this.banknote = banknote;
     }
 
+    void putBanknote() {
+        numAvailableNotes++;
+    }
+
+    /**
+     * Retrieves banknotes from a cell.<p>
+     * If numNotes < maxNumNotes, then all available banknotes are retrieved.
+     *
+     * @param maxNumNotes number of notes
+     * @return list of banknotes
+     */
     List<Banknote> retrieveBanknotes(int maxNumNotes) {
-        if (maxNumNotes < banknotes.size()) {
-            return banknotes.subList(0, maxNumNotes);
+        final List<Banknote> banknotes = new ArrayList<>();
+        long notesToRetrieve = (maxNumNotes < numAvailableNotes) ? maxNumNotes : numAvailableNotes;
+
+        for (int i = 0; i < notesToRetrieve; i++) {
+            banknotes.add(banknote);
         }
+        numAvailableNotes -= notesToRetrieve;
         return banknotes;
     }
 
-    int numAvailableNotes() {
-        return banknotes.size();
+    long numAvailableNotes() {
+        return numAvailableNotes;
     }
 }
