@@ -28,6 +28,7 @@
         <module>L08-byteCodes</module>
         <module>L09-gc</module>
         <module>L11-solid</module>
+        <module>L13-structural-patterns</module>
     </modules>
 
     <properties>
