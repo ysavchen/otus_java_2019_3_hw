@@ -18,7 +18,9 @@ class CellTests {
     @Test
     void retrieveAllNeededNotes() {
         Cell cell = new Cell(Banknote.HUNDRED_RUB);
-        for (int i = 0; i < 5; i++) cell.putBanknote();
+        for (int i = 0; i < 5; i++) {
+            cell.putBanknote();
+        }
         assertEquals(4, cell.retrieveBanknotes(4).size(),
                 "Retrieved incorrect number of banknotes");
     }
@@ -26,7 +28,9 @@ class CellTests {
     @Test
     void retrieveAllAvailableNotes() {
         Cell cell = new Cell(Banknote.HUNDRED_RUB);
-        for (int i = 0; i < 5; i++) cell.putBanknote();
+        for (int i = 0; i < 5; i++) {
+            cell.putBanknote();
+        }
         assertEquals(5, cell.retrieveBanknotes(10).size(),
                 "Retrieved incorrect number of banknotes");
     }

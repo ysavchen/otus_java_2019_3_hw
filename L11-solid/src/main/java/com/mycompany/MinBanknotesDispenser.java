@@ -29,8 +29,12 @@ class MinBanknotesDispenser extends Dispenser {
             notesToDispense.addAll(notes);
         }
 
-        if (notesToDispense.isEmpty())
+        if (neededAmount != 0) {
+            for (Banknote note : notesToDispense) {
+                getStorage().get(note).putBanknote();
+            }
             throw new NoBanknotesException();
+        }
         return notesToDispense;
     }
 
