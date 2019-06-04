@@ -33,20 +33,27 @@ class DispenserTests {
     void dispenseFullNeededAmount() {
         cell_1000.putBanknote();
         cell_100.putBanknote();
-        assertEquals(2, dispenser.dispense(1500).size(),
+        assertEquals(2, dispenser.dispense(1100).size(),
                 "Invalid number of dispensed banknotes");
     }
 
     @Test
     void dispensePartNeededAmount() {
-        for (int i = 0; i < 3; i++) cell_100.putBanknote();
-        assertEquals(2, dispenser.dispense(250).size(),
+        for (int i = 0; i < 3; i++) {
+            cell_100.putBanknote();
+        }
+        assertThrows(NoBanknotesException.class,
+                () -> dispenser.dispense(250).size(),
+                "Invalid number of dispensed banknotes");
+        assertEquals(3, dispenser.dispense(300).size(),
                 "Invalid number of dispensed banknotes");
     }
 
     @Test
     void checkMinimalNumBanknotesDispensed() {
-        for (int i = 0; i < 5; i++) cell_100.putBanknote();
+        for (int i = 0; i < 5; i++) {
+            cell_100.putBanknote();
+        }
         cell_500.putBanknote();
         assertEquals(1, dispenser.dispense(500).size(),
                 "Invalid number of dispensed banknotes");
