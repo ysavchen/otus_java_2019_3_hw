@@ -15,11 +15,13 @@ public class ATMImpl implements ATM {
         this.dispenser = dispenser;
     }
 
+    @Override
     public boolean acceptBanknotes(Banknote banknote) {
 
         return acceptBanknotes(List.of(banknote));
     }
 
+    @Override
     public boolean acceptBanknotes(Collection<Banknote> banknotes) {
         var noteCellMap = dispenser.getStorage();
 
@@ -33,6 +35,7 @@ public class ATMImpl implements ATM {
         return true;
     }
 
+    @Override
     public List<Banknote> dispenseBanknotes(long neededAmount) {
         long balance = getBalance();
         if (balance < neededAmount) {
@@ -43,6 +46,7 @@ public class ATMImpl implements ATM {
         return dispenser.dispense(neededAmount);
     }
 
+    @Override
     public long getBalance() {
         var noteCellMap = dispenser.getStorage();
 
