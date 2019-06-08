@@ -1,5 +1,7 @@
 package com.mycompany;
 
+import com.mycompany.atm.ATM;
+
 /**
  * Департамент ATM
  * Написать приложение ATM Департамент:
@@ -12,4 +14,13 @@ package com.mycompany;
  * Попробуйте использовать как можно больше.
  */
 public interface AtmDepartment {
+
+    void addATM(ATM atm);
+
+    void removeATM(ATM atm);
+
+    void restoreInitialStates();
+
+    long getRemainders();
+
 }
