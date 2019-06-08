@@ -1,5 +1,9 @@
-package com.mycompany.atm;
+package com.mycompany;
 
+import com.mycompany.atm.AtmDispenserTests;
+import com.mycompany.atm.AtmTests;
+import com.mycompany.atm.CellTests;
+import com.mycompany.atm.DispenserTests;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.runner.RunWith;

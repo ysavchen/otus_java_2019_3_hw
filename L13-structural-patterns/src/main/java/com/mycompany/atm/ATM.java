@@ -1,8 +1,5 @@
 package com.mycompany.atm;
 
-import com.mycompany.StateListener;
-import com.mycompany.memento.Memento;
-
 import java.util.Collection;
 import java.util.List;
 

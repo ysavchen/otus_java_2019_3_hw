@@ -12,7 +12,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-class AtmTests {
+public class AtmTests {
 
     private Dispenser dispenser;
     private ATM atm;

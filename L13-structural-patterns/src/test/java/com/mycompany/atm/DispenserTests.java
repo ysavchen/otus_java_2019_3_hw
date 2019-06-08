@@ -8,7 +8,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DispenserTests {
+public class DispenserTests {
 
     private Dispenser dispenser;
 

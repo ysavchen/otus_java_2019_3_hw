@@ -1,6 +1,5 @@
-package com.mycompany;
+package com.mycompany.atm;
 
-import com.mycompany.atm.State;
 import com.mycompany.memento.Memento;
 
 public interface StateListener {
