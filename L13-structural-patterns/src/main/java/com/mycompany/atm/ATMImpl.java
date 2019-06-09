@@ -71,6 +71,7 @@ public class ATMImpl implements ATM {
         this.state = state;
     }
 
+    //todo: is it possible to test that state got its initial value?
     @Override
     public void restoreInitialState() {
 

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class AtmDepartmentTests {
@@ -39,6 +40,12 @@ public class AtmDepartmentTests {
                 "Added ATM is not removed");
         assertFalse(atmDepartment.removeATM(Mockito.mock(ATM.class)),
                 "Not added ATM is removed");
+    }
+
+    @Test
+    void restoreInitialState() {
+        atmDepartment.restoreInitialStates();
+        verify(atmOne, Mockito.times(1)).restoreInitialState();
     }
 
     @Test
