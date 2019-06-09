@@ -1,4 +1,4 @@
-package com.mycompany.memento;
+package com.mycompany.atm.memento;
 
 import com.mycompany.atm.State;
 

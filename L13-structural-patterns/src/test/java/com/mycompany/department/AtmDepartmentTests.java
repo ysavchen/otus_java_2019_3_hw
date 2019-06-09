@@ -1,36 +1,59 @@
 package com.mycompany.department;
 
+import com.google.common.collect.Sets;
 import com.mycompany.AtmDepartment;
 import com.mycompany.AtmDepartmentImpl;
 import com.mycompany.atm.ATM;
-import com.mycompany.atm.State;
-import com.mycompany.memento.Caretaker;
-import com.mycompany.memento.Memento;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-import java.util.Map;
-
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 public class AtmDepartmentTests {
 
     private AtmDepartment atmDepartment;
-    private ATM atm;
 
-//    private final Map<ATM, Caretaker> atmCaretakerMap;
+    private ATM atmOne;
+    private ATM atmTwo;
 
     @BeforeEach
     void prepareAtm() {
-        atm = Mockito.mock(ATM.class);
+        atmOne = Mockito.mock(ATM.class);
+        atmTwo = Mockito.mock(ATM.class);
+        atmDepartment = new AtmDepartmentImpl(Sets.newHashSet(atmOne));
     }
 
     @Test
-    void acceptSuccessfully() {
-        when(atm.saveInitialState()).thenReturn(new Memento(State.IN_SERVICE));
-        ArgumentCaptor<AtmDepartmentImpl> captor = ArgumentCaptor.forClass(AtmDepartmentImpl.class);
-        atmDepartment.addATM(atm);
+    void addAtm() {
+        assertTrue(atmDepartment.addATM(atmTwo),
+                "New ATM is not added");
+        assertFalse(atmDepartment.addATM(atmOne),
+                "Already added ATM is added again");
+    }
+
+    @Test
+    void removeATM() {
+        assertTrue(atmDepartment.removeATM(atmOne),
+                "Added ATM is not removed");
+        assertFalse(atmDepartment.removeATM(Mockito.mock(ATM.class)),
+                "Not added ATM is removed");
+    }
+
+    @Test
+    void checkRemaindersFromOneATM() {
+        when(atmOne.getBalance()).thenReturn(500L);
+        assertEquals(500L, atmDepartment.getRemainders(),
+                "Incorrect remainders returned for one ATM");
+    }
+
+    @Test
+    void checkRemaindersFromSeveralATMs() {
+        when(atmOne.getBalance()).thenReturn(150L);
+        when(atmTwo.getBalance()).thenReturn(200L);
+        atmDepartment.addATM(atmTwo);
+        assertEquals(350L, atmDepartment.getRemainders(),
+                "Incorrect remainders returned for several ATMs");
     }
 }

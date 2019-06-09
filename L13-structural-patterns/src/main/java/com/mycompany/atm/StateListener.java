@@ -1,6 +1,6 @@
 package com.mycompany.atm;
 
-import com.mycompany.memento.Memento;
+import com.mycompany.atm.memento.Memento;
 
 public interface StateListener {
 
@@ -8,6 +8,6 @@ public interface StateListener {
 
     Memento saveInitialState();
 
-    void restoreInitialState(Memento memento);
+    void restoreInitialState();
 
 }

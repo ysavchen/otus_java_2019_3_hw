@@ -2,8 +2,8 @@ package com.mycompany.atm;
 
 import com.mycompany.atm.exceptions.InsufficientFundsException;
 import com.mycompany.atm.exceptions.NoSuchCellException;
-import com.mycompany.memento.Caretaker;
-import com.mycompany.memento.Memento;
+import com.mycompany.atm.memento.Caretaker;
+import com.mycompany.atm.memento.Memento;
 
 import java.util.Collection;
 import java.util.List;
@@ -11,15 +11,14 @@ import java.util.List;
 public class ATMImpl implements ATM {
 
     private final Dispenser dispenser;
-
     private State state;
-
     private final Caretaker caretaker = new Caretaker();
 
     ATMImpl(Dispenser dispenser, State initialState) {
 
         this.dispenser = dispenser;
         this.state = initialState;
+        caretaker.setMemento(saveInitialState());
     }
 
     public boolean acceptBanknotes(Banknote banknote) {
@@ -73,7 +72,8 @@ public class ATMImpl implements ATM {
     }
 
     @Override
-    public void restoreInitialState(Memento memento) {
-        this.state = memento.getState();
+    public void restoreInitialState() {
+
+        this.state = caretaker.getMemento().getState();
     }
 }

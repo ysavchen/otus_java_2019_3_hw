@@ -15,12 +15,32 @@ import com.mycompany.atm.ATM;
  */
 public interface AtmDepartment {
 
-    void addATM(ATM atm);
+    /**
+     * Adds an ATM to the department.
+     *
+     * @param atm atm to be added
+     * @return true for success, otherwise false
+     */
+    boolean addATM(ATM atm);
 
-    void removeATM(ATM atm);
+    /**
+     * Removes an ATM from the department.
+     *
+     * @param atm atm to be removed
+     * @return true for success, otherwise false
+     */
+    boolean removeATM(ATM atm);
 
+    /**
+     * Restores an initial state for all ATMs.
+     */
     void restoreInitialStates();
 
+    /**
+     * Collects the overall sum of remainders from all ATMs in the department.
+     *
+     * @return sum of remainders
+     */
     long getRemainders();
 
 }

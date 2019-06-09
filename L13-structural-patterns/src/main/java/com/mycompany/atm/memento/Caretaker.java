@@ -1,4 +1,4 @@
-package com.mycompany.memento;
+package com.mycompany.atm.memento;
 
 public class Caretaker {
 

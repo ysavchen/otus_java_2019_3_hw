@@ -1,38 +1,40 @@
 package com.mycompany;
 
 import com.mycompany.atm.ATM;
-import com.mycompany.memento.Caretaker;
+import com.mycompany.atm.StateListener;
 
-import java.util.Map;
+import java.util.Set;
 
 public class AtmDepartmentImpl implements AtmDepartment {
 
     /**
-     * Stores ATMs with their initial states.
+     * Stores ATMs
      */
-    private final Map<ATM, Caretaker> atmStateMap;
+    private final Set<ATM> machines;
 
-    AtmDepartmentImpl(Map<ATM, Caretaker> atmStateMap) {
-        this.atmStateMap = atmStateMap;
+    public AtmDepartmentImpl(Set<ATM> machines) {
+        this.machines = machines;
     }
 
     @Override
-    public void addATM(ATM atm) {
-        atmStateMap.putIfAbsent(atm, new Caretaker().setMemento(atm.saveInitialState()));
+    public boolean addATM(ATM atm) {
+        return machines.add(atm);
     }
 
     @Override
-    public void removeATM(ATM atm) {
-        atmStateMap.remove(atm, atmStateMap.get(atm));
+    public boolean removeATM(ATM atm) {
+
+        return machines.remove(atm);
     }
 
     @Override
     public void restoreInitialStates() {
-        atmStateMap.forEach((atm, caretaker) -> atm.restoreInitialState(caretaker.getMemento()));
+        machines.forEach(StateListener::restoreInitialState);
     }
 
     @Override
     public long getRemainders() {
-        return atmStateMap.keySet().stream().mapToLong(ATM::getBalance).sum();
+
+        return machines.stream().mapToLong(ATM::getBalance).sum();
     }
 }
