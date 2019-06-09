@@ -19,7 +19,7 @@ public class AtmDepartmentTests {
     private ATM atmTwo;
 
     @BeforeEach
-    void prepareAtm() {
+    void prepare() {
         atmOne = Mockito.mock(ATM.class);
         atmTwo = Mockito.mock(ATM.class);
         atmDepartment = new AtmDepartmentImpl(Sets.newHashSet(atmOne));
