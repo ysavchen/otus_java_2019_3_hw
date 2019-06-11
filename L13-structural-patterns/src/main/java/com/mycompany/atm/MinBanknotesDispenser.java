@@ -9,34 +9,29 @@ import java.util.*;
  */
 class MinBanknotesDispenser implements Dispenser {
 
-    /**
-     * Stores banknotes in their own cells
-     */
-    private final Map<Banknote, Cell> noteCellMap;
-
-    MinBanknotesDispenser(Map<Banknote, Cell> noteCellMap) {
-        this.noteCellMap = noteCellMap;
-    }
-
     @Override
-    public List<Banknote> dispense(long neededAmount) {
+    public List<Banknote> dispense(long neededAmount, Map<Banknote, Cell> noteCellMap) {
         if (neededAmount <= 0) {
             return Collections.emptyList();
         }
 
         final List<Banknote> notesToDispense = new ArrayList<>();
         final SortedMap<Banknote, Cell> sortedMap = new TreeMap<>(Collections.reverseOrder());
-        sortedMap.putAll(getStorage());
+        sortedMap.putAll(noteCellMap);
 
         for (var entry : sortedMap.entrySet()) {
-            final List<Banknote> notes = getNotesFromCell(entry.getKey(), neededAmount);
+            Banknote note = entry.getKey();
+            Cell cell = noteCellMap.get(note);
+            int numNeededNotes = Math.toIntExact(neededAmount / note.getValue());
+
+            final List<Banknote> notes = getNotesFromCell(numNeededNotes, cell);
             neededAmount -= calculateBanknotesValue(notes);
             notesToDispense.addAll(notes);
         }
 
         if (neededAmount != 0) {
             for (Banknote note : notesToDispense) {
-                getStorage().get(note).putBanknote();
+                noteCellMap.get(note).putBanknote();
             }
             throw new NoBanknotesException();
         }
@@ -47,14 +42,11 @@ class MinBanknotesDispenser implements Dispenser {
      * Calculates and returns a number of banknotes depending on the needed amount.
      * If a cell doesn't store any, or neededAmount is less than the nominal, then an emptyList is returned.
      *
-     * @param note
-     * @param neededAmount
+     * @param numNeededNotes
+     * @param cell
      * @return retrieved banknotes
      */
-    private List<Banknote> getNotesFromCell(Banknote note, long neededAmount) {
-        Cell cell = getStorage().get(note);
-        int numNeededNotes = Math.toIntExact(neededAmount / note.getValue());
-
+    private List<Banknote> getNotesFromCell(int numNeededNotes, Cell cell) {
         if (cell.numAvailableNotes() > 0 && numNeededNotes > 0) {
             return cell.retrieveBanknotes(numNeededNotes);
         }
@@ -73,10 +65,5 @@ class MinBanknotesDispenser implements Dispenser {
                 .stream()
                 .mapToLong(Banknote::getValue)
                 .sum();
-    }
-
-    @Override
-    public Map<Banknote, Cell> getStorage() {
-        return noteCellMap;
     }
 }

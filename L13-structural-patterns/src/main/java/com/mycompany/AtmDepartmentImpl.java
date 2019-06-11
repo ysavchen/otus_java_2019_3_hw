@@ -1,7 +1,7 @@
 package com.mycompany;
 
 import com.mycompany.atm.ATM;
-import com.mycompany.atm.StateListener;
+import com.mycompany.atm.memento.StorageKeeper;
 
 import java.util.Set;
 
@@ -29,7 +29,7 @@ public class AtmDepartmentImpl implements AtmDepartment {
 
     @Override
     public void restoreInitialStates() {
-        machines.forEach(StateListener::restoreInitialState);
+        machines.forEach(StorageKeeper::restoreInitialCells);
     }
 
     @Override

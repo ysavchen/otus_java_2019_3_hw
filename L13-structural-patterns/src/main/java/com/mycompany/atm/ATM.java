@@ -1,5 +1,7 @@
 package com.mycompany.atm;
 
+import com.mycompany.atm.memento.StorageKeeper;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -13,7 +15,7 @@ import java.util.List;
  * Поэтому оптимизировать выдачу не надо.<p>
  * - выдавать сумму остатка денежных средств<p>
  */
-public interface ATM extends StateListener {
+public interface ATM extends StorageKeeper {
 
     boolean acceptBanknotes(Banknote banknote);
 

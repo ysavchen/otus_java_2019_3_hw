@@ -2,25 +2,29 @@ package com.mycompany.atm;
 
 import com.mycompany.atm.exceptions.InsufficientFundsException;
 import com.mycompany.atm.exceptions.NoSuchCellException;
-import com.mycompany.atm.memento.Caretaker;
-import com.mycompany.atm.memento.Memento;
+import com.mycompany.atm.memento.CellsStorage;
+import com.mycompany.atm.memento.CellsStorageImpl;
+import com.mycompany.atm.memento.StorageKeeper;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class ATMImpl implements ATM {
+public class ATMImpl implements ATM, StorageKeeper {
 
     private final Dispenser dispenser;
-    private State state;
-    private final Caretaker caretaker = new Caretaker();
+    private CellsStorage cellsStorage;
+    private Map<Banknote, Cell> noteCellMap;
 
-    ATMImpl(Dispenser dispenser, State initialState) {
+    ATMImpl(Dispenser dispenser, Map<Banknote, Cell> noteCellMap) {
 
         this.dispenser = dispenser;
-        this.state = initialState;
-        caretaker.setMemento(saveInitialState());
+        this.noteCellMap = noteCellMap;
+        saveInitialCells();
     }
 
+    @Override
     public boolean acceptBanknotes(Banknote banknote) {
 
         return acceptBanknotes(List.of(banknote));
@@ -28,8 +32,6 @@ public class ATMImpl implements ATM {
 
     @Override
     public boolean acceptBanknotes(Collection<Banknote> banknotes) {
-        var noteCellMap = dispenser.getStorage();
-
         for (Banknote note : banknotes) {
             Cell cell = noteCellMap.get(note);
             if (cell == null) {
@@ -48,13 +50,11 @@ public class ATMImpl implements ATM {
                     "Amount(" + balance + ") is less than requested amount - " + neededAmount);
         }
 
-        return dispenser.dispense(neededAmount);
+        return dispenser.dispense(neededAmount, noteCellMap);
     }
 
     @Override
     public long getBalance() {
-        var noteCellMap = dispenser.getStorage();
-
         long balance = 0;
         for (var entry : noteCellMap.entrySet()) {
             balance += (entry.getKey().getValue() * entry.getValue().numAvailableNotes());
@@ -62,19 +62,14 @@ public class ATMImpl implements ATM {
         return balance;
     }
 
-    public Memento saveInitialState() {
-        return new Memento(state);
+    @Override
+    public void saveInitialCells() {
+        this.cellsStorage = new CellsStorageImpl(new HashMap<>(noteCellMap));
     }
 
     @Override
-    public void setState(State state) {
-        this.state = state;
-    }
+    public void restoreInitialCells() {
 
-    //todo: is it possible to test that state got its initial value?
-    @Override
-    public void restoreInitialState() {
-
-        this.state = caretaker.getMemento().getState();
+        this.noteCellMap = cellsStorage.getInitialCells();
     }
 }

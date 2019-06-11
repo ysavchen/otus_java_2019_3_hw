@@ -26,14 +26,14 @@ public class DispenserTests {
 
     @BeforeEach
     void prepareDispenser() {
-        dispenser = new MinBanknotesDispenser(noteCellMap);
+        dispenser = new MinBanknotesDispenser();
     }
 
     @Test
     void dispenseFullNeededAmount() {
         cell_1000.putBanknote();
         cell_100.putBanknote();
-        assertEquals(2, dispenser.dispense(1100).size(),
+        assertEquals(2, dispenser.dispense(1100, noteCellMap).size(),
                 "Invalid number of dispensed banknotes");
     }
 
@@ -43,9 +43,9 @@ public class DispenserTests {
             cell_100.putBanknote();
         }
         assertThrows(NoBanknotesException.class,
-                () -> dispenser.dispense(250).size(),
+                () -> dispenser.dispense(250, noteCellMap).size(),
                 "Invalid number of dispensed banknotes");
-        assertEquals(3, dispenser.dispense(300).size(),
+        assertEquals(3, dispenser.dispense(300, noteCellMap).size(),
                 "Invalid number of dispensed banknotes");
     }
 
@@ -55,7 +55,7 @@ public class DispenserTests {
             cell_100.putBanknote();
         }
         cell_500.putBanknote();
-        assertEquals(1, dispenser.dispense(500).size(),
+        assertEquals(1, dispenser.dispense(500, noteCellMap).size(),
                 "Invalid number of dispensed banknotes");
     }
 
@@ -63,14 +63,14 @@ public class DispenserTests {
     void testNoBanknotesException() {
         cell_1000.putBanknote();
         assertThrows(NoBanknotesException.class,
-                () -> dispenser.dispense(100));
+                () -> dispenser.dispense(100, noteCellMap));
     }
 
     @Test
     void testSomeErrors() {
-        assertTrue(dispenser.dispense(0L).isEmpty(),
+        assertTrue(dispenser.dispense(0L, noteCellMap).isEmpty(),
                 "Banknotes for 0 amount is not empty");
-        assertTrue(dispenser.dispense(-5L).isEmpty(),
+        assertTrue(dispenser.dispense(-5L, noteCellMap).isEmpty(),
                 "Banknotes for -5 amount is not empty");
     }
 }

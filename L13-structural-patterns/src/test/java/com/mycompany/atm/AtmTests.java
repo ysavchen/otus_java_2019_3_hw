@@ -18,7 +18,6 @@ public class AtmTests {
     private ATM atm;
 
     private Map<Banknote, Cell> noteCellMap = Map.of(
-            Banknote.FIFTY_RUB, new Cell(Banknote.FIFTY_RUB),
             Banknote.HUNDRED_RUB, new Cell(Banknote.HUNDRED_RUB),
             Banknote.FIVE_HUNDRED_RUB, new Cell(Banknote.FIVE_HUNDRED_RUB),
             Banknote.THOUSAND_RUB, new Cell(Banknote.THOUSAND_RUB)
@@ -27,15 +26,14 @@ public class AtmTests {
     @BeforeEach
     void prepareAtm() {
         dispenser = Mockito.mock(Dispenser.class);
-        atm = new ATMImpl(dispenser, State.IN_SERVICE);
+        atm = new ATMImpl(dispenser, noteCellMap);
     }
 
     @Test
     void acceptSuccessfully() {
         final var banknotes = List.of(
-                Banknote.FIFTY_RUB,
+                Banknote.FIVE_HUNDRED_RUB,
                 Banknote.HUNDRED_RUB);
-        when(dispenser.getStorage()).thenReturn(noteCellMap);
         assertTrue(atm.acceptBanknotes(banknotes),
                 "Banknotes are not accepted");
     }
@@ -43,13 +41,12 @@ public class AtmTests {
     @Test
     void checkBalance() {
         final var banknotes = List.of(
-                Banknote.FIFTY_RUB,
+                Banknote.THOUSAND_RUB,
                 Banknote.HUNDRED_RUB);
-        when(dispenser.getStorage()).thenReturn(noteCellMap);
 
         assertTrue(atm.acceptBanknotes(banknotes),
                 "Banknotes are not accepted");
-        assertEquals(atm.getBalance(), 150L,
+        assertEquals(atm.getBalance(), 1100L,
                 "Balance is not correct");
     }
 
@@ -58,8 +55,7 @@ public class AtmTests {
         final var banknotes = List.of(
                 Banknote.FIVE_HUNDRED_RUB,
                 Banknote.THOUSAND_RUB);
-        when(dispenser.getStorage()).thenReturn(noteCellMap);
-        when(dispenser.dispense(1500L)).thenReturn(banknotes);
+        when(dispenser.dispense(1500L, noteCellMap)).thenReturn(banknotes);
 
         assertTrue(atm.acceptBanknotes(banknotes),
                 "Banknotes are not accepted");
@@ -68,10 +64,8 @@ public class AtmTests {
 
     @Test
     void testNoSuchCellException() {
-        when(dispenser.getStorage()).thenReturn(
-                Map.of(Banknote.THOUSAND_RUB, new Cell(Banknote.THOUSAND_RUB)));
         assertThrows(NoSuchCellException.class,
-                () -> atm.acceptBanknotes(Banknote.HUNDRED_RUB));
+                () -> atm.acceptBanknotes(Banknote.FIFTY_RUB));
     }
 
     @Test

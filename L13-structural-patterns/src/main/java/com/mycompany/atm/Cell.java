@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-class Cell {
+public class Cell {
 
     /**
      * Banknote type stored by a cell

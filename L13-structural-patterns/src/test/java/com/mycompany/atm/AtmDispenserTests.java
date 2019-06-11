@@ -21,8 +21,8 @@ public class AtmDispenserTests {
 
     @BeforeEach
     void prepareAtm() {
-        dispenser = new MinBanknotesDispenser(noteCellMap);
-        atm = new ATMImpl(dispenser, State.IN_SERVICE);
+        dispenser = new MinBanknotesDispenser();
+        atm = new ATMImpl(dispenser, noteCellMap);
     }
 
     @Test

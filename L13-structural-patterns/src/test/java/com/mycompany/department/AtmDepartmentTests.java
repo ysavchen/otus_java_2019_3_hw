@@ -45,7 +45,7 @@ public class AtmDepartmentTests {
     @Test
     void restoreInitialState() {
         atmDepartment.restoreInitialStates();
-        verify(atmOne, Mockito.times(1)).restoreInitialState();
+        verify(atmOne, Mockito.times(1)).restoreInitialCells();
     }
 
     @Test
