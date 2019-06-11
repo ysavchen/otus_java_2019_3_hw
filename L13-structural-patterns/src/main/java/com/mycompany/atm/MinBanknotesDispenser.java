@@ -7,14 +7,19 @@ import java.util.*;
 /**
  * Dispenses the needed amount in a min number of banknotes.
  */
-class MinBanknotesDispenser extends Dispenser {
+class MinBanknotesDispenser implements Dispenser {
+
+    /**
+     * Stores banknotes in their own cells
+     */
+    private final Map<Banknote, Cell> noteCellMap;
 
     MinBanknotesDispenser(Map<Banknote, Cell> noteCellMap) {
-        super(noteCellMap);
+        this.noteCellMap = noteCellMap;
     }
 
     @Override
-    List<Banknote> dispense(long neededAmount) {
+    public List<Banknote> dispense(long neededAmount) {
         if (neededAmount <= 0) {
             return Collections.emptyList();
         }
@@ -68,5 +73,10 @@ class MinBanknotesDispenser extends Dispenser {
                 .stream()
                 .mapToLong(Banknote::getValue)
                 .sum();
+    }
+
+    @Override
+    public Map<Banknote, Cell> getStorage() {
+        return noteCellMap;
     }
 }

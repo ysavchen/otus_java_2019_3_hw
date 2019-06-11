@@ -3,16 +3,7 @@ package com.mycompany.atm;
 import java.util.List;
 import java.util.Map;
 
-abstract class Dispenser {
-
-    /**
-     * Stores banknotes in their own cells
-     */
-    private final Map<Banknote, Cell> noteCellMap;
-
-    Dispenser(Map<Banknote, Cell> noteCellMap) {
-        this.noteCellMap = noteCellMap;
-    }
+public interface Dispenser {
 
     /**
      * Dispenses neededAmount from cells.
@@ -20,10 +11,13 @@ abstract class Dispenser {
      * @param neededAmount amount needed for a client
      * @return banknotes for dispensation
      */
-    abstract List<Banknote> dispense(long neededAmount);
+    List<Banknote> dispense(long neededAmount);
 
-    Map<Banknote, Cell> getStorage() {
-        return noteCellMap;
-    }
+    /**
+     * Gets storage of banknotes from the dispenser.
+     *
+     * @return storage
+     */
+    Map<Banknote, Cell> getStorage();
 
 }
