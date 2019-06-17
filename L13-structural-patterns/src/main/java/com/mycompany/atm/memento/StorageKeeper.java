@@ -2,7 +2,7 @@ package com.mycompany.atm.memento;
 
 public interface StorageKeeper {
 
-    void saveInitialCells();
+    CellsStorage saveInitialCells();
 
-    void restoreInitialCells();
+    void restoreInitialCells(CellsStorage cellsStorage);
 }

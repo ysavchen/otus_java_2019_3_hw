@@ -1,8 +1,11 @@
 package com.mycompany;
 
 import com.mycompany.atm.ATM;
-import com.mycompany.atm.memento.StorageKeeper;
+import com.mycompany.atm.memento.CellsStorage;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class AtmDepartmentImpl implements AtmDepartment {
@@ -10,26 +13,31 @@ public class AtmDepartmentImpl implements AtmDepartment {
     /**
      * Stores ATMs
      */
-    private final Set<ATM> machines;
+    private final Set<ATM> machines = new HashSet<>();
 
-    public AtmDepartmentImpl(Set<ATM> machines) {
-        this.machines = machines;
-    }
+    /**
+     * Stores initial states for each ATM
+     */
+    private final Map<ATM, CellsStorage> atmCellsStorage = new HashMap<>();
 
     @Override
     public boolean addATM(ATM atm) {
-        return machines.add(atm);
+        boolean isAtmAdded = machines.add(atm);
+        boolean isCellsStored = atmCellsStorage.put(atm, atm.saveInitialCells()) == null;
+        return isAtmAdded && isCellsStored;
     }
 
     @Override
     public boolean removeATM(ATM atm) {
-
-        return machines.remove(atm);
+        boolean isAtmRemoved = machines.remove(atm);
+        boolean isCellsRemoved = atmCellsStorage.remove(atm, atm.saveInitialCells());
+        return isAtmRemoved && isCellsRemoved;
     }
 
     @Override
     public void restoreInitialStates() {
-        machines.forEach(StorageKeeper::restoreInitialCells);
+
+        machines.forEach(atm -> atm.restoreInitialCells(atmCellsStorage.get(atm)));
     }
 
     @Override

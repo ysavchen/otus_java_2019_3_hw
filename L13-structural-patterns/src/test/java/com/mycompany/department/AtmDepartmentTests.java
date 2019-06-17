@@ -1,6 +1,5 @@
 package com.mycompany.department;
 
-import com.google.common.collect.Sets;
 import com.mycompany.AtmDepartment;
 import com.mycompany.AtmDepartmentImpl;
 import com.mycompany.atm.ATM;
@@ -9,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class AtmDepartmentTests {
@@ -23,12 +21,12 @@ public class AtmDepartmentTests {
     void prepare() {
         atmOne = Mockito.mock(ATM.class);
         atmTwo = Mockito.mock(ATM.class);
-        atmDepartment = new AtmDepartmentImpl(Sets.newHashSet(atmOne));
+        atmDepartment = new AtmDepartmentImpl();
     }
 
     @Test
     void addAtm() {
-        assertTrue(atmDepartment.addATM(atmTwo),
+        assertTrue(atmDepartment.addATM(atmOne),
                 "New ATM is not added");
         assertFalse(atmDepartment.addATM(atmOne),
                 "Already added ATM is added again");
@@ -36,20 +34,24 @@ public class AtmDepartmentTests {
 
     @Test
     void removeATM() {
+        assertTrue(atmDepartment.addATM(atmOne),
+                "New ATM is not added");
         assertTrue(atmDepartment.removeATM(atmOne),
                 "Added ATM is not removed");
-        assertFalse(atmDepartment.removeATM(Mockito.mock(ATM.class)),
+        assertFalse(atmDepartment.removeATM(atmTwo),
                 "Not added ATM is removed");
     }
 
     @Test
     void restoreInitialState() {
+        assertTrue(atmDepartment.addATM(atmOne),
+                "New ATM is not added");
         atmDepartment.restoreInitialStates();
-        verify(atmOne, Mockito.times(1)).restoreInitialCells();
     }
 
     @Test
     void checkRemaindersFromOneATM() {
+        atmDepartment.addATM(atmOne);
         when(atmOne.getBalance()).thenReturn(500L);
         assertEquals(500L, atmDepartment.getRemainders(),
                 "Incorrect remainders returned for one ATM");
@@ -57,9 +59,10 @@ public class AtmDepartmentTests {
 
     @Test
     void checkRemaindersFromSeveralATMs() {
+        atmDepartment.addATM(atmOne);
+        atmDepartment.addATM(atmTwo);
         when(atmOne.getBalance()).thenReturn(150L);
         when(atmTwo.getBalance()).thenReturn(200L);
-        atmDepartment.addATM(atmTwo);
         assertEquals(350L, atmDepartment.getRemainders(),
                 "Incorrect remainders returned for several ATMs");
     }

@@ -14,7 +14,6 @@ import java.util.Map;
 public class ATMImpl implements ATM, StorageKeeper {
 
     private final Dispenser dispenser;
-    private CellsStorage cellsStorage;
     private Map<Banknote, Cell> noteCellMap;
 
     ATMImpl(Dispenser dispenser, Map<Banknote, Cell> noteCellMap) {
@@ -63,12 +62,12 @@ public class ATMImpl implements ATM, StorageKeeper {
     }
 
     @Override
-    public void saveInitialCells() {
-        this.cellsStorage = new CellsStorageImpl(new HashMap<>(noteCellMap));
+    public CellsStorage saveInitialCells() {
+        return new CellsStorageImpl(new HashMap<>(noteCellMap));
     }
 
     @Override
-    public void restoreInitialCells() {
+    public void restoreInitialCells(CellsStorage cellsStorage) {
 
         this.noteCellMap = cellsStorage.getInitialCells();
     }
