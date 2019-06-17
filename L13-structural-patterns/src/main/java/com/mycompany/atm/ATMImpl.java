@@ -4,14 +4,13 @@ import com.mycompany.atm.exceptions.InsufficientFundsException;
 import com.mycompany.atm.exceptions.NoSuchCellException;
 import com.mycompany.atm.memento.CellsStorage;
 import com.mycompany.atm.memento.CellsStorageImpl;
-import com.mycompany.atm.memento.StorageKeeper;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ATMImpl implements ATM, StorageKeeper {
+public class ATMImpl implements ATM {
 
     private final Dispenser dispenser;
     private Map<Banknote, Cell> noteCellMap;
