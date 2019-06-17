@@ -29,6 +29,7 @@
         <module>L09-gc</module>
         <module>L11-solid</module>
         <module>L13-structural-patterns</module>
+        <module>L15-io</module>
     </modules>
 
     <properties>
