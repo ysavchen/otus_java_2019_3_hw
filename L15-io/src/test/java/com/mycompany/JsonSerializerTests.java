@@ -7,10 +7,9 @@ class JsonSerializerTests {
 
     @Test
     void checkArrayOfPrimitives() throws IllegalAccessException {
-        JsonSerializer.toJson(new Department());
-
-//        Gson gson  = new Gson();
-//        gson.toJson(ints);
+        String str = JsonSerializer.toJson(new Department());
+        Gson gson = new Gson();
+        Department dep = gson.fromJson(str, Department.class);
     }
 
     @Test

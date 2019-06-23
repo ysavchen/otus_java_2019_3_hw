@@ -18,14 +18,15 @@ import java.lang.reflect.Modifier;
 public class JsonSerializer {
 
 
-    public static void toJson(Object object) throws IllegalAccessException {
+    public static String toJson(Object object) throws IllegalAccessException {
         if (object == null) {
-            // return "{}";
+            return "{}";
         }
         JsonObjectBuilder builder = Json.createObjectBuilder();
         new JsonSerializer().navigateTree(object, builder);
         JsonObject jsonCreated = builder.build();
         System.out.println("jsonCreated:" + jsonCreated);
+        return jsonCreated.toString();
     }
 
     private void navigateTree(Object object, JsonObjectBuilder builder) throws IllegalAccessException {
@@ -54,27 +55,19 @@ public class JsonSerializer {
             if (field.getType().isPrimitive()) {
                 builder.add(field.getName(), field.get(object).toString());
             }
+            if (field.get(object) instanceof String) {
+                builder.add(field.getName(), field.get(object).toString());
+            }
             if (field.getType().isArray()) {
-                Object[] array = (Object[]) field.get(object);
-                JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-                JsonObjectBuilder newObjBuilder = Json.createObjectBuilder();
-                for (int i = 0; i < array.length; i++) {
-                    navigateTree(array[i], newObjBuilder);
+                //todo: copypaste
+                JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+                int length = Array.getLength(field.get(object));
+                for (int i = 0; i < length; i++) {
+                    Object arrayElement = Array.get(field.get(object), i);
+                    jsonArrayBuilder.add(covertObject(arrayElement));
                 }
-                builder.add(field.getName(), arrayBuilder.add(newObjBuilder));
-                break;
+                builder.add(field.getName(), jsonArrayBuilder);
             }
-        }
-        /*
-        if (object.getClass().isArray()) {
-            Object[] array = (Object[]) object;
-            for (int i = 0; i < array.length; i++) {
-                navigateTreesdf(array[i]);
-            }
-        }*/
-
-        if (object instanceof String) {
-
         }
     }
 
@@ -93,6 +86,10 @@ public class JsonSerializer {
         if (object instanceof Integer) {
             return Json.createValue((Integer) object);
         }
+        if (object instanceof String) {
+            return Json.createValue((String) object);
+        }
+
         return null;
     }
 }
