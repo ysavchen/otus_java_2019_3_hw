@@ -1,6 +1,7 @@
 package com.mycompany;
 
 import javax.json.*;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
@@ -22,12 +23,28 @@ public class JsonSerializer {
             // return "{}";
         }
         JsonObjectBuilder builder = Json.createObjectBuilder();
-        new JsonSerializer().navigateTreesdf(object, builder);
+        new JsonSerializer().navigateTree(object, builder);
         JsonObject jsonCreated = builder.build();
         System.out.println("jsonCreated:" + jsonCreated);
     }
 
-    private void navigateTreesdf(Object object, JsonObjectBuilder builder) throws IllegalAccessException {
+    private void navigateTree(Object object, JsonObjectBuilder builder) throws IllegalAccessException {
+
+        //array for primitives
+        if (object.getClass().isArray()) {
+            JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+            int length = Array.getLength(object);
+            for (int i = 0; i < length; i++) {
+                Object arrayElement = Array.get(object, i);
+                jsonArrayBuilder.add(covertObject(arrayElement));
+            }
+            builder.add(object.getClass().getName(), jsonArrayBuilder);
+        }
+
+
+        if (object.getClass().isPrimitive()) {
+            builder.add(object.getClass().getName(), object.toString());
+        }
         Field[] fields = object.getClass().getDeclaredFields();
         for (Field field : fields) {
             field.setAccessible(true);
@@ -42,7 +59,7 @@ public class JsonSerializer {
                 JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
                 JsonObjectBuilder newObjBuilder = Json.createObjectBuilder();
                 for (int i = 0; i < array.length; i++) {
-                    navigateTreesdf(array[i], newObjBuilder);
+                    navigateTree(array[i], newObjBuilder);
                 }
                 builder.add(field.getName(), arrayBuilder.add(newObjBuilder));
                 break;
@@ -61,35 +78,21 @@ public class JsonSerializer {
         }
     }
 
-    private static void navigateTree(JsonValue tree) {
-        switch (tree.getValueType()) {
-            case OBJECT:
-                System.out.println("OBJECT");
-                JsonObject object = (JsonObject) tree;
-                for (String name : object.keySet()) {
-                    navigateTree(object.get(name));
-                }
-                break;
-            case ARRAY:
-                System.out.println("ARRAY");
-                JsonArray array = (JsonArray) tree;
-                for (JsonValue val : array) {
-                    navigateTree(val);
-                }
-                break;
-            case STRING:
-                JsonString st = (JsonString) tree;
-                System.out.println("STRING " + st.getString());
-                break;
-            case NUMBER:
-                JsonNumber num = (JsonNumber) tree;
-                System.out.println("NUMBER " + num.toString());
-                break;
-            case TRUE:
-            case FALSE:
-            case NULL:
-                System.out.println(tree.getValueType().toString());
-                break;
+    /**
+     * Returns a type that is functionally equal but not necessarily equal
+     * according to {@link Object#equals(Object) Object.equals()}. The returned
+     * type is {@link java.io.Serializable}.
+     */
+//    public static Type canonicalize(Type type) {
+//        if (type instanceof Class) {
+//            Class<?> c = (Class<?>) type;
+//            return c.isArray() ? canonicalize(c.getComponentType()) : c;
+//        }
+//    }
+    public JsonValue covertObject(Object object) {
+        if (object instanceof Integer) {
+            return Json.createValue((Integer) object);
         }
+        return null;
     }
 }

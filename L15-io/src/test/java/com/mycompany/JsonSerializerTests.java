@@ -1,12 +1,16 @@
 package com.mycompany;
 
+import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 
-public class JsonSerializerTests {
+class JsonSerializerTests {
 
     @Test
-    void checkArrayOfPrimitives() {
+    void checkArrayOfPrimitives() throws IllegalAccessException {
+        JsonSerializer.toJson(new Department());
 
+//        Gson gson  = new Gson();
+//        gson.toJson(ints);
     }
 
     @Test
