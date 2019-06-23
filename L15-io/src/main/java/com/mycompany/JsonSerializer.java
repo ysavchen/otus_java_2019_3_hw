@@ -3,8 +3,6 @@ package com.mycompany;
 import javax.json.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 
 /**
  * Cвой json object writer
@@ -38,6 +36,16 @@ public class JsonSerializer {
             }
             if (field.getType().isPrimitive()) {
                 builder.add(field.getName(), field.get(object).toString());
+            }
+            if (field.getType().isArray()) {
+                Object[] array = (Object[]) field.get(object);
+                JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+                JsonObjectBuilder newObjBuilder = Json.createObjectBuilder();
+                for (int i = 0; i < array.length; i++) {
+                    navigateTreesdf(array[i], newObjBuilder);
+                }
+                builder.add(field.getName(), arrayBuilder.add(newObjBuilder));
+                break;
             }
         }
         /*
