@@ -1,8 +1,32 @@
 package com.mycompany;
 
+import org.junit.jupiter.api.Test;
+
 public class JsonSerializerTests {
 
-    public static void main(String[] args) throws IllegalAccessException {
-        JsonSerializer.toJson(new Department());
+    @Test
+    void checkArrayOfPrimitives() {
+
+    }
+
+    @Test
+    void checkArrayOfObjects() throws IllegalAccessException {
+        Department[] departments = {new Department(), new Department()};
+        JsonSerializer.toJson(departments);
+    }
+
+    @Test
+    void checkLists() {
+
+    }
+
+    @Test
+    void checkSets() {
+
+    }
+
+    @Test
+    void checkHashMaps() {
+
     }
 }
