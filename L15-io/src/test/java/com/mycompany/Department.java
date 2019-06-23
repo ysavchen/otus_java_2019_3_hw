@@ -6,6 +6,7 @@ public class Department {
 
     private final int numEmployees = 45;
 
+    private final transient boolean isActive = true;
 
 
 //    private final Employee[] engineers = {

@@ -52,6 +52,9 @@ public class JsonSerializer {
             if (Modifier.isStatic(field.getModifiers())) {
                 continue;
             }
+            if (Modifier.isTransient(field.getModifiers())) {
+                continue;
+            }
             if (field.getType().isPrimitive()) {
                 builder.add(field.getName(), field.get(object).toString());
             }
