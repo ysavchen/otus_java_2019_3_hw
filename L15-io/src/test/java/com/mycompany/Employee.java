@@ -7,7 +7,7 @@ public class Employee {
 
     private final transient String title;
 
-    private final static long projects = 15L;
+   // private final static long projects = 15L;
 
     Employee(String name, String surname, String title) {
         this.name = name;

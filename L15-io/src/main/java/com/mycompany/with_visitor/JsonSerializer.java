@@ -1,10 +1,7 @@
 package com.mycompany.with_visitor;
 
 import com.mycompany.with_visitor.base.Visitor;
-import com.mycompany.with_visitor.types.TraversedArray;
-import com.mycompany.with_visitor.types.TraversedObject;
-import com.mycompany.with_visitor.types.TraversedPrimitive;
-import com.mycompany.with_visitor.types.TraversedString;
+import com.mycompany.with_visitor.types.*;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -52,16 +49,16 @@ public class JsonSerializer {
                 continue;
             }
             try {
-                if (field.getType().isPrimitive()) {
-                    new TraversedPrimitive(field, field.get(object)).accept(visitor);
-                } else if (field.getType().isArray()) {
-                    new TraversedArray(field, field.get(object)).accept(visitor);
-                } else if (field.getType() == String.class) {
+                if (field.getType() == String.class) {
                     new TraversedString(field, field.get(object)).accept(visitor);
                 } else if (field.getType() == Integer.class ||
                         field.getType() == Long.class ||
                         field.getType() == Double.class) {
-
+                    new TraversedPrimitiveWrapper(field, field.get(object)).accept(visitor);
+                } else if (field.getType().isPrimitive()) {
+                    new TraversedPrimitive(field, field.get(object)).accept(visitor);
+                } else if (field.getType().isArray()) {
+                    new TraversedArray(field, field.get(object)).accept(visitor);
                 } else {
                     traverseObject(field.get(object), visitor);
                 }

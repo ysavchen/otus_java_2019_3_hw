@@ -21,9 +21,24 @@ public class JsonSerializationVisitor implements Visitor {
     public void visit(TraversedArray value) {
         JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
         int length = Array.getLength(value.getArray());
+
         for (int i = 0; i < length; i++) {
             Object element = Array.get(value.getArray(), i);
 
+            if (element.getClass() == String.class ||
+                    element.getClass() == Integer.class ||
+                    element.getClass() == int.class ||
+                    element.getClass() == Long.class ||
+                    element.getClass() == long.class ||
+                    element.getClass() == Double.class ||
+                    element.getClass() == double.class) {
+                jsonArrayBuilder.add(convertObject(element));
+            } else {
+                JsonObjectBuilder innerObjectBuilder = Json.createObjectBuilder();
+                Visitor visitor = new JsonSerializationVisitor(innerObjectBuilder);
+                new JsonSerializer().traverseObject(element, visitor);
+                jsonArrayBuilder.add(innerObjectBuilder);
+            }
         }
         builder.add(value.getName(), jsonArrayBuilder);
     }
@@ -48,11 +63,11 @@ public class JsonSerializationVisitor implements Visitor {
     }
 
     private JsonValue convertObject(Object object) {
-        if (object.getClass() == Integer.class || object.getClass() == int.class) {
-            return Json.createValue((Integer) object);
-        }
         if (object.getClass() == String.class) {
             return Json.createValue((String) object);
+        }
+        if (object.getClass() == Integer.class || object.getClass() == int.class) {
+            return Json.createValue((Integer) object);
         }
         if (object.getClass() == Long.class || object.getClass() == long.class) {
             return Json.createValue((Long) object);

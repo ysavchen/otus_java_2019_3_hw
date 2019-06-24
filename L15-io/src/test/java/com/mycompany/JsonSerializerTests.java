@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.mycompany.no_visitor.JsonSerializer;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Array;
+
 class JsonSerializerTests {
 
     @Test
@@ -15,9 +17,12 @@ class JsonSerializerTests {
     }
 
     @Test
-    void checkArrayOfObjects() throws IllegalAccessException {
+    void checkArrayOfObjects() {
         Department[] departments = {new Department(), new Department()};
-        JsonSerializer.toJson(departments);
+        String str = com.mycompany.with_visitor.JsonSerializer.toJson(departments);
+        Gson gson = new Gson();
+        Department[] dep = (Department[]) gson.fromJson(str, Object.class);
+        System.out.println(dep);
     }
 
     @Test
