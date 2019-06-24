@@ -22,12 +22,14 @@ class JsonSerializerTests {
 
     @Test
     void checkLists() {
-
+        com.mycompany.with_visitor.JsonSerializer.toJson(new Department());
     }
 
     @Test
     void checkSets() {
-
+        Gson gson = new Gson();
+        String str = gson.toJson(new Employee("Marcus", "Wendler", "software engineer"));
+        System.out.println(str);
     }
 
     @Test

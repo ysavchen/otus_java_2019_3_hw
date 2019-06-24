@@ -4,6 +4,7 @@ import com.mycompany.with_visitor.base.Visitor;
 import com.mycompany.with_visitor.types.TraversedArray;
 import com.mycompany.with_visitor.types.TraversedObject;
 import com.mycompany.with_visitor.types.TraversedPrimitive;
+import com.mycompany.with_visitor.types.TraversedString;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -21,7 +22,7 @@ import java.lang.reflect.Modifier;
  */
 public class JsonSerializer {
 
-    public static String toJson(Object object) throws IllegalAccessException {
+    public static String toJson(Object object) {
         if (object == null) {
             return "{}";
         }
@@ -34,11 +35,11 @@ public class JsonSerializer {
         return jsonCreated.toString();
     }
 
-    private void traverseObject(Object object, Visitor visitor) throws IllegalAccessException {
+    void traverseObject(Object object, Visitor visitor) {
         if (object.getClass().isArray()) {
-            new TraversedArray(object).accept(visitor);
+            new TraversedArray(null, object).accept(visitor);
         } else {
-            new TraversedObject(object).accept(visitor);
+            new TraversedObject(null, object).accept(visitor);
         }
 
         Field[] fields = object.getClass().getDeclaredFields();
@@ -50,13 +51,24 @@ public class JsonSerializer {
             if (Modifier.isTransient(field.getModifiers())) {
                 continue;
             }
-            if (field.getType().isPrimitive()) {
-                new TraversedPrimitive(field).accept(visitor);
-            } else if (field.getType().isArray()) {
-                new TraversedArray(field.get(object)).accept(visitor);
-            } else {
-                traverseObject(field.get(object), visitor);
+            try {
+                if (field.getType().isPrimitive()) {
+                    new TraversedPrimitive(field, field.get(object)).accept(visitor);
+                } else if (field.getType().isArray()) {
+                    new TraversedArray(field, field.get(object)).accept(visitor);
+                } else if (field.getType() == String.class) {
+                    new TraversedString(field, field.get(object)).accept(visitor);
+                } else if (field.getType() == Integer.class ||
+                        field.getType() == Long.class ||
+                        field.getType() == Double.class) {
+
+                } else {
+                    traverseObject(field.get(object), visitor);
+                }
+            } catch (IllegalAccessException ex) {
+                ex.printStackTrace();
             }
+
         }
     }
 }

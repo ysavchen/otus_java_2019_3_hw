@@ -5,21 +5,22 @@ import com.mycompany.with_visitor.base.Visitor;
 
 import java.lang.reflect.Field;
 
-public class TraversedObject extends TraversedField {
+public class TraversedPrimitiveWrapper extends TraversedField {
 
-    private final Object object;
+    private final Object primitiveWrapper;
 
-    public TraversedObject(Field field, Object object) {
+    public TraversedPrimitiveWrapper(Field field, Object primitiveWrapper) {
         super(field);
-        this.object = object;
+        this.primitiveWrapper = primitiveWrapper;
     }
 
-    public Object getObject() {
-        return object;
+    public Object getPrimitiveWrapper() {
+        return primitiveWrapper;
     }
 
     @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }
+
 }

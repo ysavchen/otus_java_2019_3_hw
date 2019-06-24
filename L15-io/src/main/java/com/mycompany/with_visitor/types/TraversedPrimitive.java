@@ -1,13 +1,16 @@
 package com.mycompany.with_visitor.types;
 
-import com.mycompany.with_visitor.base.TraversedType;
+import com.mycompany.with_visitor.base.TraversedField;
 import com.mycompany.with_visitor.base.Visitor;
 
-public class TraversedPrimitive implements TraversedType {
+import java.lang.reflect.Field;
+
+public class TraversedPrimitive extends TraversedField {
 
     private final Object primitive;
 
-    public TraversedPrimitive(Object primitive) {
+    public TraversedPrimitive(Field field, Object primitive) {
+        super(field);
         this.primitive = primitive;
     }
 

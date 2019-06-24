@@ -5,17 +5,17 @@ import com.mycompany.with_visitor.base.Visitor;
 
 import java.lang.reflect.Field;
 
-public class TraversedObject extends TraversedField {
+public class TraversedString extends TraversedField {
 
-    private final Object object;
+    private final Object string;
 
-    public TraversedObject(Field field, Object object) {
+    public TraversedString(Field field, Object string) {
         super(field);
-        this.object = object;
+        this.string = string;
     }
 
-    public Object getObject() {
-        return object;
+    public Object getString() {
+        return string;
     }
 
     @Override

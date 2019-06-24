@@ -1,11 +1,13 @@
 package com.mycompany.with_visitor;
 
 import com.mycompany.with_visitor.base.Visitor;
-import com.mycompany.with_visitor.types.TraversedArray;
-import com.mycompany.with_visitor.types.TraversedObject;
-import com.mycompany.with_visitor.types.TraversedPrimitive;
+import com.mycompany.with_visitor.types.*;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
+import java.lang.reflect.Array;
 
 public class JsonSerializationVisitor implements Visitor {
 
@@ -17,17 +19,48 @@ public class JsonSerializationVisitor implements Visitor {
 
     @Override
     public void visit(TraversedArray value) {
+        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+        int length = Array.getLength(value.getArray());
+        for (int i = 0; i < length; i++) {
+            Object element = Array.get(value.getArray(), i);
 
+        }
+        builder.add(value.getName(), jsonArrayBuilder);
     }
 
     @Override
     public void visit(TraversedPrimitive value) {
-
+        builder.add(value.getName(), convertObject(value.getPrimitive()));
     }
 
     @Override
     public void visit(TraversedObject value) {
-
     }
 
+    @Override
+    public void visit(TraversedPrimitiveWrapper value) {
+        builder.add(value.getName(), convertObject(value.getPrimitiveWrapper()));
+    }
+
+    @Override
+    public void visit(TraversedString value) {
+        builder.add(value.getName(), convertObject(value.getString()));
+    }
+
+    private JsonValue convertObject(Object object) {
+        if (object.getClass() == Integer.class || object.getClass() == int.class) {
+            return Json.createValue((Integer) object);
+        }
+        if (object.getClass() == String.class) {
+            return Json.createValue((String) object);
+        }
+        if (object.getClass() == Long.class || object.getClass() == long.class) {
+            return Json.createValue((Long) object);
+        }
+        if (object.getClass() == Double.class || object.getClass() == double.class) {
+            return Json.createValue((Double) object);
+        }
+
+        throw new IllegalArgumentException("Invalid type: " + object.getClass());
+    }
 }

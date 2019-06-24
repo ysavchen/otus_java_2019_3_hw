@@ -1,13 +1,16 @@
 package com.mycompany.with_visitor.types;
 
-import com.mycompany.with_visitor.base.TraversedType;
+import com.mycompany.with_visitor.base.TraversedField;
 import com.mycompany.with_visitor.base.Visitor;
 
-public class TraversedArray implements TraversedType {
+import java.lang.reflect.Field;
+
+public class TraversedArray extends TraversedField {
 
     private final Object array;
 
-    public TraversedArray(Object array) {
+    public TraversedArray(Field field, Object array) {
+        super(field);
         this.array = array;
     }
 
