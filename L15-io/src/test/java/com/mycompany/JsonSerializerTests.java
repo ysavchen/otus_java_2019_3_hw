@@ -10,6 +10,7 @@ class JsonSerializerTests {
         String str = JsonSerializer.toJson(new Department());
         Gson gson = new Gson();
         Department dep = gson.fromJson(str, Department.class);
+        System.out.println(dep);
     }
 
     @Test

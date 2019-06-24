@@ -9,18 +9,20 @@ public class Department {
     private final transient boolean isActive = true;
 
 
-//    private final Employee[] engineers = {
-//            new Employee("Marcus", "Schmidt", "software engineer"),
-//            new Employee("Luke", "Wyatt", "software engineer")
-//    };
+    private final Employee[] engineers = {
+            new Employee("Marcus", "Schmidt", "software engineer"),
+            new Employee("Luke", "Wyatt", "software engineer")
+    };
 
     private final String[] typesOfServices = {"Internal", "External"};
-    /*
-    private final List<Employee> managers = List.of(
-            new Employee("William", "Johnson", "manager"),
-            new Employee("Benjamin", "Brown", "manager"));
 
-     */
+    private final int[] ints = {1, 2, 3};
+//    /*
+//    private final List<Employee> managers = List.of(
+//            new Employee("William", "Johnson", "manager"),
+//            new Employee("Benjamin", "Brown", "manager"));
+//
+//     */
 
     @Override
     public String toString() {

@@ -30,26 +30,80 @@ public class JsonSerializer {
     }
 
     private void navigateTree(Object object, JsonObjectBuilder builder) throws IllegalAccessException {
-
         //array for primitives
         if (object.getClass().isArray()) {
             JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
             int length = Array.getLength(object);
             for (int i = 0; i < length; i++) {
                 Object arrayElement = Array.get(object, i);
-                jsonArrayBuilder.add(covertObject(arrayElement));
+                System.out.println("Class: " + arrayElement.getClass());
+                if (arrayElement.getClass() == int.class || arrayElement == Integer.class) {
+                    jsonArrayBuilder.add(covertObject(arrayElement));
+                }
+                if (arrayElement.getClass() == String.class) {
+                    jsonArrayBuilder.add(covertObject(arrayElement));
+                }
+//                JsonObjectBuilder arrObjectBuilder = Json.createObjectBuilder();
+//                navigateTree(arrayElement, arrObjectBuilder);
             }
             builder.add(object.getClass().getName(), jsonArrayBuilder);
-        }
+        } else {
+            JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
 
+            Field[] fields = object.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                if (Modifier.isStatic(field.getModifiers())) {
+                    //todo: add processing for static fields
+                    continue;
+                }
+                if (Modifier.isTransient(field.getModifiers())) {
+                    continue;
+                }
+                if (field.getType().isPrimitive()) {
+                    objectBuilder.add(field.getName(), field.get(object).toString());
+                }
+                if (field.get(object) instanceof String) {
+                    objectBuilder.add(field.getName(), field.get(object).toString());
+                    continue;
+                }
+                if (field.get(object) instanceof Integer) {
+                    objectBuilder.add(field.getName(), field.get(object).toString());
+                    continue;
+                }
+                if (field.getType().isArray()) {
+                    //todo: copypaste
+                    JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+                    int length = Array.getLength(field.get(object));
+                    for (int i = 0; i < length; i++) {
+                        Object arrayElement = Array.get(field.get(object), i);
+                        System.out.println("Class: " + arrayElement.getClass());
+                        if (arrayElement.getClass() == int.class || arrayElement == Integer.class) {
+                            jsonArrayBuilder.add(covertObject(arrayElement));
+                        }
+                        if (arrayElement.getClass() == String.class) {
+                            jsonArrayBuilder.add(covertObject(arrayElement));
+                        }
 
-        if (object.getClass().isPrimitive()) {
-            builder.add(object.getClass().getName(), object.toString());
+//                        JsonObjectBuilder arrObjectBuilder = Json.createObjectBuilder();
+//                        navigateTree(arrayElement, jsonArrayBuilder);
+                    }
+                    objectBuilder.add(field.getName(), jsonArrayBuilder);
+                } else {
+                    navigateTree(field.get(object), objectBuilder);
+                }
+            }
+
+            builder.add(object.getClass().getName(), objectBuilder);
         }
+    }
+
+/*
         Field[] fields = object.getClass().getDeclaredFields();
         for (Field field : fields) {
             field.setAccessible(true);
             if (Modifier.isStatic(field.getModifiers())) {
+                //todo: add processing for static fields
                 continue;
             }
             if (Modifier.isTransient(field.getModifiers())) {
@@ -70,9 +124,11 @@ public class JsonSerializer {
                     jsonArrayBuilder.add(covertObject(arrayElement));
                 }
                 builder.add(field.getName(), jsonArrayBuilder);
+            } else {
+                //todo: object is Object
             }
-        }
-    }
+        }*/
+
 
     /**
      * Returns a type that is functionally equal but not necessarily equal
@@ -86,10 +142,10 @@ public class JsonSerializer {
 //        }
 //    }
     public JsonValue covertObject(Object object) {
-        if (object instanceof Integer) {
+        if (object.getClass() == Integer.class || object.getClass() == int.class) {
             return Json.createValue((Integer) object);
         }
-        if (object instanceof String) {
+        if (object.getClass() == String.class) {
             return Json.createValue((String) object);
         }
 
