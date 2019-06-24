@@ -8,6 +8,8 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 import java.lang.reflect.Array;
+import java.util.Collection;
+import java.util.function.Consumer;
 
 public class JsonSerializationVisitor implements Visitor {
 
@@ -20,11 +22,7 @@ public class JsonSerializationVisitor implements Visitor {
     @Override
     public void visit(TraversedArray value) {
         JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
-        int length = Array.getLength(value.getArray());
-
-        for (int i = 0; i < length; i++) {
-            Object element = Array.get(value.getArray(), i);
-
+        Consumer<Object> consumer = (element) -> {
             if (element.getClass() == String.class ||
                     element.getClass() == Integer.class ||
                     element.getClass() == int.class ||
@@ -39,7 +37,17 @@ public class JsonSerializationVisitor implements Visitor {
                 new JsonSerializer().traverseObject(element, visitor);
                 jsonArrayBuilder.add(innerObjectBuilder);
             }
+        };
+
+        if (value.getArray() instanceof Collection<?>) {
+            ((Collection<?>) value.getArray()).forEach(consumer);
+        } else {
+            int length = Array.getLength(value.getArray());
+            for (int i = 0; i < length; i++) {
+                consumer.accept(Array.get(value.getArray(), i));
+            }
         }
+
         objectBuilder.add(value.getName(), jsonArrayBuilder);
     }
 
@@ -75,6 +83,9 @@ public class JsonSerializationVisitor implements Visitor {
         }
         if (object.getClass() == Double.class || object.getClass() == double.class) {
             return Json.createValue((Double) object);
+        }
+        if (object.getClass() == Float.class || object.getClass() == float.class) {
+            return Json.createValue(((Float) object).doubleValue());
         }
 
         throw new IllegalArgumentException("Invalid type: " + object.getClass());

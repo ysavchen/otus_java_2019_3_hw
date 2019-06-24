@@ -12,6 +12,8 @@ public class Employee {
 
     private final transient String title;
 
+    private final boolean isActive = true;
+
     private final Set<Integer> integerSet;
 
     private final List<String> responsibilities = List.of("Coding", "Reviewing");

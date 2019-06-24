@@ -8,6 +8,7 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Collection;
 
 /**
  * Cвой json object writer
@@ -33,7 +34,7 @@ public class JsonSerializer {
     }
 
     void traverseObject(Object object, Visitor visitor) {
-        if (object.getClass().isArray()) {
+        if (object.getClass().isArray() || object instanceof Collection<?>) {
             new TraversedArray(null, object).accept(visitor);
         } else {
             new TraversedObject(null, object).accept(visitor);
@@ -60,7 +61,7 @@ public class JsonSerializer {
                 } else if (field.getType().isPrimitive()) {
                     new TraversedPrimitive(field, field.get(object)).accept(visitor);
 
-                } else if (field.getType().isArray()) {
+                } else if (field.getType().isArray() || field.get(object) instanceof Collection<?>) {
                     new TraversedArray(field, field.get(object)).accept(visitor);
 
                 } else {

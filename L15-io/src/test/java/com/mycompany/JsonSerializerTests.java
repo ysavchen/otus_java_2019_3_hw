@@ -46,5 +46,8 @@ class JsonSerializerTests {
     void checkHashMaps() {
         int[] ints = {1, 2, 3};
         JsonSerializer.toJson(ints);
+
+        String str = "some string";
+        JsonSerializer.toJson(str);
     }
 }
