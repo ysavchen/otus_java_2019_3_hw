@@ -10,7 +10,7 @@ public class Employee {
     private final String name;
     private final String surname;
 
-    private final transient String title;
+    private transient String title = "software engineer";
 
     private final boolean isActive = true;
 
@@ -20,13 +20,11 @@ public class Employee {
 
     private final HashMap<Integer, String> integerStringHashMap;
 
-
     private final static long projects = 15L;
 
-    Employee(String name, String surname, String title) {
+    Employee(String name, String surname) {
         this.name = name;
         this.surname = surname;
-        this.title = title;
         this.integerSet = new HashSet<>();
         integerSet.add(56);
         integerSet.add(78);

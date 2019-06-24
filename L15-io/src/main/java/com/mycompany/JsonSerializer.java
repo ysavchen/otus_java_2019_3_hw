@@ -4,7 +4,6 @@ import com.mycompany.base.Visitor;
 import com.mycompany.types.*;
 
 import javax.json.Json;
-import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -28,9 +27,7 @@ public class JsonSerializer {
         Visitor visitor = new JsonSerializationVisitor(builder);
         new JsonSerializer().traverseObject(object, visitor);
 
-        JsonObject jsonCreated = builder.build();
-        System.out.println("jsonCreated:" + jsonCreated);
-        return jsonCreated.toString();
+        return builder.build().toString();
     }
 
     void traverseObject(Object object, Visitor visitor) {

@@ -3,51 +3,21 @@ package com.mycompany;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 class JsonSerializerTests {
 
     @Test
-    void checkArrayOfPrimitives() {
-        String str = JsonSerializer.toJson(new Department());
+    void checkEmployee() {
+        String empString = JsonSerializer.toJson(new Employee("William", "Johnson"));
+        System.out.println("Serialized employee: " + empString);
         Gson gson = new Gson();
-        Department dep = gson.fromJson(str, Department.class);
-        System.out.println(dep);
+        gson.fromJson(empString, Employee.class);
     }
 
     @Test
-    void checkArrayOfObjects() {
-        Department[] departments = {new Department(), new Department()};
-        String str = JsonSerializer.toJson(departments);
-        System.out.println(str);
-    }
-
-    @Test
-    void checkLists() {
-        List<Employee> empList = List.of(
-                new Employee("Marcus", "Wendler", "software engineer"),
-                new Employee("Luke", "Wyatt", "software engineer"));
-        JsonSerializer.toJson(empList);
-
-//        String str = new Gson().toJson(empList);
-//        System.out.println(str);
-
-    }
-
-    @Test
-    void checkSets() {
+    void checkDepartment() {
+        String depString = JsonSerializer.toJson(new Department());
+        System.out.println("Serialized department: " + depString);
         Gson gson = new Gson();
-        String str = gson.toJson(new Employee("Marcus", "Wendler", "software engineer"));
-        System.out.println(str);
-        Employee emp = gson.fromJson(str, Employee.class);
-    }
-
-    @Test
-    void checkHashMaps() {
-        int[] ints = {1, 2, 3};
-        JsonSerializer.toJson(ints);
-
-        String str = "some string";
-        JsonSerializer.toJson(str);
+        gson.fromJson(depString, Department.class);
     }
 }
