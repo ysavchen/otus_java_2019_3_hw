@@ -1,4 +1,4 @@
-package com.mycompany.with_visitor.base;
+package com.mycompany.base;
 
 import java.lang.reflect.Field;
 

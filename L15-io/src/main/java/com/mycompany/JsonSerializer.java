@@ -1,7 +1,7 @@
-package com.mycompany.with_visitor;
+package com.mycompany;
 
-import com.mycompany.with_visitor.base.Visitor;
-import com.mycompany.with_visitor.types.*;
+import com.mycompany.base.Visitor;
+import com.mycompany.types.*;
 
 import javax.json.Json;
 import javax.json.JsonObject;

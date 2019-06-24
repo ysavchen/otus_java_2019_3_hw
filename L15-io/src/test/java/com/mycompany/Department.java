@@ -8,7 +8,6 @@ public class Department {
 
     private final transient boolean isActive = true;
 
-
     private final Employee[] engineers = {
             new Employee("Marcus", "Schmidt", "software engineer"),
             new Employee("Luke", "Wyatt", "software engineer")

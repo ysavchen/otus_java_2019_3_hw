@@ -1,7 +1,7 @@
-package com.mycompany.with_visitor.types;
+package com.mycompany.types;
 
-import com.mycompany.with_visitor.base.TraversedField;
-import com.mycompany.with_visitor.base.Visitor;
+import com.mycompany.base.TraversedField;
+import com.mycompany.base.Visitor;
 
 import java.lang.reflect.Field;
 

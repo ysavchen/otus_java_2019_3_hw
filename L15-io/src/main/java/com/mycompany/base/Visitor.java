@@ -1,6 +1,6 @@
-package com.mycompany.with_visitor.base;
+package com.mycompany.base;
 
-import com.mycompany.with_visitor.types.*;
+import com.mycompany.types.*;
 
 public interface Visitor {
 
