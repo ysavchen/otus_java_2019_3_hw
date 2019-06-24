@@ -3,10 +3,7 @@ package com.mycompany;
 import com.mycompany.base.Visitor;
 import com.mycompany.types.*;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonValue;
+import javax.json.*;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -25,11 +22,13 @@ public class JsonSerializationVisitor implements Visitor {
         Consumer<Object> consumer = (element) -> {
             if (element.getClass() == String.class ||
                     element.getClass() == Integer.class ||
-                    element.getClass() == int.class ||
                     element.getClass() == Long.class ||
-                    element.getClass() == long.class ||
                     element.getClass() == Double.class ||
-                    element.getClass() == double.class) {
+                    element.getClass() == Short.class ||
+                    element.getClass() == Float.class ||
+                    element.getClass() == Boolean.class ||
+                    element.getClass() == Byte.class ||
+                    element.getClass().isPrimitive()) {
                 jsonArrayBuilder.add(toJsonValue(element));
             } else {
                 JsonObjectBuilder innerObjectBuilder = Json.createObjectBuilder();
@@ -86,6 +85,15 @@ public class JsonSerializationVisitor implements Visitor {
         }
         if (object.getClass() == Float.class || object.getClass() == float.class) {
             return Json.createValue(((Float) object).doubleValue());
+        }
+        if (object.getClass() == Byte.class || object.getClass() == byte.class) {
+            return Json.createValue(((Byte) object).intValue());
+        }
+        if (object.getClass() == Short.class || object.getClass() == short.class) {
+            return Json.createValue(((Short) object).intValue());
+        }
+        if (object.getClass() == Boolean.class || object.getClass() == boolean.class) {
+            return ((Boolean) object) ? JsonObject.TRUE : JsonObject.FALSE;
         }
 
         throw new IllegalArgumentException("Invalid type: " + object.getClass());
