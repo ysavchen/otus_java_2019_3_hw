@@ -1,6 +1,7 @@
 package com.mycompany;
 
 import com.google.gson.Gson;
+import com.mycompany.no_visitor.JsonSerializer;
 import org.junit.jupiter.api.Test;
 
 class JsonSerializerTests {

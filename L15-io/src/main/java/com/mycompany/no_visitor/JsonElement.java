@@ -1,4 +1,4 @@
-package com.mycompany;
+package com.mycompany.no_visitor;
 
 public interface JsonElement {
 }

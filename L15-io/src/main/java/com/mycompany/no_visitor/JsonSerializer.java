@@ -1,4 +1,4 @@
-package com.mycompany;
+package com.mycompany.no_visitor;
 
 import javax.json.*;
 import java.lang.reflect.Array;
