@@ -3,6 +3,8 @@ package com.mycompany;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 class JsonSerializerTests {
 
     @Test
@@ -22,7 +24,14 @@ class JsonSerializerTests {
 
     @Test
     void checkLists() {
-        JsonSerializer.toJson(new Department());
+        List<Employee> empList = List.of(
+                new Employee("Marcus", "Wendler", "software engineer"),
+                new Employee("Luke", "Wyatt", "software engineer"));
+        JsonSerializer.toJson(empList);
+
+//        String str = new Gson().toJson(empList);
+//        System.out.println(str);
+
     }
 
     @Test
@@ -30,10 +39,12 @@ class JsonSerializerTests {
         Gson gson = new Gson();
         String str = gson.toJson(new Employee("Marcus", "Wendler", "software engineer"));
         System.out.println(str);
+        Employee emp = gson.fromJson(str, Employee.class);
     }
 
     @Test
     void checkHashMaps() {
-
+        int[] ints = {1, 2, 3};
+        JsonSerializer.toJson(ints);
     }
 }

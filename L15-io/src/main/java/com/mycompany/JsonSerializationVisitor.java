@@ -11,10 +11,10 @@ import java.lang.reflect.Array;
 
 public class JsonSerializationVisitor implements Visitor {
 
-    private final JsonObjectBuilder builder;
+    private final JsonObjectBuilder objectBuilder;
 
-    JsonSerializationVisitor(JsonObjectBuilder builder) {
-        this.builder = builder;
+    JsonSerializationVisitor(JsonObjectBuilder objectBuilder) {
+        this.objectBuilder = objectBuilder;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class JsonSerializationVisitor implements Visitor {
                     element.getClass() == long.class ||
                     element.getClass() == Double.class ||
                     element.getClass() == double.class) {
-                jsonArrayBuilder.add(convertObject(element));
+                jsonArrayBuilder.add(toJsonValue(element));
             } else {
                 JsonObjectBuilder innerObjectBuilder = Json.createObjectBuilder();
                 Visitor visitor = new JsonSerializationVisitor(innerObjectBuilder);
@@ -40,29 +40,30 @@ public class JsonSerializationVisitor implements Visitor {
                 jsonArrayBuilder.add(innerObjectBuilder);
             }
         }
-        builder.add(value.getName(), jsonArrayBuilder);
+        objectBuilder.add(value.getName(), jsonArrayBuilder);
     }
 
     @Override
     public void visit(TraversedPrimitive value) {
-        builder.add(value.getName(), convertObject(value.getPrimitive()));
+        objectBuilder.add(value.getName(), toJsonValue(value.getPrimitive()));
     }
 
     @Override
     public void visit(TraversedObject value) {
+        //must be empty
     }
 
     @Override
     public void visit(TraversedPrimitiveWrapper value) {
-        builder.add(value.getName(), convertObject(value.getPrimitiveWrapper()));
+        objectBuilder.add(value.getName(), toJsonValue(value.getPrimitiveWrapper()));
     }
 
     @Override
     public void visit(TraversedString value) {
-        builder.add(value.getName(), convertObject(value.getString()));
+        objectBuilder.add(value.getName(), toJsonValue(value.getString()));
     }
 
-    private JsonValue convertObject(Object object) {
+    private JsonValue toJsonValue(Object object) {
         if (object.getClass() == String.class) {
             return Json.createValue((String) object);
         }

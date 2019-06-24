@@ -1,5 +1,10 @@
 package com.mycompany;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class Employee {
 
     private final String name;
@@ -7,12 +12,26 @@ public class Employee {
 
     private final transient String title;
 
-   // private final static long projects = 15L;
+    private final Set<Integer> integerSet;
+
+    private final List<String> responsibilities = List.of("Coding", "Reviewing");
+
+    private final HashMap<Integer, String> integerStringHashMap;
+
+
+    private final static long projects = 15L;
 
     Employee(String name, String surname, String title) {
         this.name = name;
         this.surname = surname;
         this.title = title;
+        this.integerSet = new HashSet<>();
+        integerSet.add(56);
+        integerSet.add(78);
+
+        this.integerStringHashMap = new HashMap<>();
+        integerStringHashMap.put(36, "Thirty six");
+        integerStringHashMap.put(89, "Eighty nine");
     }
 
     @Override

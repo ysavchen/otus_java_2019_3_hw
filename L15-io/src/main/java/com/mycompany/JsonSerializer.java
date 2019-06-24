@@ -51,21 +51,24 @@ public class JsonSerializer {
             try {
                 if (field.getType() == String.class) {
                     new TraversedString(field, field.get(object)).accept(visitor);
+
                 } else if (field.getType() == Integer.class ||
                         field.getType() == Long.class ||
                         field.getType() == Double.class) {
                     new TraversedPrimitiveWrapper(field, field.get(object)).accept(visitor);
+
                 } else if (field.getType().isPrimitive()) {
                     new TraversedPrimitive(field, field.get(object)).accept(visitor);
+
                 } else if (field.getType().isArray()) {
                     new TraversedArray(field, field.get(object)).accept(visitor);
+
                 } else {
                     traverseObject(field.get(object), visitor);
                 }
             } catch (IllegalAccessException ex) {
                 ex.printStackTrace();
             }
-
         }
     }
 }
