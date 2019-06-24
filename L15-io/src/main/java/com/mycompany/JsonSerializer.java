@@ -54,7 +54,6 @@ public class JsonSerializer {
             for (Field field : fields) {
                 field.setAccessible(true);
                 if (Modifier.isStatic(field.getModifiers())) {
-                    //todo: add processing for static fields
                     continue;
                 }
                 if (Modifier.isTransient(field.getModifiers())) {
