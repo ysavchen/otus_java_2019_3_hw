@@ -11,6 +11,14 @@ import javax.json.JsonObjectBuilder;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
+/**
+ * Cвой json object writer
+ * Напишите свой json object writer (object to JSON string) аналогичный gson на основе javax.json.
+ * <p>
+ * Поддержите:
+ * - массивы объектов и примитивных типов
+ * - коллекции из стандартный библиотеки.
+ */
 public class JsonSerializer {
 
     public static String toJson(Object object) throws IllegalAccessException {
