@@ -2,7 +2,9 @@ package com.mycompany.dao;
 
 import com.mycompany.annotations.Column;
 import com.mycompany.annotations.Id;
+import com.mycompany.annotations.Table;
 
+@Table(name = "User")
 public class User {
 
     @Id
