@@ -1,19 +1,14 @@
 package com.mycompany.dao;
 
-import com.mycompany.annotations.Column;
 import com.mycompany.annotations.Id;
-import com.mycompany.annotations.Table;
 
-@Table(name = "User")
 public class User {
 
     @Id
     private final long id;
 
-    @Column(name = "name")
     private final String name;
 
-    @Column(name = "age")
     private int age;
 
     public User(long id, String name) {

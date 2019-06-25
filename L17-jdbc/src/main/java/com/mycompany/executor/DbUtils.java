@@ -18,6 +18,7 @@ public class DbUtils {
     }
 
     public DbUtils() throws SQLException {
+        //H2 starts by itself while creating a connection
         this.connection = DriverManager.getConnection(URL);
         this.connection.setAutoCommit(false);
     }
