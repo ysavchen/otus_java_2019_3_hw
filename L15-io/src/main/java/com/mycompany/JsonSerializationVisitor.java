@@ -1,6 +1,5 @@
 package com.mycompany;
 
-import com.mycompany.base.Visitor;
 import com.mycompany.types.*;
 
 import javax.json.*;
@@ -8,7 +7,7 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.function.Consumer;
 
-public class JsonSerializationVisitor implements Visitor {
+public class JsonSerializationVisitor implements JsonVisitor {
 
     private final JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
     private JsonArrayBuilder arrayBuilder;
@@ -26,10 +25,9 @@ public class JsonSerializationVisitor implements Visitor {
             if (jsonValue != null) {
                 innerArrayBuilder.add(jsonValue);
             } else {
-                JsonObjectBuilder innerObjectBuilder = Json.createObjectBuilder();
-                Visitor visitor = new JsonSerializationVisitor();
-                new JsonSerializer().traverseObject(element, visitor);
-                innerArrayBuilder.add(innerObjectBuilder);
+                JsonVisitor jsonVisitor = new JsonSerializationVisitor();
+                new JsonSerializer().traverseObject(element, jsonVisitor);
+                innerArrayBuilder.add(jsonVisitor.getJsonValue());
             }
         };
 
@@ -119,15 +117,15 @@ public class JsonSerializationVisitor implements Visitor {
     }
 
     @Override
-    public String toString() {
-        String jsonString;
+    public JsonValue getJsonValue() {
+        JsonValue resultValue;
         if (jsonValue != null) {
-            jsonString = jsonValue.toString();
+            resultValue = jsonValue;
         } else if (arrayBuilder != null) {
-            jsonString = arrayBuilder.build().toString();
+            resultValue = arrayBuilder.build();
         } else {
-            jsonString = objectBuilder.build().toString();
+            resultValue = objectBuilder.build();
         }
-        return jsonString;
+        return resultValue;
     }
 }

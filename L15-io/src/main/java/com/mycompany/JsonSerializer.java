@@ -21,10 +21,10 @@ public class JsonSerializer {
         if (object == null) {
             return "null";
         }
-        Visitor visitor = new JsonSerializationVisitor();
+        JsonVisitor visitor = new JsonSerializationVisitor();
         new JsonSerializer().traverseObject(object, visitor);
 
-        return visitor.toString();
+        return visitor.getJsonValue().toString();
     }
 
     void traverseObject(Object object, Visitor visitor) {
