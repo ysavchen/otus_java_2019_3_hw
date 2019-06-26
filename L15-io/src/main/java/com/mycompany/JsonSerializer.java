@@ -42,35 +42,35 @@ public class JsonSerializer {
 
         } else {
             new TraversedObject(null, object).accept(visitor);
-        }
 
-        Field[] fields = object.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            field.setAccessible(true);
-            if (Modifier.isStatic(field.getModifiers())) {
-                continue;
-            }
-            if (Modifier.isTransient(field.getModifiers())) {
-                continue;
-            }
-            try {
-                if (field.getType() == String.class) {
-                    new TraversedString(field, field.get(object)).accept(visitor);
-
-                } else if (isPrimitiveWrapper(field.getType())) {
-                    new TraversedPrimitiveWrapper(field, field.get(object)).accept(visitor);
-
-                } else if (field.getType().isPrimitive()) {
-                    new TraversedPrimitive(field, field.get(object)).accept(visitor);
-
-                } else if (field.getType().isArray() || field.get(object) instanceof Collection<?>) {
-                    new TraversedArray(field, field.get(object)).accept(visitor);
-
-                } else {
-                    traverseObject(field.get(object), visitor);
+            Field[] fields = object.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                if (Modifier.isStatic(field.getModifiers())) {
+                    continue;
                 }
-            } catch (IllegalAccessException ex) {
-                ex.printStackTrace();
+                if (Modifier.isTransient(field.getModifiers())) {
+                    continue;
+                }
+                try {
+                    if (field.getType() == String.class) {
+                        new TraversedString(field, field.get(object)).accept(visitor);
+
+                    } else if (isPrimitiveWrapper(field.getType())) {
+                        new TraversedPrimitiveWrapper(field, field.get(object)).accept(visitor);
+
+                    } else if (field.getType().isPrimitive()) {
+                        new TraversedPrimitive(field, field.get(object)).accept(visitor);
+
+                    } else if (field.getType().isArray() || field.get(object) instanceof Collection<?>) {
+                        new TraversedArray(field, field.get(object)).accept(visitor);
+
+                    } else {
+                        traverseObject(field.get(object), visitor);
+                    }
+                } catch (IllegalAccessException ex) {
+                    ex.printStackTrace();
+                }
             }
         }
     }

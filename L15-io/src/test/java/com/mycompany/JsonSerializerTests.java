@@ -12,18 +12,16 @@ class JsonSerializerTests {
 
     @Test
     void checkEmployee() {
-        String empString = JsonSerializer.toJson(new Employee("William", "Johnson"));
-        System.out.println("Serialized employee: " + empString);
         Gson gson = new Gson();
-        gson.fromJson(empString, Employee.class);
+        Employee employee = new Employee("William", "Johnson");
+        assertEquals(gson.toJson(employee), JsonSerializer.toJson(employee));
     }
 
     @Test
     void checkDepartment() {
-        String depString = JsonSerializer.toJson(new Department());
-        System.out.println("Serialized department: " + depString);
         Gson gson = new Gson();
-        gson.fromJson(depString, Department.class);
+        Department department = new Department();
+        assertEquals(gson.toJson(department), JsonSerializer.toJson(department));
     }
 
     @Test
@@ -41,6 +39,6 @@ class JsonSerializerTests {
         assertEquals(gson.toJson('a'), JsonSerializer.toJson('a'));
         assertEquals(gson.toJson(new int[]{1, 2, 3}), JsonSerializer.toJson(new int[]{1, 2, 3}));
         assertEquals(gson.toJson(List.of(1, 2, 3)), JsonSerializer.toJson(List.of(1, 2, 3)));
-        //assertEquals(gson.toJson(Collections.singletonList(1)), JsonSerializer.toJson(Collections.singletonList(1)));
+        assertEquals(gson.toJson(Collections.singletonList(1)), JsonSerializer.toJson(Collections.singletonList(1)));
     }
 }
