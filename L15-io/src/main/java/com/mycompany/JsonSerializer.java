@@ -3,8 +3,6 @@ package com.mycompany;
 import com.mycompany.base.Visitor;
 import com.mycompany.types.*;
 
-import javax.json.Json;
-import javax.json.JsonObjectBuilder;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
@@ -21,18 +19,27 @@ public class JsonSerializer {
 
     public static String toJson(Object object) {
         if (object == null) {
-            return "{}";
+            return "null";
         }
-        JsonObjectBuilder builder = Json.createObjectBuilder();
-        Visitor visitor = new JsonSerializationVisitor(builder);
+        Visitor visitor = new JsonSerializationVisitor();
         new JsonSerializer().traverseObject(object, visitor);
 
-        return builder.build().toString();
+        return visitor.toString();
     }
 
     void traverseObject(Object object, Visitor visitor) {
-        if (object.getClass().isArray() || object instanceof Collection<?>) {
+        if (object.getClass() == String.class) {
+            new TraversedString(null, object).accept(visitor);
+
+        } else if (isPrimitiveWrapper(object.getClass())) {
+            new TraversedPrimitiveWrapper(null, object).accept(visitor);
+
+        } else if (object.getClass().isPrimitive()) {
+            new TraversedPrimitive(null, object).accept(visitor);
+
+        } else if (object.getClass().isArray() || object instanceof Collection<?>) {
             new TraversedArray(null, object).accept(visitor);
+
         } else {
             new TraversedObject(null, object).accept(visitor);
         }
@@ -50,9 +57,7 @@ public class JsonSerializer {
                 if (field.getType() == String.class) {
                     new TraversedString(field, field.get(object)).accept(visitor);
 
-                } else if (field.getType() == Integer.class ||
-                        field.getType() == Long.class ||
-                        field.getType() == Double.class) {
+                } else if (isPrimitiveWrapper(field.getType())) {
                     new TraversedPrimitiveWrapper(field, field.get(object)).accept(visitor);
 
                 } else if (field.getType().isPrimitive()) {
@@ -68,5 +73,16 @@ public class JsonSerializer {
                 ex.printStackTrace();
             }
         }
+    }
+
+    private boolean isPrimitiveWrapper(Class<?> clazz) {
+        return clazz == Integer.class ||
+                clazz == Long.class ||
+                clazz == Double.class ||
+                clazz == Float.class ||
+                clazz == Byte.class ||
+                clazz == Short.class ||
+                clazz == Boolean.class ||
+                clazz == Character.class;
     }
 }

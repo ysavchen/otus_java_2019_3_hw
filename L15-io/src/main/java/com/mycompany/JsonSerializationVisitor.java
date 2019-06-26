@@ -10,31 +10,26 @@ import java.util.function.Consumer;
 
 public class JsonSerializationVisitor implements Visitor {
 
-    private final JsonObjectBuilder objectBuilder;
+    private final JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+    private JsonArrayBuilder arrayBuilder;
 
-    JsonSerializationVisitor(JsonObjectBuilder objectBuilder) {
-        this.objectBuilder = objectBuilder;
+    private JsonValue jsonValue;
+
+    JsonSerializationVisitor() {
     }
 
     @Override
     public void visit(TraversedArray value) {
-        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+        JsonArrayBuilder innerArrayBuilder = Json.createArrayBuilder();
         Consumer<Object> consumer = (element) -> {
-            if (element.getClass() == String.class ||
-                    element.getClass() == Integer.class ||
-                    element.getClass() == Long.class ||
-                    element.getClass() == Double.class ||
-                    element.getClass() == Short.class ||
-                    element.getClass() == Float.class ||
-                    element.getClass() == Boolean.class ||
-                    element.getClass() == Byte.class ||
-                    element.getClass().isPrimitive()) {
-                jsonArrayBuilder.add(toJsonValue(element));
+            JsonValue jsonValue = toJsonValue(element);
+            if (jsonValue != null) {
+                innerArrayBuilder.add(jsonValue);
             } else {
                 JsonObjectBuilder innerObjectBuilder = Json.createObjectBuilder();
-                Visitor visitor = new JsonSerializationVisitor(innerObjectBuilder);
+                Visitor visitor = new JsonSerializationVisitor();
                 new JsonSerializer().traverseObject(element, visitor);
-                jsonArrayBuilder.add(innerObjectBuilder);
+                innerArrayBuilder.add(innerObjectBuilder);
             }
         };
 
@@ -47,12 +42,20 @@ public class JsonSerializationVisitor implements Visitor {
             }
         }
 
-        objectBuilder.add(value.getName(), jsonArrayBuilder);
+        if ("null".equals(value.getName())) {
+            this.arrayBuilder = innerArrayBuilder;
+        } else {
+            objectBuilder.add(value.getName(), innerArrayBuilder);
+        }
     }
 
     @Override
     public void visit(TraversedPrimitive value) {
-        objectBuilder.add(value.getName(), toJsonValue(value.getPrimitive()));
+        if ("null".equals(value.getName())) {
+            jsonValue = toJsonValue(value.getPrimitive());
+        } else {
+            objectBuilder.add(value.getName(), toJsonValue(value.getPrimitive()));
+        }
     }
 
     @Override
@@ -62,14 +65,28 @@ public class JsonSerializationVisitor implements Visitor {
 
     @Override
     public void visit(TraversedPrimitiveWrapper value) {
-        objectBuilder.add(value.getName(), toJsonValue(value.getPrimitiveWrapper()));
+        if ("null".equals(value.getName())) {
+            jsonValue = toJsonValue(value.getPrimitiveWrapper());
+        } else {
+            objectBuilder.add(value.getName(), toJsonValue(value.getPrimitiveWrapper()));
+        }
     }
 
     @Override
     public void visit(TraversedString value) {
-        objectBuilder.add(value.getName(), toJsonValue(value.getString()));
+        if ("null".equals(value.getName())) {
+            jsonValue = toJsonValue(value.getString());
+        } else {
+            objectBuilder.add(value.getName(), toJsonValue(value.getString()));
+        }
     }
 
+    /**
+     * Converts an object to json value.
+     *
+     * @param object
+     * @return JsonValue if an object is convertable, otherwise {@code null}
+     */
     private JsonValue toJsonValue(Object object) {
         if (object.getClass() == String.class) {
             return Json.createValue((String) object);
@@ -95,7 +112,22 @@ public class JsonSerializationVisitor implements Visitor {
         if (object.getClass() == Boolean.class || object.getClass() == boolean.class) {
             return ((Boolean) object) ? JsonObject.TRUE : JsonObject.FALSE;
         }
+        if (object.getClass() == Character.class || object.getClass() == char.class) {
+            return Json.createValue(String.valueOf(object));
+        }
+        return null;
+    }
 
-        throw new IllegalArgumentException("Invalid type: " + object.getClass());
+    @Override
+    public String toString() {
+        String jsonString;
+        if (jsonValue != null) {
+            jsonString = jsonValue.toString();
+        } else if (arrayBuilder != null) {
+            jsonString = arrayBuilder.build().toString();
+        } else {
+            jsonString = objectBuilder.build().toString();
+        }
+        return jsonString;
     }
 }
