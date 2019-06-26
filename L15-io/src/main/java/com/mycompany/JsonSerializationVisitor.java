@@ -11,11 +11,7 @@ public class JsonSerializationVisitor implements JsonVisitor {
 
     private final JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
     private JsonArrayBuilder arrayBuilder;
-
     private JsonValue jsonValue;
-
-    JsonSerializationVisitor() {
-    }
 
     @Override
     public void visit(TraversedArray value) {
