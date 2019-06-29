@@ -13,13 +13,47 @@ public class JdbcTemplateImpl implements JdbcTemplate {
 
     private static final String URL = "jdbc:h2:mem:";
 
+    private Connection connection;
+
+    private Connection getConnection() {
+        if (connection == null) {
+            try {
+                connection = DriverManager.getConnection(URL);
+                createTables(connection);
+                connection.setAutoCommit(false);
+            } catch (SQLException ex) {
+                System.out.println("Connection is not created: " + ex.toString());
+                throw new ExceptionInInitializerError(ex);
+            }
+        }
+        return connection;
+    }
+
+    private void createTables(Connection connection) throws SQLException {
+        PreparedStatement psUser = connection.prepareStatement(
+                "create table User(" +
+                        "id bigint(20) NOT NULL auto_increment, " +
+                        "name varchar(255), " +
+                        "age int(3))");
+        PreparedStatement psAccount = connection.prepareStatement(
+                "create table Account(" +
+                        "no bigint(20) NOT NULL auto_increment, " +
+                        "type varchar(255), " +
+                        "rest number)");
+
+        try (psUser; psAccount) {
+            psUser.executeUpdate();
+            psAccount.executeUpdate();
+        }
+    }
+
     @Override
-    public void create(Object objectData) throws SQLException {
+    public void create(Object objectData) {
         Connection connection = getConnection();
-        createTable(connection);
 
         DbExecutor<User> executor = new DbExecutorImpl<>(connection);
-        long userId = executor.insertRecord("insert into user(name) values (?)", Collections.singletonList("testUserName"));
+        long userId = executor.insertRecord("insert into user(name) values (?)",
+                Collections.singletonList("testUserName"));
         System.out.println("created user:" + userId);
         connection.commit();
 
@@ -44,24 +78,7 @@ public class JdbcTemplateImpl implements JdbcTemplate {
     }
 
     @Override
-    public void createOrUpdate(Object objectData) {
-
-    }
-
-    @Override
     public <T> T load(long id, Class<T> clazz) {
         return null;
-    }
-
-    private Connection getConnection() throws SQLException {
-        Connection connection = DriverManager.getConnection(URL);
-        connection.setAutoCommit(false);
-        return connection;
-    }
-
-    private void createTable(Connection connection) throws SQLException {
-        try (PreparedStatement pst = connection.prepareStatement("create table user(id long auto_increment, name varchar(50))")) {
-            pst.executeUpdate();
-        }
     }
 }

@@ -1,14 +1,10 @@
 package com.mycompany.executor;
 
-import java.sql.SQLException;
-
 public interface JdbcTemplate {
 
-    void create(Object objectData) throws SQLException;
+    void create(Object objectData);
 
     void update(Object objectData);
-
-    void createOrUpdate(Object objectData); // опционально.
 
     <T> T load(long id, Class<T> clazz);
 
