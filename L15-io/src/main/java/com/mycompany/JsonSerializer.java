@@ -53,6 +53,9 @@ public class JsonSerializer {
                     continue;
                 }
                 try {
+                    if (field.get(object) == null) {
+                        continue;
+                    }
                     if (field.getType() == String.class) {
                         new TraversedString(field, field.get(object)).accept(visitor);
 

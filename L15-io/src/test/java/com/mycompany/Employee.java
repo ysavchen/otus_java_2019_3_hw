@@ -9,6 +9,8 @@ public class Employee {
     private final String name;
     private final String surname;
 
+    private String someField = null;
+
     private transient String title = "software engineer";
 
     private final boolean isActive = true;

@@ -82,6 +82,9 @@ public class JsonSerializationVisitor implements JsonVisitor {
      * @return JsonValue if an object is convertable, otherwise {@code null}
      */
     private JsonValue toJsonValue(Object object) {
+        if (object == null) {
+            return JsonValue.NULL;
+        }
         if (object.getClass() == String.class) {
             return Json.createValue((String) object);
         }

@@ -2,6 +2,7 @@ package com.mycompany;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 public class Department {
 
@@ -16,7 +17,13 @@ public class Department {
             new Employee("Luke", "Wyatt")
     };
 
+    private final String str = null;
+
     private final String[] typesOfServices = {"Internal", "External"};
+
+    private final List<Employee> managers = Arrays.asList(null, new Employee("Luke", "Wyatt"));
+
+    private final String[] partners = {null, "Oracle"};
 
     private final int[] ints = {1, 2, 3};
 
