@@ -9,7 +9,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -45,10 +45,10 @@ public class JdbcTemplateImpl implements JdbcTemplate {
                         "type varchar(255), " +
                         "rest number)");
 
-      //  try (psUser; psAccount) {
+        try (psUser; psAccount) {
             psUser.executeUpdate();
             psAccount.executeUpdate();
-     //   }
+        }
     }
 
     @Override
@@ -76,22 +76,53 @@ public class JdbcTemplateImpl implements JdbcTemplate {
                 .map(Field::getName)
                 .collect(Collectors.joining(", "));
 
-        List<String> params = Stream.of(fields)
-                .map(field -> {
-                    try {
-                        return field.get(object).toString();
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                        return null;
-                    }
-                }).collect(Collectors.toList());
+        Consumer<PreparedStatement> paramsSetter = pst -> {
+            for (int idx = 0; idx < fields.length; idx++) {
+                try {
+                    setParameter(pst, idx + 1, fields[idx].get(object));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        };
 
         long userId = executor.insertRecord(
                 "insert into " + table + "(" + columns + ")" +
-                        " values (?, ?, ?)", params);
+                        " values (?, ?, ?)", paramsSetter);
         System.out.println("created user:" + userId);
         connection.commit();
         connection.close();
+    }
+
+
+    public void setParameter(PreparedStatement pst, int idx, Object object) throws SQLException {
+        if (object == null) {
+            return;
+        }
+        if (object.getClass() == String.class) {
+            pst.setString(idx, String.valueOf(object));
+        }
+        if (object.getClass() == Integer.class || object.getClass() == int.class) {
+            pst.setInt(idx, (Integer) object);
+        }
+        if (object.getClass() == Long.class || object.getClass() == long.class) {
+            pst.setLong(idx, (Long) object);
+        }
+        if (object.getClass() == Double.class || object.getClass() == double.class) {
+            pst.setDouble(idx, (Double) object);
+        }
+        if (object.getClass() == Float.class || object.getClass() == float.class) {
+            pst.setFloat(idx, (Float) object);
+        }
+        if (object.getClass() == Byte.class || object.getClass() == byte.class) {
+            pst.setByte(idx, (Byte) object);
+        }
+        if (object.getClass() == Short.class || object.getClass() == short.class) {
+            pst.setShort(idx, (Short) object);
+        }
+        if (object.getClass() == Boolean.class || object.getClass() == boolean.class) {
+            pst.setBoolean(idx, (Boolean) object);
+        }
     }
 
     @Override

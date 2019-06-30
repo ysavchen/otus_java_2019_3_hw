@@ -1,8 +1,8 @@
 package com.mycompany.executor;
 
 import java.sql.*;
-import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class DbExecutorImpl<T> implements DbExecutor<T> {
@@ -14,12 +14,13 @@ public class DbExecutorImpl<T> implements DbExecutor<T> {
     }
 
     @Override
-    public long insertRecord(String sql, List<String> params) throws SQLException {
+    public long insertRecord(String sql, Consumer<PreparedStatement> consumer) throws SQLException {
+        System.out.println(sql);
         Savepoint savePoint = this.connection.setSavepoint("savePointName");
-        try (PreparedStatement pst = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            for (int idx = 0; idx < params.size(); idx++) {
-                pst.setString(idx + 1, params.get(idx));
-            }
+        PreparedStatement pst = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+        try (pst) {
+            consumer.accept(pst);
             pst.executeUpdate();
             try (ResultSet rs = pst.getGeneratedKeys()) {
                 rs.next();
