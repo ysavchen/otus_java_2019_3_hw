@@ -1,16 +1,18 @@
 package com.mycompany;
 
-import org.junit.jupiter.api.BeforeEach;
+import com.mycompany.dao.User;
+import com.mycompany.executor.JdbcTemplate;
+import com.mycompany.executor.JdbcTemplateImpl;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class OrmTests {
+class OrmTests {
 
     @Test
-    void checkUser() {
-
+    void checkUser() throws SQLException {
+        User user = new User(1L, "Michael", 35);
+        JdbcTemplate jdbcTemplate = new JdbcTemplateImpl();
+        jdbcTemplate.create(user);
     }
 }

@@ -27,7 +27,6 @@ public class DbExecutorImpl<T> implements DbExecutor<T> {
             }
         } catch (SQLException ex) {
             this.connection.rollback(savePoint);
-            System.out.println(ex.getMessage());
             throw ex;
         }
     }
