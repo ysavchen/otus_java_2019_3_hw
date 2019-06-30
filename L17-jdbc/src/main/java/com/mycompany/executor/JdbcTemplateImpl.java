@@ -1,6 +1,7 @@
 package com.mycompany.executor;
 
 import com.mycompany.annotations.Id;
+import com.mycompany.dao.User;
 import com.mycompany.exceptions.NoIdFoundException;
 import com.mycompany.exceptions.SeveralIdsFoundException;
 
@@ -9,6 +10,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -86,12 +88,13 @@ public class JdbcTemplateImpl implements JdbcTemplate {
             }
         };
 
-        long userId = executor.insertRecord(
+        executor.insertRecord(
                 "insert into " + table + "(" + columns + ")" +
                         " values (?, ?, ?)", paramsSetter);
-        System.out.println("created user:" + userId);
         connection.commit();
-        connection.close();
+
+        //todo: should connection be closed here?
+        //connection.close();
     }
 
 
@@ -131,20 +134,20 @@ public class JdbcTemplateImpl implements JdbcTemplate {
     }
 
     @Override
-    public <T> T load(long id, Class<T> clazz) {
-//        Optional<User> user = executor.selectRecord("select id, name from user where id  = ?", userId, resultSet -> {
-//            try {
-//                if (resultSet.next()) {
-//                    return new User(resultSet.getLong("id"), resultSet.getString("name"));
-//                }
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//            return null;
-//        });
-//        return null;
-//        System.out.println(user);
-        return null;
+    public User load(long id) throws SQLException {
+        Connection connection = getConnection();
+        DbExecutor<User> executor = new DbExecutorImpl<>(connection);
+        Optional<User> entity = executor.selectRecord("select id, name, age from user where id  = ?", id, resultSet -> {
+            try {
+                if (resultSet.next()) {
+                    return new User(resultSet.getLong("id"), resultSet.getString("name"), resultSet.getInt("age"));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        });
+        return entity.get();
     }
 
 }

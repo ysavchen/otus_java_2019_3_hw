@@ -14,18 +14,14 @@ public class DbExecutorImpl<T> implements DbExecutor<T> {
     }
 
     @Override
-    public long insertRecord(String sql, Consumer<PreparedStatement> consumer) throws SQLException {
+    public void insertRecord(String sql, Consumer<PreparedStatement> paramsSetter) throws SQLException {
         System.out.println(sql);
         Savepoint savePoint = this.connection.setSavepoint("savePointName");
         PreparedStatement pst = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
         try (pst) {
-            consumer.accept(pst);
+            paramsSetter.accept(pst);
             pst.executeUpdate();
-            try (ResultSet rs = pst.getGeneratedKeys()) {
-                rs.next();
-                return rs.getInt(1);
-            }
         } catch (SQLException ex) {
             this.connection.rollback(savePoint);
             throw ex;

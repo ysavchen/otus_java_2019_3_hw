@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class OrmTests {
 
     @Test
@@ -14,5 +16,6 @@ class OrmTests {
         User user = new User(1L, "Michael", 35);
         JdbcTemplate jdbcTemplate = new JdbcTemplateImpl();
         jdbcTemplate.create(user);
+        assertEquals(user, jdbcTemplate.load(1L));
     }
 }
