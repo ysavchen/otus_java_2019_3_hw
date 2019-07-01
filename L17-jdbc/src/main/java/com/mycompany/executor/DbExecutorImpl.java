@@ -1,7 +1,6 @@
 package com.mycompany.executor;
 
 import java.sql.*;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -29,11 +28,11 @@ public class DbExecutorImpl<T> implements DbExecutor<T> {
     }
 
     @Override
-    public Optional<T> selectRecord(String sql, long id, Function<ResultSet, T> rsHandler) throws SQLException {
+    public T selectRecord(String sql, long id, Function<ResultSet, T> rsHandler) throws SQLException {
         try (PreparedStatement pst = this.connection.prepareStatement(sql)) {
             pst.setLong(1, id);
             try (ResultSet rs = pst.executeQuery()) {
-                return Optional.ofNullable(rsHandler.apply(rs));
+                return rsHandler.apply(rs);
             }
         }
     }

@@ -13,9 +13,11 @@ class OrmTests {
 
     @Test
     void checkUser() throws SQLException {
-        User user = new User(1L, "Michael", 35);
+        User user = new User();
+        user.setId(1L).setName("Michael").setAge(35);
         JdbcTemplate jdbcTemplate = new JdbcTemplateImpl();
         jdbcTemplate.create(user);
-        assertEquals(user, jdbcTemplate.load(1L));
+        assertEquals(user, jdbcTemplate.load(1L, User.class),
+                "User is not saved or not loaded");
     }
 }

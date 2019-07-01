@@ -7,16 +7,28 @@ import java.util.Objects;
 public class Account {
 
     @Id
-    private final long no;
+    private long no;
 
-    private final String type;
+    private String type;
 
-    private final int rest;
+    private int rest;
 
-    public Account(long no, String type, int rest) {
+    public Account() {
+    }
+
+    public Account setNo(long no) {
         this.no = no;
+        return this;
+    }
+
+    public Account setType(String type) {
         this.type = type;
+        return this;
+    }
+
+    public Account setRest(int rest) {
         this.rest = rest;
+        return this;
     }
 
     public long getNo() {

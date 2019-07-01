@@ -11,5 +11,5 @@ public interface DbExecutor<T> {
 
     void insertRecord(String sql, Consumer<PreparedStatement> paramsSetter) throws SQLException;
 
-    Optional<T> selectRecord(String sql, long id, Function<ResultSet, T> rsHandler) throws SQLException;
+    T selectRecord(String sql, long id, Function<ResultSet, T> rsHandler) throws SQLException;
 }

@@ -1,16 +1,12 @@
 package com.mycompany.executor;
 
+import com.mycompany.ReflectionUtils;
 import com.mycompany.annotations.Id;
-import com.mycompany.dao.User;
 import com.mycompany.exceptions.NoIdFoundException;
 import com.mycompany.exceptions.SeveralIdsFoundException;
 
 import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.Optional;
+import java.sql.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -134,20 +130,82 @@ public class JdbcTemplateImpl implements JdbcTemplate {
     }
 
     @Override
-    public User load(long id) throws SQLException {
+    public <T> T load(long id, Class<T> clazz) throws SQLException {
         Connection connection = getConnection();
-        DbExecutor<User> executor = new DbExecutorImpl<>(connection);
-        Optional<User> entity = executor.selectRecord("select id, name, age from user where id  = ?", id, resultSet -> {
+        DbExecutor<T> executor = new DbExecutorImpl<>(connection);
+
+        Object object = ReflectionUtils.instantiate(clazz);
+
+        Field[] fields = object.getClass().getDeclaredFields();
+        int numIds = 0;
+        for (var field : fields) {
+            field.setAccessible(true);
+            if (field.getAnnotation(Id.class) != null) {
+                numIds++;
+            }
+        }
+
+        if (numIds == 0) {
+            throw new NoIdFoundException("Entity does not have a field with @Id - " + object);
+        }
+        if (numIds > 1) {
+            throw new SeveralIdsFoundException("Entity have several fields with @Id - " + object);
+        }
+
+        String table = object.getClass().getSimpleName();
+        String columns = Stream.of(fields)
+                .map(Field::getName)
+                .collect(Collectors.joining(", "));
+
+
+        T entity = executor.selectRecord("select " + columns + " from " + table + " where id  = ?", id, resultSet -> {
             try {
                 if (resultSet.next()) {
-                    return new User(resultSet.getLong("id"), resultSet.getString("name"), resultSet.getInt("age"));
+                    for (int idx = 0; idx < fields.length; idx++) {
+                        fields[idx].setAccessible(true);
+                        try {
+                            Object value = getValue(resultSet, idx + 1, fields[idx].get(object));
+                            fields[idx].set(object, value);
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                    return clazz.cast(object);
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
             }
             return null;
         });
-        return entity.get();
+        return entity;
+    }
+
+    private Object getValue(ResultSet rs, int idx, Object object) throws SQLException {
+        if (object.getClass() == String.class) {
+            return rs.getString(idx);
+        }
+        if (object.getClass() == Integer.class || object.getClass() == int.class) {
+            return rs.getInt(idx);
+        }
+        if (object.getClass() == Long.class || object.getClass() == long.class) {
+            return rs.getLong(idx);
+        }
+        if (object.getClass() == Double.class || object.getClass() == double.class) {
+            return rs.getDouble(idx);
+        }
+        if (object.getClass() == Float.class || object.getClass() == float.class) {
+            return rs.getFloat(idx);
+        }
+        if (object.getClass() == Byte.class || object.getClass() == byte.class) {
+            return rs.getByte(idx);
+        }
+        if (object.getClass() == Short.class || object.getClass() == short.class) {
+            return rs.getShort(idx);
+        }
+        if (object.getClass() == Boolean.class || object.getClass() == boolean.class) {
+            return rs.getBoolean(idx);
+        }
+        return null;
     }
 
 }

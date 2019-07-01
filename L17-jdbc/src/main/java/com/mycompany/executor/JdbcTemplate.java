@@ -1,7 +1,5 @@
 package com.mycompany.executor;
 
-import com.mycompany.dao.User;
-
 import java.sql.SQLException;
 
 public interface JdbcTemplate {
@@ -10,6 +8,6 @@ public interface JdbcTemplate {
 
     void update(Object objectData);
 
-    User load(long id) throws SQLException;
+    <T> T load(long id, Class<T> clazz) throws SQLException;
 
 }

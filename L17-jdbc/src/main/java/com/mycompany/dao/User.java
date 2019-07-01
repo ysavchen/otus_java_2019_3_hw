@@ -7,16 +7,28 @@ import java.util.Objects;
 public class User {
 
     @Id
-    private final long id;
+    private long id;
 
-    private final String name;
+    private String name;
 
     private int age;
 
-    public User(long id, String name, int age) {
+    public User(){
+    }
+
+    public User setId(long id) {
         this.id = id;
+        return this;
+    }
+
+    public User setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public User setAge(int age) {
         this.age = age;
+        return this;
     }
 
     public long getId() {
