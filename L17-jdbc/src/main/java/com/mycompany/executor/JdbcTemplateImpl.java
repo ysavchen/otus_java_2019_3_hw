@@ -161,11 +161,13 @@ public class JdbcTemplateImpl implements JdbcTemplate {
         T entity = executor.selectRecord("select " + columns + " from " + table + " where id  = ?", id, resultSet -> {
             try {
                 if (resultSet.next()) {
-                    for (int idx = 0; idx < fields.length; idx++) {
-                        fields[idx].setAccessible(true);
+                    int idx = 1;
+                    for (int i = 0; i < fields.length; i++) {
+                        fields[i].setAccessible(true);
                         try {
-                            Object value = getValue(resultSet, idx + 1, fields[idx].get(object));
-                            fields[idx].set(object, value);
+                            Object value = getValue(resultSet, idx, fields[i].getType());
+                            fields[i].set(object, value);
+                            idx++;
                         } catch (Exception ex) {
                             ex.printStackTrace();
                         }
@@ -180,29 +182,29 @@ public class JdbcTemplateImpl implements JdbcTemplate {
         return entity;
     }
 
-    private Object getValue(ResultSet rs, int idx, Object object) throws SQLException {
-        if (object.getClass() == String.class) {
+    private Object getValue(ResultSet rs, int idx, Class<?> typeOfField) throws SQLException {
+        if (typeOfField == String.class) {
             return rs.getString(idx);
         }
-        if (object.getClass() == Integer.class || object.getClass() == int.class) {
+        if (typeOfField == Integer.class || typeOfField == int.class) {
             return rs.getInt(idx);
         }
-        if (object.getClass() == Long.class || object.getClass() == long.class) {
+        if (typeOfField == Long.class || typeOfField == long.class) {
             return rs.getLong(idx);
         }
-        if (object.getClass() == Double.class || object.getClass() == double.class) {
+        if (typeOfField == Double.class || typeOfField == double.class) {
             return rs.getDouble(idx);
         }
-        if (object.getClass() == Float.class || object.getClass() == float.class) {
+        if (typeOfField == Float.class || typeOfField == float.class) {
             return rs.getFloat(idx);
         }
-        if (object.getClass() == Byte.class || object.getClass() == byte.class) {
+        if (typeOfField == Byte.class || typeOfField == byte.class) {
             return rs.getByte(idx);
         }
-        if (object.getClass() == Short.class || object.getClass() == short.class) {
+        if (typeOfField == Short.class || typeOfField == short.class) {
             return rs.getShort(idx);
         }
-        if (object.getClass() == Boolean.class || object.getClass() == boolean.class) {
+        if (typeOfField == Boolean.class || typeOfField == boolean.class) {
             return rs.getBoolean(idx);
         }
         return null;
