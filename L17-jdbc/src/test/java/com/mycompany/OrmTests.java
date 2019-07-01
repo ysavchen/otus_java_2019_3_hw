@@ -19,5 +19,10 @@ class OrmTests {
         jdbcTemplate.create(user);
         assertEquals(user, jdbcTemplate.load(1L, User.class),
                 "User is not saved or not loaded");
+
+        user.setName("Klaus");
+        jdbcTemplate.update(user);
+        assertEquals(user, jdbcTemplate.load(1L, User.class),
+                "User is not saved or not loaded");
     }
 }

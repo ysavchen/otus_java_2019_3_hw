@@ -6,7 +6,7 @@ public interface JdbcTemplate {
 
     void create(Object objectData) throws SQLException;
 
-    void update(Object objectData);
+    void update(Object objectData) throws SQLException;
 
     <T> T load(long id, Class<T> clazz) throws SQLException;
 

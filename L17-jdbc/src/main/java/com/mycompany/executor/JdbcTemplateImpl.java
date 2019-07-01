@@ -125,8 +125,50 @@ public class JdbcTemplateImpl implements JdbcTemplate {
     }
 
     @Override
-    public void update(Object objectData) {
+    public void update(Object object) throws SQLException {
+        Field[] fields = object.getClass().getDeclaredFields();
+        int numIds = 0;
+        for (var field : fields) {
+            field.setAccessible(true);
+            if (field.getAnnotation(Id.class) != null) {
+                numIds++;
+            }
+        }
 
+        if (numIds == 0) {
+            throw new NoIdFoundException("Entity does not have a field with @Id - " + object);
+        }
+        if (numIds > 1) {
+            throw new SeveralIdsFoundException("Entity have several fields with @Id - " + object);
+        }
+
+        Connection connection = getConnection();
+        DbExecutor<?> executor = new DbExecutorImpl<>(connection);
+        String table = object.getClass().getSimpleName();
+        StringBuilder update = new StringBuilder();
+        update.append("set ");
+        for (int i = 0; i < fields.length; i++) {
+            String name = fields[i].getName();
+            if (i > 0) {
+                update.append(", ");
+            }
+            update.append(name).append(" = ?");
+        }
+
+        Consumer<PreparedStatement> paramsSetter = pst -> {
+            for (int idx = 0; idx < fields.length; idx++) {
+                try {
+                    setParameter(pst, idx + 1, fields[idx].get(object));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        };
+
+
+        executor.insertRecord(
+                "update " + table + " " + update, paramsSetter);
+        connection.commit();
     }
 
     @Override
