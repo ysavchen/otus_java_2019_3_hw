@@ -96,6 +96,8 @@ public class JdbcTemplateImpl implements JdbcTemplate {
                 .collect(Collectors.joining(", "));
 
         T entity = executor.selectRecord(
+                //todo: instead of 'id' must be a column marked with @Id
+                //todo: does not work with account
                 "select " + columns + " from " + table + " where id  = ?", id,
                 resultSet -> {
                     try {
