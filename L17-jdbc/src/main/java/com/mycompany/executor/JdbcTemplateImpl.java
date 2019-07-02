@@ -77,8 +77,7 @@ public class JdbcTemplateImpl implements JdbcTemplate {
             }
         };
 
-        executor.insertRecord(
-                "update " + table + " " + update, paramsSetter);
+        executor.insertRecord("update " + table + " " + update, paramsSetter);
         connection.commit();
     }
 
@@ -95,10 +94,17 @@ public class JdbcTemplateImpl implements JdbcTemplate {
                 .map(Field::getName)
                 .collect(Collectors.joining(", "));
 
+        String idField = Stream.of(fields)
+                .filter(field -> {
+                            field.setAccessible(true);
+                            return field.getAnnotation(Id.class) != null;
+                        }
+                ).findFirst()
+                .orElseThrow(() -> new NoIdFoundException("Entity does not have a field with @Id - " + object))
+                .getName();
+
         T entity = executor.selectRecord(
-                //todo: instead of 'id' must be a column marked with @Id
-                //todo: does not work with account
-                "select " + columns + " from " + table + " where id  = ?", id,
+                "select " + columns + " from " + table + " where " + idField + "  = ?", id,
                 resultSet -> {
                     try {
                         if (resultSet.next()) {

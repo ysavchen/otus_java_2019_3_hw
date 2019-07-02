@@ -60,6 +60,11 @@ class OrmTests {
         assertEquals(user, jdbcTemplate.load(1L, User.class),
                 "User is not saved or not loaded");
 
+        user.setName(null);
+        jdbcTemplate.update(user);
+        assertEquals(user, jdbcTemplate.load(1L, User.class),
+                "User is not saved or not loaded");
+
         connection.close();
     }
 
@@ -82,4 +87,5 @@ class OrmTests {
 
         connection.close();
     }
+
 }
