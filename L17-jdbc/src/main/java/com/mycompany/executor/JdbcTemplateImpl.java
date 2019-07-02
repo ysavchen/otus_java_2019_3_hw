@@ -34,10 +34,11 @@ public class JdbcTemplateImpl implements JdbcTemplate {
                 .collect(Collectors.joining(", "));
 
         Consumer<PreparedStatement> paramsSetter = pst -> {
-            //todo: idx incremented twice within one cycle
-            for (int idx = 0; idx < fields.length; idx++) {
+            int idx = 1;
+            for (Field field : fields) {
                 try {
-                    setParameter(pst, idx + 1, fields[idx].get(object));
+                    setParameter(pst, idx, field.get(object));
+                    idx++;
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -69,10 +70,11 @@ public class JdbcTemplateImpl implements JdbcTemplate {
         }
 
         Consumer<PreparedStatement> paramsSetter = pst -> {
-            //todo: idx incremented twice within one cycle
-            for (int idx = 0; idx < fields.length; idx++) {
+            int idx = 1;
+            for (Field field : fields) {
                 try {
-                    setParameter(pst, idx + 1, fields[idx].get(object));
+                    setParameter(pst, idx, field.get(object));
+                    idx++;
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -113,17 +115,14 @@ public class JdbcTemplateImpl implements JdbcTemplate {
                             int idx = 1;
                             for (Field field : fields) {
                                 field.setAccessible(true);
-                                try {
-                                    Object value = getValue(resultSet, idx, field.getType());
-                                    field.set(object, value);
-                                    idx++;
-                                } catch (Exception ex) {
-                                    ex.printStackTrace();
-                                }
+
+                                Object value = getValue(resultSet, idx, field.getType());
+                                field.set(object, value);
+                                idx++;
                             }
                             return clazz.cast(object);
                         }
-                    } catch (SQLException ex) {
+                    } catch (SQLException | IllegalAccessException ex) {
                         ex.printStackTrace();
                     }
                     return null;
