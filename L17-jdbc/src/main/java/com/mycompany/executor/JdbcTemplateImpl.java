@@ -34,6 +34,7 @@ public class JdbcTemplateImpl implements JdbcTemplate {
                 .collect(Collectors.joining(", "));
 
         Consumer<PreparedStatement> paramsSetter = pst -> {
+            //todo: idx incremented twice within one cycle
             for (int idx = 0; idx < fields.length; idx++) {
                 try {
                     setParameter(pst, idx + 1, fields[idx].get(object));
@@ -68,6 +69,7 @@ public class JdbcTemplateImpl implements JdbcTemplate {
         }
 
         Consumer<PreparedStatement> paramsSetter = pst -> {
+            //todo: idx incremented twice within one cycle
             for (int idx = 0; idx < fields.length; idx++) {
                 try {
                     setParameter(pst, idx + 1, fields[idx].get(object));
