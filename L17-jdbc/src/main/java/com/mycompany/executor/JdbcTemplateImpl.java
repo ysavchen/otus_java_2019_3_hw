@@ -6,10 +6,7 @@ import com.mycompany.exceptions.NoIdFoundException;
 import com.mycompany.exceptions.SeveralIdsFoundException;
 
 import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -170,36 +167,39 @@ public class JdbcTemplateImpl implements JdbcTemplate {
 
     private void setParameter(PreparedStatement pst, int idx, Object object) throws SQLException {
         if (object == null) {
+            pst.setNull(idx, Types.NULL);
             return;
         }
-        if (object.getClass() == String.class) {
+
+        Class<?> objClass = object.getClass();
+        if (objClass == String.class || objClass == Character.class || objClass == char.class) {
             pst.setString(idx, String.valueOf(object));
         }
-        if (object.getClass() == Integer.class || object.getClass() == int.class) {
+        if (objClass == Integer.class || objClass == int.class) {
             pst.setInt(idx, (Integer) object);
         }
-        if (object.getClass() == Long.class || object.getClass() == long.class) {
+        if (objClass == Long.class || objClass == long.class) {
             pst.setLong(idx, (Long) object);
         }
-        if (object.getClass() == Double.class || object.getClass() == double.class) {
+        if (objClass == Double.class || objClass == double.class) {
             pst.setDouble(idx, (Double) object);
         }
-        if (object.getClass() == Float.class || object.getClass() == float.class) {
+        if (objClass == Float.class || objClass == float.class) {
             pst.setFloat(idx, (Float) object);
         }
-        if (object.getClass() == Byte.class || object.getClass() == byte.class) {
+        if (objClass == Byte.class || objClass == byte.class) {
             pst.setByte(idx, (Byte) object);
         }
-        if (object.getClass() == Short.class || object.getClass() == short.class) {
+        if (objClass == Short.class || objClass == short.class) {
             pst.setShort(idx, (Short) object);
         }
-        if (object.getClass() == Boolean.class || object.getClass() == boolean.class) {
+        if (objClass == Boolean.class || objClass == boolean.class) {
             pst.setBoolean(idx, (Boolean) object);
         }
     }
 
     private Object getValue(ResultSet rs, int idx, Class<?> typeOfField) throws SQLException {
-        if (typeOfField == String.class) {
+        if (typeOfField == String.class || typeOfField == Character.class || typeOfField == char.class) {
             return rs.getString(idx);
         }
         if (typeOfField == Integer.class || typeOfField == int.class) {

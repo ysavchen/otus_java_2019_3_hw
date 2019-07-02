@@ -96,6 +96,32 @@ class OrmTests {
                 "Account is not updated");
     }
 
+    @Test
+    void checkNull() {
+        User user = new User();
+        user.setId(3L).setName(null);
+
+        JdbcTemplate jdbcTemplate = new JdbcTemplateImpl(connection);
+        jdbcTemplate.create(user);
+        assertEquals(user, jdbcTemplate.load(3L, User.class),
+                "User with name = null is not saved or loaded");
+
+        user.setAge(25);
+        jdbcTemplate.update(user);
+        assertEquals(user, jdbcTemplate.load(3L, User.class),
+                "User with name = null is not updated");
+    }
+
+    @Test
+    void checkNoIdFoundException() {
+
+    }
+
+    @Test
+    void checkSeveralIdsFoundException() {
+
+    }
+
     @AfterAll
     static void closeConnection() throws SQLException {
         connection.close();
