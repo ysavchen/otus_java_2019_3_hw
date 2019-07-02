@@ -7,6 +7,7 @@ import com.mycompany.exceptions.SeveralIdsFoundException;
 
 import java.lang.reflect.Field;
 import java.sql.*;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -21,6 +22,8 @@ public class JdbcTemplateImpl implements JdbcTemplate {
 
     @Override
     public void create(Object object) {
+        Objects.requireNonNull(object);
+
         Field[] fields = object.getClass().getDeclaredFields();
         checkIdPresent(object, fields);
 
@@ -55,6 +58,8 @@ public class JdbcTemplateImpl implements JdbcTemplate {
 
     @Override
     public void update(Object object) {
+        Objects.requireNonNull(object);
+
         Field[] fields = object.getClass().getDeclaredFields();
         checkIdPresent(object, fields);
         DbExecutor<?> executor = new DbExecutorImpl<>(connection);

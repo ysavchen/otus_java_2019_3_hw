@@ -15,8 +15,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class OrmTests {
 
@@ -100,7 +99,7 @@ class OrmTests {
     }
 
     @Test
-    void checkNull() {
+    void checkNullFields() {
         User user = new User();
         user.setId(3L).setName(null);
 
@@ -113,6 +112,23 @@ class OrmTests {
         jdbcTemplate.update(user);
         assertEquals(user, jdbcTemplate.load(3L, User.class),
                 "User with name = null is not updated");
+    }
+
+    @Test
+    void checkNullObject() {
+        User user = null;
+        JdbcTemplate jdbcTemplate = new JdbcTemplateImpl(connection);
+
+        assertThrows(NullPointerException.class,
+                () -> jdbcTemplate.create(user));
+        assertThrows(NullPointerException.class,
+                () -> jdbcTemplate.update(user));
+    }
+
+    @Test
+    void checkLoadForNonExistingId() {
+        JdbcTemplate jdbcTemplate = new JdbcTemplateImpl(connection);
+        assertNull(jdbcTemplate.load(100L, User.class));
     }
 
     @Test
