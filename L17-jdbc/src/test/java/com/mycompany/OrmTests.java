@@ -47,41 +47,53 @@ class OrmTests {
     }
 
     @Test
-    void checkUser() throws SQLException {
+    void createAndLoadUser() {
         User user = new User();
         user.setId(1L).setName("Michael").setAge(35);
-        JdbcTemplate jdbcTemplate = new JdbcTemplateImpl(connection);
 
+        JdbcTemplate jdbcTemplate = new JdbcTemplateImpl(connection);
         jdbcTemplate.create(user);
         assertEquals(user, jdbcTemplate.load(1L, User.class),
                 "User is not saved or not loaded");
-
-        user.setName("Klaus");
-        jdbcTemplate.update(user);
-        assertEquals(user, jdbcTemplate.load(1L, User.class),
-                "User is not saved or not loaded");
-
-//        user.setName(null);
-//        jdbcTemplate.update(user);
-//        assertEquals(user, jdbcTemplate.load(1L, User.class),
-//                "User is not saved or not loaded");
     }
 
     @Test
-    void checkAccount() throws SQLException {
-        JdbcTemplate jdbcTemplate = new JdbcTemplateImpl(connection);
-
+    void createAndLoadAccount() {
         Account account = new Account();
-        account.setNo(3L).setType("Personal").setRest(500);
+        account.setNo(1L).setType("Personal").setRest(500);
 
+        JdbcTemplate jdbcTemplate = new JdbcTemplateImpl(connection);
         jdbcTemplate.create(account);
-        assertEquals(account, jdbcTemplate.load(3L, Account.class),
+        assertEquals(account, jdbcTemplate.load(1L, Account.class),
                 "Account is not saved or not loaded");
+    }
 
-        account.setRest(450);
+    @Test
+    void updateUser() {
+        User user = new User();
+        user.setId(2L).setName("Marcus").setAge(30);
+
+        JdbcTemplate jdbcTemplate = new JdbcTemplateImpl(connection);
+        jdbcTemplate.create(user);
+
+        user.setName("Klaus").setAge(31);
+        jdbcTemplate.update(user);
+        assertEquals(user, jdbcTemplate.load(2L, User.class),
+                "User is not updated");
+    }
+
+    @Test
+    void updateAccount() {
+        Account account = new Account();
+        account.setNo(2L).setType("Corporate").setRest(100000);
+
+        JdbcTemplate jdbcTemplate = new JdbcTemplateImpl(connection);
+        jdbcTemplate.create(account);
+
+        account.setRest(50000);
         jdbcTemplate.update(account);
-        assertEquals(account, jdbcTemplate.load(3L, Account.class),
-                "Account is not saved or not loaded");
+        assertEquals(account, jdbcTemplate.load(2L, Account.class),
+                "Account is not updated");
     }
 
     @AfterAll

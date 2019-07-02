@@ -23,7 +23,7 @@ public class JdbcTemplateImpl implements JdbcTemplate {
     }
 
     @Override
-    public void create(Object object) throws SQLException {
+    public void create(Object object) {
         Field[] fields = object.getClass().getDeclaredFields();
         checkIdPresent(object, fields);
 
@@ -45,15 +45,19 @@ public class JdbcTemplateImpl implements JdbcTemplate {
             }
         };
 
-        executor.insertRecord(
-                "insert into " + table + "(" + columns + ")" +
-                        " values (?, ?, ?)", paramsSetter);
-        connection.commit();
+        try {
+            executor.insertRecord(
+                    "insert into " + table + "(" + columns + ")" +
+                            " values (?, ?, ?)", paramsSetter);
+            connection.commit();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
 
     @Override
-    public void update(Object object) throws SQLException {
+    public void update(Object object) {
         Field[] fields = object.getClass().getDeclaredFields();
         checkIdPresent(object, fields);
         DbExecutor<?> executor = new DbExecutorImpl<>(connection);
@@ -81,13 +85,16 @@ public class JdbcTemplateImpl implements JdbcTemplate {
             }
         };
 
-        executor.insertRecord("update " + table + " " + update, paramsSetter);
-        connection.commit();
+        try {
+            executor.insertRecord("update " + table + " " + update, paramsSetter);
+            connection.commit();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
-
     @Override
-    public <T> T load(long id, Class<T> clazz) throws SQLException {
+    public <T> T load(long id, Class<T> clazz) {
         Object object = ReflectionUtils.instantiate(clazz);
         Field[] fields = object.getClass().getDeclaredFields();
         checkIdPresent(object, fields);
@@ -107,31 +114,43 @@ public class JdbcTemplateImpl implements JdbcTemplate {
                 .orElseThrow(() -> new NoIdFoundException("Entity does not have a field with @Id - " + object))
                 .getName();
 
-        T entity = executor.selectRecord(
-                "select " + columns + " from " + table + " where " + idField + "  = ?", id,
-                resultSet -> {
-                    try {
-                        if (resultSet.next()) {
-                            int idx = 1;
-                            for (Field field : fields) {
-                                field.setAccessible(true);
+        T entity = null;
+        try {
+            entity = executor.selectRecord(
+                    "select " + columns + " from " + table + " where " + idField + "  = ?", id,
+                    resultSet -> {
+                        try {
+                            if (resultSet.next()) {
+                                int idx = 1;
+                                for (Field field : fields) {
+                                    field.setAccessible(true);
 
-                                Object value = getValue(resultSet, idx, field.getType());
-                                field.set(object, value);
-                                idx++;
+                                    Object value = getValue(resultSet, idx, field.getType());
+                                    field.set(object, value);
+                                    idx++;
+                                }
+                                return clazz.cast(object);
                             }
-                            return clazz.cast(object);
+                        } catch (SQLException | IllegalAccessException ex) {
+                            ex.printStackTrace();
                         }
-                    } catch (SQLException | IllegalAccessException ex) {
-                        ex.printStackTrace();
-                    }
-                    return null;
-                });
+                        return null;
+                    });
 
-        connection.commit();
+            connection.commit();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
         return entity;
     }
 
+    /**
+     * Checks if an object has an exactly one field marked by @Id.
+     *
+     * @param object object to insert/update/select
+     * @param fields fields of the object
+     */
     private void checkIdPresent(Object object, Field[] fields) {
         int numIds = 0;
         for (var field : fields) {
