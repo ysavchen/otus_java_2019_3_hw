@@ -17,7 +17,6 @@ JdbcTemplate должен сохранять объект в базу и чит�
 Методы JdbcTemplate'а:
 void create(T objectData);
 void update(T objectData);
-void createOrUpdate(T objectData); // опционально.
 <T> T load(long id, Class<T> clazz);
 
 Проверьте его работу на классе User.
@@ -31,6 +30,3 @@ void createOrUpdate(T objectData); // опционально.
 • rest number
 
 Создайте для этой таблицы класс Account и проверьте работу JdbcTemplate на этом классе.
-
-Еще одна опция (по желанию):
-Реализовать абстракцию DBService для объектов User и Account.
