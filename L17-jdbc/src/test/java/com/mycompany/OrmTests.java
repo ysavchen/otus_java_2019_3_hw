@@ -2,6 +2,8 @@ package com.mycompany;
 
 import com.mycompany.dao.Account;
 import com.mycompany.dao.User;
+import com.mycompany.exceptions.NoIdFoundException;
+import com.mycompany.exceptions.SeveralIdsFoundException;
 import com.mycompany.executor.JdbcTemplate;
 import com.mycompany.executor.JdbcTemplateImpl;
 import org.junit.jupiter.api.AfterAll;
@@ -14,6 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class OrmTests {
 
@@ -114,12 +117,28 @@ class OrmTests {
 
     @Test
     void checkNoIdFoundException() {
+        NoIdEntity noIdEntity = new NoIdEntity();
+        JdbcTemplate jdbcTemplate = new JdbcTemplateImpl(connection);
 
+        assertThrows(NoIdFoundException.class,
+                () -> jdbcTemplate.create(noIdEntity));
+        assertThrows(NoIdFoundException.class,
+                () -> jdbcTemplate.update(noIdEntity));
+        assertThrows(NoIdFoundException.class,
+                () -> jdbcTemplate.load(1L, NoIdEntity.class));
     }
 
     @Test
     void checkSeveralIdsFoundException() {
+        SeveralIdsEntity sevIdsEntity = new SeveralIdsEntity();
+        JdbcTemplate jdbcTemplate = new JdbcTemplateImpl(connection);
 
+        assertThrows(SeveralIdsFoundException.class,
+                () -> jdbcTemplate.create(sevIdsEntity));
+        assertThrows(SeveralIdsFoundException.class,
+                () -> jdbcTemplate.update(sevIdsEntity));
+        assertThrows(SeveralIdsFoundException.class,
+                () -> jdbcTemplate.load(1L, SeveralIdsEntity.class));
     }
 
     @AfterAll
