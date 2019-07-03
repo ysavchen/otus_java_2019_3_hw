@@ -24,6 +24,7 @@ public class JdbcTemplateImpl implements JdbcTemplate {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void create(Object object) {
         Objects.requireNonNull(object);
 
@@ -40,7 +41,14 @@ public class JdbcTemplateImpl implements JdbcTemplate {
             int idx = 1;
             for (Field field : fields) {
                 try {
-                    pst.setObject(idx, field.get(object));
+                    Object value = field.get(object);
+
+                    Convert convert = field.getAnnotation(Convert.class);
+                    if (field.getAnnotation(Convert.class) != null) {
+                        value = ReflectionUtils.instantiate(convert.converter())
+                                .convertToDatabaseColumn(value);
+                    }
+                    pst.setObject(idx, value);
                     idx++;
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -60,6 +68,7 @@ public class JdbcTemplateImpl implements JdbcTemplate {
 
 
     @Override
+    @SuppressWarnings("unchecked")
     public void update(Object object) {
         Objects.requireNonNull(object);
 
@@ -82,7 +91,14 @@ public class JdbcTemplateImpl implements JdbcTemplate {
             int idx = 1;
             for (Field field : fields) {
                 try {
-                    pst.setObject(idx, field.get(object));
+                    Object value = field.get(object);
+
+                    Convert convert = field.getAnnotation(Convert.class);
+                    if (field.getAnnotation(Convert.class) != null) {
+                        value = ReflectionUtils.instantiate(convert.converter())
+                                .convertToDatabaseColumn(value);
+                    }
+                    pst.setObject(idx, value);
                     idx++;
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -99,6 +115,7 @@ public class JdbcTemplateImpl implements JdbcTemplate {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T load(long id, Class<T> clazz) {
         Object object = ReflectionUtils.instantiate(clazz);
         Field[] fields = object.getClass().getDeclaredFields();
@@ -134,7 +151,6 @@ public class JdbcTemplateImpl implements JdbcTemplate {
 
                                     Convert convert = field.getAnnotation(Convert.class);
                                     if (field.getAnnotation(Convert.class) != null) {
-
                                         value = ReflectionUtils.instantiate(convert.converter())
                                                 .convertToEntityAttribute(value);
                                     }
