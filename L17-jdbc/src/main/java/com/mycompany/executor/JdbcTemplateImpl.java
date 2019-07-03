@@ -1,12 +1,15 @@
 package com.mycompany.executor;
 
 import com.mycompany.ReflectionUtils;
+import com.mycompany.annotations.Convert;
 import com.mycompany.annotations.Id;
 import com.mycompany.exceptions.NoIdFoundException;
 import com.mycompany.exceptions.SeveralIdsFoundException;
 
 import java.lang.reflect.Field;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -37,7 +40,7 @@ public class JdbcTemplateImpl implements JdbcTemplate {
             int idx = 1;
             for (Field field : fields) {
                 try {
-                    setParameter(pst, idx, field.get(object));
+                    pst.setObject(idx, field.get(object));
                     idx++;
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -79,7 +82,7 @@ public class JdbcTemplateImpl implements JdbcTemplate {
             int idx = 1;
             for (Field field : fields) {
                 try {
-                    setParameter(pst, idx, field.get(object));
+                    pst.setObject(idx, field.get(object));
                     idx++;
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -127,7 +130,14 @@ public class JdbcTemplateImpl implements JdbcTemplate {
                                 for (Field field : fields) {
                                     field.setAccessible(true);
 
-                                    Object value = getValue(resultSet, idx, field.getType());
+                                    Object value = resultSet.getObject(idx);
+
+                                    Convert convert = field.getAnnotation(Convert.class);
+                                    if (field.getAnnotation(Convert.class) != null) {
+
+                                        value = ReflectionUtils.instantiate(convert.converter())
+                                                .convertToEntityAttribute(value);
+                                    }
                                     field.set(object, value);
                                     idx++;
                                 }
@@ -169,66 +179,4 @@ public class JdbcTemplateImpl implements JdbcTemplate {
             throw new SeveralIdsFoundException("Entity have several fields with @Id - " + object);
         }
     }
-
-    private void setParameter(PreparedStatement pst, int idx, Object object) throws SQLException {
-        if (object == null) {
-            pst.setNull(idx, Types.NULL);
-            return;
-        }
-
-        Class<?> objClass = object.getClass();
-        if (objClass == String.class || objClass == Character.class || objClass == char.class) {
-            pst.setString(idx, String.valueOf(object));
-        }
-        if (objClass == Integer.class || objClass == int.class) {
-            pst.setInt(idx, (Integer) object);
-        }
-        if (objClass == Long.class || objClass == long.class) {
-            pst.setLong(idx, (Long) object);
-        }
-        if (objClass == Double.class || objClass == double.class) {
-            pst.setDouble(idx, (Double) object);
-        }
-        if (objClass == Float.class || objClass == float.class) {
-            pst.setFloat(idx, (Float) object);
-        }
-        if (objClass == Byte.class || objClass == byte.class) {
-            pst.setByte(idx, (Byte) object);
-        }
-        if (objClass == Short.class || objClass == short.class) {
-            pst.setShort(idx, (Short) object);
-        }
-        if (objClass == Boolean.class || objClass == boolean.class) {
-            pst.setBoolean(idx, (Boolean) object);
-        }
-    }
-
-    private Object getValue(ResultSet rs, int idx, Class<?> typeOfField) throws SQLException {
-        if (typeOfField == String.class || typeOfField == Character.class || typeOfField == char.class) {
-            return rs.getString(idx);
-        }
-        if (typeOfField == Integer.class || typeOfField == int.class) {
-            return rs.getInt(idx);
-        }
-        if (typeOfField == Long.class || typeOfField == long.class) {
-            return rs.getLong(idx);
-        }
-        if (typeOfField == Double.class || typeOfField == double.class) {
-            return rs.getDouble(idx);
-        }
-        if (typeOfField == Float.class || typeOfField == float.class) {
-            return rs.getFloat(idx);
-        }
-        if (typeOfField == Byte.class || typeOfField == byte.class) {
-            return rs.getByte(idx);
-        }
-        if (typeOfField == Short.class || typeOfField == short.class) {
-            return rs.getShort(idx);
-        }
-        if (typeOfField == Boolean.class || typeOfField == boolean.class) {
-            return rs.getBoolean(idx);
-        }
-        return null;
-    }
-
 }

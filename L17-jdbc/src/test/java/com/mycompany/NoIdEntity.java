@@ -1,6 +1,6 @@
 package com.mycompany;
 
-public class NoIdEntity {
+class NoIdEntity {
 
     private long id;
 
