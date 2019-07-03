@@ -12,8 +12,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.joining;
 
 public class JdbcTemplateImpl implements JdbcTemplate {
 
@@ -23,8 +24,8 @@ public class JdbcTemplateImpl implements JdbcTemplate {
         this.connection = connection;
     }
 
-    @Override
     @SuppressWarnings("unchecked")
+    @Override
     public void create(Object object) {
         Objects.requireNonNull(object);
 
@@ -35,7 +36,10 @@ public class JdbcTemplateImpl implements JdbcTemplate {
         String table = object.getClass().getSimpleName();
         String columns = Stream.of(fields)
                 .map(Field::getName)
-                .collect(Collectors.joining(", "));
+                .collect(joining(", "));
+        String values = Stream.of(fields)
+                .map(field -> "?")
+                .collect(joining(", "));
 
         Consumer<PreparedStatement> paramsSetter = pst -> {
             int idx = 1;
@@ -56,10 +60,11 @@ public class JdbcTemplateImpl implements JdbcTemplate {
             }
         };
 
+
         try {
             executor.insertRecord(
                     "insert into " + table + "(" + columns + ")" +
-                            " values (?, ?, ?)", paramsSetter);
+                            " values (" + values + ")", paramsSetter);
             connection.commit();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -67,8 +72,8 @@ public class JdbcTemplateImpl implements JdbcTemplate {
     }
 
 
-    @Override
     @SuppressWarnings("unchecked")
+    @Override
     public void update(Object object) {
         Objects.requireNonNull(object);
 
@@ -114,8 +119,8 @@ public class JdbcTemplateImpl implements JdbcTemplate {
         }
     }
 
-    @Override
     @SuppressWarnings("unchecked")
+    @Override
     public <T> T load(long id, Class<T> clazz) {
         Object object = ReflectionUtils.instantiate(clazz);
         Field[] fields = object.getClass().getDeclaredFields();
@@ -125,7 +130,7 @@ public class JdbcTemplateImpl implements JdbcTemplate {
         String table = object.getClass().getSimpleName();
         String columns = Stream.of(fields)
                 .map(Field::getName)
-                .collect(Collectors.joining(", "));
+                .collect(joining(", "));
 
         String idField = Stream.of(fields)
                 .filter(field -> {
