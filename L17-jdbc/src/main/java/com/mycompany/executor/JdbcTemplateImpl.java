@@ -2,26 +2,28 @@ package com.mycompany.executor;
 
 import com.mycompany.ReflectionUtils;
 import com.mycompany.annotations.Convert;
-import com.mycompany.annotations.Id;
-import com.mycompany.exceptions.NoIdFoundException;
-import com.mycompany.exceptions.SeveralIdsFoundException;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.joining;
 
 public class JdbcTemplateImpl implements JdbcTemplate {
 
     private final Connection connection;
 
+    private final Map<RequestTypes, RequestPattern> reqDetailsMap = new HashMap<>();
+
     public JdbcTemplateImpl(Connection connection) {
+
         this.connection = connection;
+        for (var reqType : RequestTypes.values()) {
+            reqDetailsMap.put(reqType, new RequestPattern(reqType));
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -29,21 +31,14 @@ public class JdbcTemplateImpl implements JdbcTemplate {
     public void create(Object object) {
         Objects.requireNonNull(object);
 
-        Field[] fields = object.getClass().getDeclaredFields();
-        checkIdPresent(object, fields);
-
-        DbExecutor<?> executor = new DbExecutorImpl<>(connection);
-        String table = object.getClass().getSimpleName();
-        String columns = Stream.of(fields)
-                .map(Field::getName)
-                .collect(joining(", "));
-        String values = Stream.of(fields)
-                .map(field -> "?")
-                .collect(joining(", "));
+        var reqDetails = reqDetailsMap.get(RequestTypes.INSERT);
+        reqDetails.analyze(object);
 
         Consumer<PreparedStatement> paramsSetter = pst -> {
             int idx = 1;
-            for (Field field : fields) {
+            for (Field field : object.getClass().getDeclaredFields()) {
+                field.setAccessible(true);
+
                 try {
                     Object value = field.get(object);
 
@@ -60,11 +55,10 @@ public class JdbcTemplateImpl implements JdbcTemplate {
             }
         };
 
-
+        DbExecutor<?> executor = new DbExecutorImpl<>(connection);
+        System.out.println(reqDetails.getRequest());
         try {
-            executor.insertRecord(
-                    "insert into " + table + "(" + columns + ")" +
-                            " values (" + values + ")", paramsSetter);
+            executor.insertRecord(reqDetails.getRequest(), paramsSetter);
             connection.commit();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -77,24 +71,14 @@ public class JdbcTemplateImpl implements JdbcTemplate {
     public void update(Object object) {
         Objects.requireNonNull(object);
 
-        Field[] fields = object.getClass().getDeclaredFields();
-        checkIdPresent(object, fields);
-        DbExecutor<?> executor = new DbExecutorImpl<>(connection);
-
-        String table = object.getClass().getSimpleName();
-        StringBuilder update = new StringBuilder();
-        update.append("set ");
-        for (int i = 0; i < fields.length; i++) {
-            String name = fields[i].getName();
-            if (i > 0) {
-                update.append(", ");
-            }
-            update.append(name).append(" = ?");
-        }
+        var reqDetails = reqDetailsMap.get(RequestTypes.UPDATE);
+        reqDetails.analyze(object);
 
         Consumer<PreparedStatement> paramsSetter = pst -> {
             int idx = 1;
-            for (Field field : fields) {
+            for (Field field : object.getClass().getDeclaredFields()) {
+                field.setAccessible(true);
+
                 try {
                     Object value = field.get(object);
 
@@ -111,8 +95,10 @@ public class JdbcTemplateImpl implements JdbcTemplate {
             }
         };
 
+        DbExecutor<?> executor = new DbExecutorImpl<>(connection);
+        System.out.println(reqDetails.getRequest());
         try {
-            executor.insertRecord("update " + table + " " + update, paramsSetter);
+            executor.insertRecord(reqDetails.getRequest(), paramsSetter);
             connection.commit();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -123,33 +109,22 @@ public class JdbcTemplateImpl implements JdbcTemplate {
     @Override
     public <T> T load(long id, Class<T> clazz) {
         Object object = ReflectionUtils.instantiate(clazz);
-        Field[] fields = object.getClass().getDeclaredFields();
-        checkIdPresent(object, fields);
+
+        var reqDetails = reqDetailsMap.get(RequestTypes.LOAD);
+        reqDetails.analyze(object);
+
         DbExecutor<T> executor = new DbExecutorImpl<>(connection);
 
-        String table = object.getClass().getSimpleName();
-        String columns = Stream.of(fields)
-                .map(Field::getName)
-                .collect(joining(", "));
-
-        String idField = Stream.of(fields)
-                .filter(field -> {
-                            field.setAccessible(true);
-                            return field.getAnnotation(Id.class) != null;
-                        }
-                ).findFirst()
-                .orElseThrow(() -> new NoIdFoundException("Entity does not have a field with @Id - " + object))
-                .getName();
-
+        System.out.println(reqDetails.getRequest());
         T entity = null;
         try {
             entity = executor.selectRecord(
-                    "select " + columns + " from " + table + " where " + idField + "  = ?", id,
+                    reqDetails.getRequest(), id,
                     resultSet -> {
                         try {
                             if (resultSet.next()) {
                                 int idx = 1;
-                                for (Field field : fields) {
+                                for (Field field : clazz.getDeclaredFields()) {
                                     field.setAccessible(true);
 
                                     Object value = resultSet.getObject(idx);
@@ -178,26 +153,5 @@ public class JdbcTemplateImpl implements JdbcTemplate {
         return entity;
     }
 
-    /**
-     * Checks if an object has an exactly one field marked by @Id.
-     *
-     * @param object object to insert/update/select
-     * @param fields fields of the object
-     */
-    private void checkIdPresent(Object object, Field[] fields) {
-        int numIds = 0;
-        for (var field : fields) {
-            field.setAccessible(true);
-            if (field.getAnnotation(Id.class) != null) {
-                numIds++;
-            }
-        }
 
-        if (numIds == 0) {
-            throw new NoIdFoundException("Entity does not have a field with @Id - " + object);
-        }
-        if (numIds > 1) {
-            throw new SeveralIdsFoundException("Entity have several fields with @Id - " + object);
-        }
-    }
 }
