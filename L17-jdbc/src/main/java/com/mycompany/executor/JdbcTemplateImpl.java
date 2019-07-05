@@ -30,9 +30,7 @@ public class JdbcTemplateImpl implements JdbcTemplate {
     @Override
     public void create(Object object) {
         Objects.requireNonNull(object);
-
-        var reqDetails = reqDetailsMap.get(RequestTypes.INSERT);
-        reqDetails.analyze(object);
+        String sqlRequest = reqDetailsMap.get(RequestTypes.INSERT).analyze(object);
 
         Consumer<PreparedStatement> paramsSetter = pst -> {
             int idx = 1;
@@ -56,9 +54,9 @@ public class JdbcTemplateImpl implements JdbcTemplate {
         };
 
         DbExecutor<?> executor = new DbExecutorImpl<>(connection);
-        System.out.println(reqDetails.getRequest());
+        System.out.println(sqlRequest);
         try {
-            executor.insertRecord(reqDetails.getRequest(), paramsSetter);
+            executor.insertRecord(sqlRequest, paramsSetter);
             connection.commit();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -71,8 +69,7 @@ public class JdbcTemplateImpl implements JdbcTemplate {
     public void update(Object object) {
         Objects.requireNonNull(object);
 
-        var reqDetails = reqDetailsMap.get(RequestTypes.UPDATE);
-        reqDetails.analyze(object);
+        String sqlRequest = reqDetailsMap.get(RequestTypes.UPDATE).analyze(object);
 
         Consumer<PreparedStatement> paramsSetter = pst -> {
             int idx = 1;
@@ -96,9 +93,9 @@ public class JdbcTemplateImpl implements JdbcTemplate {
         };
 
         DbExecutor<?> executor = new DbExecutorImpl<>(connection);
-        System.out.println(reqDetails.getRequest());
+        System.out.println(sqlRequest);
         try {
-            executor.insertRecord(reqDetails.getRequest(), paramsSetter);
+            executor.insertRecord(sqlRequest, paramsSetter);
             connection.commit();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -110,17 +107,14 @@ public class JdbcTemplateImpl implements JdbcTemplate {
     public <T> T load(long id, Class<T> clazz) {
         Object object = ReflectionUtils.instantiate(clazz);
 
-        var reqDetails = reqDetailsMap.get(RequestTypes.LOAD);
-        reqDetails.analyze(object);
-
+        String sqlRequest = reqDetailsMap.get(RequestTypes.LOAD).analyze(object);
         DbExecutor<T> executor = new DbExecutorImpl<>(connection);
 
-        System.out.println(reqDetails.getRequest());
+        System.out.println(sqlRequest);
         T entity = null;
         try {
             entity = executor.selectRecord(
-                    reqDetails.getRequest(), id,
-                    resultSet -> {
+                    sqlRequest, id, resultSet -> {
                         try {
                             if (resultSet.next()) {
                                 int idx = 1;
@@ -152,6 +146,5 @@ public class JdbcTemplateImpl implements JdbcTemplate {
 
         return entity;
     }
-
 
 }
