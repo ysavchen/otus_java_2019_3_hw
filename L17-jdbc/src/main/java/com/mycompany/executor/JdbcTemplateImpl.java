@@ -63,7 +63,6 @@ public class JdbcTemplateImpl implements JdbcTemplate {
         }
     }
 
-
     @SuppressWarnings("unchecked")
     @Override
     public void update(Object object) {
