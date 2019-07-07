@@ -1,14 +1,11 @@
 package com.mycompany;
 
-import com.mycompany.dao.Account;
 import com.mycompany.dao.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
 
 public class HibernateDemo {
 
@@ -21,19 +18,13 @@ public class HibernateDemo {
     }
 
     private HibernateDemo() {
-        Configuration configuration = new Configuration()
-                .configure("hibernate.cfg.xml");
-
-        StandardServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-                .applySettings(configuration.getProperties()).build();
-
-        Metadata metadata = new MetadataSources(serviceRegistry)
-                .addAnnotatedClass(User.class)
-                .addAnnotatedClass(Account.class)
-                .getMetadataBuilder()
+        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
+                .configure()
                 .build();
 
-        sessionFactory = metadata.getSessionFactoryBuilder().build();
+        sessionFactory = new MetadataSources(registry)
+                .buildMetadata()
+                .buildSessionFactory();
     }
 
     private void entityExample() {
