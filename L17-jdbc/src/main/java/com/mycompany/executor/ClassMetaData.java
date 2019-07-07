@@ -8,28 +8,28 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-class RequestPattern {
+class ClassMetaData {
 
     private final Map<Class<?>, RequestDetails> requestDetails = new HashMap<>();
 
     private final RequestTypes requestType;
 
-    RequestPattern(RequestTypes requestType) {
+    ClassMetaData(RequestTypes requestType) {
         this.requestType = requestType;
     }
 
-    String analyze(Object object) {
+    RequestDetails analyze(Object object) {
         Class<?> clazz = object.getClass();
 
         RequestDetails details = requestDetails.get(clazz);
         if (details != null) {
-            return details.getRequest();
+            return details;
         }
 
         checkIdPresent(clazz);
         details = new RequestDetails(requestType, clazz);
         requestDetails.put(clazz, details);
-        return details.getRequest();
+        return details;
     }
 
     /**

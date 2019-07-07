@@ -16,13 +16,13 @@ public class JdbcTemplateImpl implements JdbcTemplate {
 
     private final Connection connection;
 
-    private final Map<RequestTypes, RequestPattern> reqDetailsMap = new HashMap<>();
+    private final Map<RequestTypes, ClassMetaData> classMetaDataMap = new HashMap<>();
 
     public JdbcTemplateImpl(Connection connection) {
 
         this.connection = connection;
         for (var reqType : RequestTypes.values()) {
-            reqDetailsMap.put(reqType, new RequestPattern(reqType));
+            classMetaDataMap.put(reqType, new ClassMetaData(reqType));
         }
     }
 
@@ -30,11 +30,11 @@ public class JdbcTemplateImpl implements JdbcTemplate {
     @Override
     public void create(Object object) {
         Objects.requireNonNull(object);
-        String sqlRequest = reqDetailsMap.get(RequestTypes.INSERT).analyze(object);
+        var requestDetails = classMetaDataMap.get(RequestTypes.INSERT).analyze(object);
 
         Consumer<PreparedStatement> paramsSetter = pst -> {
             int idx = 1;
-            for (Field field : object.getClass().getDeclaredFields()) {
+            for (Field field : requestDetails.getClassFields()) {
                 field.setAccessible(true);
 
                 try {
@@ -54,9 +54,8 @@ public class JdbcTemplateImpl implements JdbcTemplate {
         };
 
         DbExecutor<?> executor = new DbExecutorImpl<>(connection);
-        System.out.println(sqlRequest);
         try {
-            executor.insertRecord(sqlRequest, paramsSetter);
+            executor.insertRecord(requestDetails.getRequest(), paramsSetter);
             connection.commit();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -68,11 +67,11 @@ public class JdbcTemplateImpl implements JdbcTemplate {
     public void update(Object object) {
         Objects.requireNonNull(object);
 
-        String sqlRequest = reqDetailsMap.get(RequestTypes.UPDATE).analyze(object);
+        var requestDetails = classMetaDataMap.get(RequestTypes.UPDATE).analyze(object);
 
         Consumer<PreparedStatement> paramsSetter = pst -> {
             int idx = 1;
-            for (Field field : object.getClass().getDeclaredFields()) {
+            for (Field field : requestDetails.getClassFields()) {
                 field.setAccessible(true);
 
                 try {
@@ -92,9 +91,8 @@ public class JdbcTemplateImpl implements JdbcTemplate {
         };
 
         DbExecutor<?> executor = new DbExecutorImpl<>(connection);
-        System.out.println(sqlRequest);
         try {
-            executor.insertRecord(sqlRequest, paramsSetter);
+            executor.insertRecord(requestDetails.getRequest(), paramsSetter);
             connection.commit();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -106,18 +104,17 @@ public class JdbcTemplateImpl implements JdbcTemplate {
     public <T> T load(long id, Class<T> clazz) {
         Object object = ReflectionUtils.instantiate(clazz);
 
-        String sqlRequest = reqDetailsMap.get(RequestTypes.LOAD).analyze(object);
+        var requestDetails = classMetaDataMap.get(RequestTypes.LOAD).analyze(object);
         DbExecutor<T> executor = new DbExecutorImpl<>(connection);
 
-        System.out.println(sqlRequest);
         T entity = null;
         try {
             entity = executor.selectRecord(
-                    sqlRequest, id, resultSet -> {
+                    requestDetails.getRequest(), id, resultSet -> {
                         try {
                             if (resultSet.next()) {
                                 int idx = 1;
-                                for (Field field : clazz.getDeclaredFields()) {
+                                for (Field field : requestDetails.getClassFields()) {
                                     field.setAccessible(true);
 
                                     Object value = resultSet.getObject(idx);

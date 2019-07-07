@@ -12,6 +12,8 @@ class RequestDetails {
 
     private final RequestTypes requestType;
 
+    private final Field[] fields;
+
     private final String table;
     private String columns;
     private String sqlRequest;
@@ -19,7 +21,8 @@ class RequestDetails {
     RequestDetails(RequestTypes requestType, Class<?> clazz) {
         this.requestType = requestType;
         this.table = clazz.getSimpleName();
-        setColumns(clazz.getDeclaredFields());
+        this.fields = clazz.getDeclaredFields();
+        setColumns();
         generateSqlRequest(clazz);
     }
 
@@ -28,7 +31,11 @@ class RequestDetails {
         return sqlRequest;
     }
 
-    private void setColumns(Field[] fields) {
+    Field[] getClassFields() {
+        return fields;
+    }
+
+    private void setColumns() {
         switch (requestType) {
             case INSERT:
             case LOAD:
