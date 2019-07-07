@@ -41,7 +41,7 @@ public class JdbcTemplateImpl implements JdbcTemplate {
                     Object value = field.get(object);
 
                     Convert convert = field.getAnnotation(Convert.class);
-                    if (field.getAnnotation(Convert.class) != null) {
+                    if (convert != null) {
                         value = ReflectionUtils.instantiate(convert.converter())
                                 .convertToDatabaseColumn(value);
                     }
@@ -79,7 +79,7 @@ public class JdbcTemplateImpl implements JdbcTemplate {
                     Object value = field.get(object);
 
                     Convert convert = field.getAnnotation(Convert.class);
-                    if (field.getAnnotation(Convert.class) != null) {
+                    if (convert != null) {
                         value = ReflectionUtils.instantiate(convert.converter())
                                 .convertToDatabaseColumn(value);
                     }
@@ -123,7 +123,7 @@ public class JdbcTemplateImpl implements JdbcTemplate {
                                     Object value = resultSet.getObject(idx);
 
                                     Convert convert = field.getAnnotation(Convert.class);
-                                    if (field.getAnnotation(Convert.class) != null) {
+                                    if (convert != null) {
                                         value = ReflectionUtils.instantiate(convert.converter())
                                                 .convertToEntityAttribute(value);
                                     }

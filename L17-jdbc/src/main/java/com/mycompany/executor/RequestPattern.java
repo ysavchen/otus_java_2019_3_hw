@@ -20,13 +20,13 @@ class RequestPattern {
 
     String analyze(Object object) {
         Class<?> clazz = object.getClass();
-        checkIdPresent(clazz);
 
         RequestDetails details = requestDetails.get(clazz);
         if (details != null) {
             return details.getRequest();
         }
 
+        checkIdPresent(clazz);
         details = new RequestDetails(requestType, clazz);
         requestDetails.put(clazz, details);
         return details.getRequest();
