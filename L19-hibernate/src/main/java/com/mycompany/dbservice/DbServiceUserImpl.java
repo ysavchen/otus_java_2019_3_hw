@@ -29,7 +29,6 @@ public class DbServiceUserImpl implements DbServiceUser {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             User user = session.get(User.class, id);
-            Hibernate.initialize(user);
             session.getTransaction().commit();
             return Optional.ofNullable(user);
         }
