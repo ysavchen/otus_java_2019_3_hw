@@ -1,7 +1,6 @@
 package com.mycompany.dbservice;
 
 import com.mycompany.dao.User;
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
