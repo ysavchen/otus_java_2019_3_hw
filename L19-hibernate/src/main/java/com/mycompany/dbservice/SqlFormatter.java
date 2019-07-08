@@ -1,4 +1,4 @@
-package com.mycompany.template;
+package com.mycompany.dbservice;
 
 import com.p6spy.engine.spy.appender.MessageFormattingStrategy;
 import org.hibernate.engine.jdbc.internal.BasicFormatterImpl;

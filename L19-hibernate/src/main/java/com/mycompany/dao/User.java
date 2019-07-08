@@ -1,7 +1,9 @@
 package com.mycompany.dao;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "User")
@@ -16,6 +18,12 @@ public class User {
 
     @Column(name = "age")
     private Integer age;
+
+    @Transient
+    Set<AddressDataSet> addressData = new HashSet<>();
+
+    @Transient
+    Set<PhoneDataSet> phoneData = new HashSet<>();
 
     public User() {
     }

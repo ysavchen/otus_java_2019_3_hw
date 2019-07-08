@@ -14,7 +14,6 @@
         <property name="hbm2ddl.auto">create</property>
 
         <mapping class="com.mycompany.dao.User"/>
-        <mapping class="com.mycompany.dao.Account"/>
 
     </session-factory>
 
