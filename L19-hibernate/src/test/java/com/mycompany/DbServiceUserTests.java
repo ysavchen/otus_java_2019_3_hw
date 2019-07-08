@@ -1,5 +1,7 @@
 package com.mycompany;
 
+import com.mycompany.dao.Address;
+import com.mycompany.dao.Phone;
 import com.mycompany.dao.User;
 import com.mycompany.dbservice.DbServiceUser;
 import com.mycompany.dbservice.DbServiceUserImpl;
@@ -10,6 +12,8 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -31,7 +35,25 @@ class DbServiceUserTests {
     @Test
     void createAndLoadUser() {
         User user = new User();
-        user.setId(1L).setName("Michael").setAge(35);
+        user.setName("Michael").setAge(35);
+
+        DbServiceUser dbService = new DbServiceUserImpl(sessionFactory);
+        dbService.saveUser(user);
+        assertEquals(user, dbService.getUser(1L).orElse(null),
+                "User is not saved or not loaded");
+    }
+
+    @Test
+    void createAndLoadUserWithPhoneAndAddress() {
+        User user = new User().setName("Henrich").setAge(27);
+
+        Phone phone1 = new Phone().setUser(user).setNumber("111");
+        Phone phone2 = new Phone().setUser(user).setNumber("222");
+        user.setPhoneData(Set.of(phone1, phone2));
+
+        Address address1 = new Address().setUser(user).setStreet("Fasanenstraße 15");
+        Address address2 = new Address().setUser(user).setStreet("Grolmanstr. 36");
+        user.setAddressData(Set.of(address1, address2));
 
         DbServiceUser dbService = new DbServiceUserImpl(sessionFactory);
         dbService.saveUser(user);

@@ -33,16 +33,18 @@ public class Phone {
         return number;
     }
 
-    public void setNumber(String number) {
+    public Phone setNumber(String number) {
         this.number = number;
+        return this;
     }
 
     public User getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public Phone setUser(User user) {
         this.user = user;
+        return this;
     }
 
     @Override

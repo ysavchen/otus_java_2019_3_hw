@@ -33,16 +33,18 @@ public class Address {
         return street;
     }
 
-    public void setStreet(String street) {
+    public Address setStreet(String street) {
         this.street = street;
+        return this;
     }
 
     public User getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public Address setUser(User user) {
         this.user = user;
+        return this;
     }
 
     @Override
