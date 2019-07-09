@@ -1,5 +1,6 @@
 package com.mycompany.dao;
 
+import com.mycompany.annotations.Convert;
 import com.mycompany.annotations.Id;
 
 import java.util.Objects;
@@ -11,7 +12,8 @@ public class Account {
 
     private String type;
 
-    private int rest;
+    @Convert(converter = IntegerBigDecimalConverter.class)
+    private Integer rest;
 
     public Account() {
     }
@@ -39,7 +41,7 @@ public class Account {
         return type;
     }
 
-    public int getRest() {
+    public Number getRest() {
         return rest;
     }
 
@@ -49,7 +51,7 @@ public class Account {
         if (o == null || getClass() != o.getClass()) return false;
         Account account = (Account) o;
         return no == account.no &&
-                rest == account.rest &&
+                rest.equals(account.rest) &&
                 Objects.equals(type, account.type);
     }
 

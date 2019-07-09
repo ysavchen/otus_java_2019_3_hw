@@ -2,7 +2,7 @@ package com.mycompany;
 
 import com.mycompany.annotations.Id;
 
-public class SeveralIdsEntity {
+class SeveralIdsEntity {
 
     @Id
     private long id;
