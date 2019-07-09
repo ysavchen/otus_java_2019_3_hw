@@ -9,7 +9,7 @@ public class Address {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private long id;
 
     @Column(name = "street")
     private String street;
@@ -21,11 +21,11 @@ public class Address {
     public Address() {
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

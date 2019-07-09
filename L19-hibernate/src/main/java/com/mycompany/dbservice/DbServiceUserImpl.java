@@ -1,6 +1,7 @@
 package com.mycompany.dbservice;
 
 import com.mycompany.dao.User;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -15,19 +16,30 @@ public class DbServiceUserImpl implements DbServiceUser {
     }
 
     @Override
-    public void saveUser(User user) {
+    public Long saveUser(User user) {
+        Long id;
         try (Session session = sessionFactory.openSession()) {
+            System.out.println("Save user");
             session.beginTransaction();
             session.save(user);
+            id = user.getId();
             session.getTransaction().commit();
         }
+        return id;
     }
 
     @Override
     public Optional<User> getUser(long id) {
+        System.out.println("Get user by id = " + id);
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             User user = session.get(User.class, id);
+
+            if (user != null) {
+                Hibernate.initialize(user.getAddressData());
+                Hibernate.initialize(user.getPhoneData());
+            }
+
             session.getTransaction().commit();
             return Optional.ofNullable(user);
         }

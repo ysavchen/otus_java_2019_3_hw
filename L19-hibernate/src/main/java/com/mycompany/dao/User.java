@@ -11,7 +11,7 @@ public class User {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private long id;
 
     @Column(name = "name")
     private String name;
@@ -28,7 +28,7 @@ public class User {
     public User() {
     }
 
-    public User setId(Long id) {
+    public User setId(long id) {
         this.id = id;
         return this;
     }
@@ -43,7 +43,7 @@ public class User {
         return this;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
@@ -76,8 +76,8 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id.equals(user.id) &&
-                age.equals(user.age) &&
+        return Objects.equals(id, user.id) &&
+                Objects.equals(age, user.age) &&
                 Objects.equals(name, user.name);
     }
 
