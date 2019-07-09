@@ -10,7 +10,7 @@ import java.util.Map;
 
 class ClassMetaData {
 
-    private final Map<Class<?>, RequestDetails> requestDetails = new HashMap<>();
+    private final Map<Class<?>, RequestDetails> classMetaData = new HashMap<>();
 
     private final RequestTypes requestType;
 
@@ -21,14 +21,14 @@ class ClassMetaData {
     RequestDetails analyze(Object object) {
         Class<?> clazz = object.getClass();
 
-        RequestDetails details = requestDetails.get(clazz);
+        RequestDetails details = classMetaData.get(clazz);
         if (details != null) {
             return details;
         }
 
         checkIdPresent(clazz);
         details = new RequestDetails(requestType, clazz);
-        requestDetails.put(clazz, details);
+        classMetaData.put(clazz, details);
         return details;
     }
 
