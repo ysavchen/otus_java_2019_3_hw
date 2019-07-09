@@ -16,8 +16,8 @@ public class DbServiceUserImpl implements DbServiceUser {
     }
 
     @Override
-    public Long saveUser(User user) {
-        Long id;
+    public long saveUser(User user) {
+        long id;
         try (Session session = sessionFactory.openSession()) {
             System.out.println("Save user");
             session.beginTransaction();
