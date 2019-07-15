@@ -31,6 +31,7 @@
         <module>L13-structural-patterns</module>
         <module>L15-io</module>
         <module>L17-jdbc</module>
+        <module>L21-cache</module>
     </modules>
 
     <properties>
