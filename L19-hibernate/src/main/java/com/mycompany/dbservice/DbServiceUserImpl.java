@@ -21,7 +21,7 @@ public class DbServiceUserImpl implements DbServiceUser {
         try (Session session = sessionFactory.openSession()) {
             System.out.println("Save user");
             session.beginTransaction();
-            session.save(user);
+            session.saveOrUpdate(user);
             id = user.getId();
             session.getTransaction().commit();
         }

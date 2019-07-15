@@ -97,6 +97,17 @@ class DbServiceUserTests {
         assertTrue(dbService.getUser(100L).isEmpty());
     }
 
+    @Test
+    void createUserCustomTest() {
+        User user = new User();
+        user.setName("Michael").setAge(35);
+
+        DbServiceUser dbService = new DbServiceUserImpl(sessionFactory);
+        long id1 = dbService.saveUser(user);
+        long id2 = dbService.saveUser(user);
+        assertEquals(id1, id2);
+    }
+
     @AfterAll
     static void closeConnection() {
         sessionFactory.close();
