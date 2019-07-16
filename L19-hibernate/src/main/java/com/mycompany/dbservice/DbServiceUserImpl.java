@@ -5,6 +5,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+import javax.persistence.RollbackException;
 import java.util.Optional;
 
 public class DbServiceUserImpl implements DbServiceUser {
@@ -17,13 +18,18 @@ public class DbServiceUserImpl implements DbServiceUser {
 
     @Override
     public long saveUser(User user) {
-        long id;
+        System.out.println("Save user");
+        long id = 0;
         try (Session session = sessionFactory.openSession()) {
-            System.out.println("Save user");
-            session.beginTransaction();
-            session.saveOrUpdate(user);
-            id = user.getId();
-            session.getTransaction().commit();
+            try {
+                session.beginTransaction();
+                session.saveOrUpdate(user);
+                id = user.getId();
+                session.getTransaction().commit();
+            } catch (RollbackException ex) {
+                session.getTransaction().rollback();
+                System.out.println("Save is not successful" + ex.toString());
+            }
         }
         return id;
     }
@@ -31,16 +37,23 @@ public class DbServiceUserImpl implements DbServiceUser {
     @Override
     public Optional<User> getUser(long id) {
         System.out.println("Get user by id = " + id);
+        User user = null;
         try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            User user = session.get(User.class, id);
+            try {
+                session.beginTransaction();
+                user = session.get(User.class, id);
 
-            if (user != null) {
-                Hibernate.initialize(user.getAddressData());
-                Hibernate.initialize(user.getPhoneData());
+                if (user != null) {
+                    Hibernate.initialize(user.getAddressData());
+                    Hibernate.initialize(user.getPhoneData());
+                }
+
+                session.getTransaction().commit();
+            } catch (RollbackException ex) {
+                session.getTransaction().rollback();
+                System.out.println("Save is not successful" + ex.toString());
             }
 
-            session.getTransaction().commit();
             return Optional.ofNullable(user);
         }
     }
