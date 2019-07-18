@@ -1,5 +1,6 @@
 package com.mycompany.dbservice;
 
+import com.mycompany.cache.CacheEngine;
 import com.mycompany.data.User;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
@@ -12,10 +13,17 @@ public class DbServiceUserImpl implements DbServiceUser {
 
     private final SessionFactory sessionFactory;
 
+    private CacheEngine cache;
+
     public DbServiceUserImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
+    public void addCache(CacheEngine<Long, User> cache) {
+        this.cache = cache;
+    }
+
+    @SuppressWarnings("unchecked")
     @Override
     public long saveUser(User user) {
         System.out.println("Save user");
@@ -31,13 +39,20 @@ public class DbServiceUserImpl implements DbServiceUser {
                 System.out.println("Save is not successful" + ex.toString());
             }
         }
+        if (cache != null) {
+            cache.put(id, user);
+        }
         return id;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Optional<User> getUser(long id) {
         System.out.println("Get user by id = " + id);
         User user = null;
+        if (cache != null) {
+            return Optional.ofNullable((User) cache.get(id));
+        }
         try (Session session = sessionFactory.openSession()) {
             try {
                 session.beginTransaction();
