@@ -7,7 +7,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.function.Function;
 
-public class MyCacheEngine<K, V> implements CacheEngine<K, V> {
+public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
 
     private static final int TIME_THRESHOLD_MS = 5;
 
@@ -45,7 +45,7 @@ public class MyCacheEngine<K, V> implements CacheEngine<K, V> {
      */
     private final boolean isEternal;
 
-    public MyCacheEngine(int maxElements, long lifeTimeMs, long idleTimeMs, boolean isEternal) {
+    public CacheEngineImpl(int maxElements, long lifeTimeMs, long idleTimeMs, boolean isEternal) {
         this.maxElements = maxElements;
         this.lifeTimeMs = lifeTimeMs > 0 ? lifeTimeMs : 0;
         this.idleTimeMs = idleTimeMs > 0 ? idleTimeMs : 0;
