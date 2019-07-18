@@ -1,4 +1,4 @@
-package com.mycompany.executor;
+package com.mycompany.template;
 
 import com.mycompany.ReflectionUtils;
 import com.mycompany.annotations.Convert;

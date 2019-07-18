@@ -31,6 +31,7 @@
         <module>L13-structural-patterns</module>
         <module>L15-io</module>
         <module>L17-jdbc</module>
+        <module>L19-hibernate</module>
         <module>L21-cache</module>
     </modules>
 
@@ -112,6 +113,16 @@
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
                 <version>1.4.197</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-core</artifactId>
+                <version>5.4.3.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>p6spy</groupId>
+                <artifactId>p6spy</artifactId>
+                <version>3.8.2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

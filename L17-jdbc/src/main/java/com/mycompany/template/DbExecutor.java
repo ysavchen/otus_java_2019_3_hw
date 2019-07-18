@@ -1,9 +1,8 @@
-package com.mycompany.executor;
+package com.mycompany.template;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
