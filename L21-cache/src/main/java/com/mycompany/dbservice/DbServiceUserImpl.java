@@ -1,4 +1,12 @@
-package com.mycompany.dbservices;
+package com.mycompany.dbservice;
+
+import com.mycompany.data.User;
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
+import javax.persistence.RollbackException;
+import java.util.Optional;
 
 public class DbServiceUserImpl implements DbServiceUser {
 

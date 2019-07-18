@@ -1,4 +1,8 @@
-package com.mycompany.dbservices;
+package com.mycompany.dbservice;
+
+import com.mycompany.data.User;
+
+import java.util.Optional;
 
 public interface DbServiceUser {
 
