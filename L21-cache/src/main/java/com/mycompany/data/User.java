@@ -9,7 +9,6 @@ import java.util.Set;
 @Table(name = "User")
 public class User {
 
-
     @Id
     @GeneratedValue
     private long id;
