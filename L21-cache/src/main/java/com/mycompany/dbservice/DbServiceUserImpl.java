@@ -24,7 +24,8 @@ public class DbServiceUserImpl implements DbServiceUser {
     }
 
     public void removeCache() {
-        this.cache = null;
+        cache.dispose();
+        cache = null;
     }
 
     @Override
