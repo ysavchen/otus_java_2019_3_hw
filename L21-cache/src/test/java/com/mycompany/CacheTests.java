@@ -18,8 +18,10 @@ class CacheTests {
     void checkHitCount() {
         int cacheSize = 10;
         int putElements = 10;
-        CacheEngine<Long, User> cache = new CacheEngineImpl<>(
-                cacheSize, 0, 0, true);
+        CacheEngine<Long, User> cache = new CacheEngineImpl.Builder(cacheSize)
+                .isEternal(true)
+                .build();
+
         var users = createUsers(putElements);
         users.forEach(user -> cache.put(user.getId(), user));
         users.forEach(user -> cache.get(user.getId()));
@@ -31,8 +33,10 @@ class CacheTests {
     void checkMissCount() {
         int cacheSize = 10;
         int putElements = 30;
-        CacheEngine<Long, User> cache = new CacheEngineImpl<>(
-                cacheSize, 0, 0, true);
+        CacheEngine<Long, User> cache = new CacheEngineImpl.Builder(cacheSize)
+                .isEternal(true)
+                .build();
+
         var users = createUsers(putElements);
         users.forEach(user -> cache.put(user.getId(), user));
         users.forEach(user -> cache.get(user.getId()));
@@ -44,8 +48,10 @@ class CacheTests {
     void checkLifeTime() throws InterruptedException {
         int cacheSize = 10;
         int putElements = 10;
-        CacheEngine<Long, User> cache = new CacheEngineImpl<>(
-                cacheSize, 500, 0, false);
+        CacheEngine<Long, User> cache = new CacheEngineImpl.Builder(cacheSize)
+                .withLifeTime(500)
+                .build();
+
         var users = createUsers(putElements);
         users.forEach(user -> cache.put(user.getId(), user));
 
@@ -59,8 +65,11 @@ class CacheTests {
     void checkLifeTimeWithEternalTrue() throws InterruptedException {
         int cacheSize = 10;
         int putElements = 10;
-        CacheEngine<Long, User> cache = new CacheEngineImpl<>(
-                cacheSize, 500, 0, true);
+        CacheEngine<Long, User> cache = new CacheEngineImpl.Builder(cacheSize)
+                .withLifeTime(500)
+                .isEternal(true)
+                .build();
+
         var users = createUsers(putElements);
         users.forEach(user -> cache.put(user.getId(), user));
 
@@ -74,8 +83,10 @@ class CacheTests {
     void checkIdleTime() throws InterruptedException {
         int cacheSize = 10;
         int putElements = 10;
-        CacheEngine<Long, User> cache = new CacheEngineImpl<>(
-                cacheSize, 0, 500, false);
+        CacheEngine<Long, User> cache = new CacheEngineImpl.Builder(cacheSize)
+                .withIdleTime(500)
+                .build();
+
         var users = createUsers(putElements);
         users.forEach(user -> cache.put(user.getId(), user));
 
@@ -97,8 +108,11 @@ class CacheTests {
     void checkIdleTimeWithEternalTrue() throws InterruptedException {
         int cacheSize = 10;
         int putElements = 10;
-        CacheEngine<Long, User> cache = new CacheEngineImpl<>(
-                cacheSize, 0, 500, true);
+        CacheEngine<Long, User> cache = new CacheEngineImpl.Builder(cacheSize)
+                .withIdleTime(500)
+                .isEternal(true)
+                .build();
+
         var users = createUsers(putElements);
         users.forEach(user -> cache.put(user.getId(), user));
 
@@ -116,8 +130,10 @@ class CacheTests {
     void checkDuplicatesNotAddedToCache() {
         int cacheSize = 10;
         int putElements = 10;
-        CacheEngine<Long, User> cache = new CacheEngineImpl<>(
-                cacheSize, 0, 0, true);
+        CacheEngine<Long, User> cache = new CacheEngineImpl.Builder(cacheSize)
+                .isEternal(true)
+                .build();
+
         var users = createUsers(putElements);
         users.forEach(user -> cache.put(user.getId(), user));
         users.forEach(user -> cache.put(user.getId(), user));
@@ -129,8 +145,10 @@ class CacheTests {
 
     @Test
     void checkRemoveElement() {
-        CacheEngine<Long, User> cache = new CacheEngineImpl<>(
-                10, 0, 0, true);
+        CacheEngine<Long, User> cache = new CacheEngineImpl.Builder(10)
+                .isEternal(true)
+                .build();
+
         cache.put(1L, new User());
         assertNotNull(cache.get(1L), "no user in cache");
         cache.remove(1L);
@@ -140,8 +158,10 @@ class CacheTests {
     //todo: check the test
     @Test
     void checkNulls() {
-        CacheEngine<Long, User> cache = new CacheEngineImpl<>(
-                10, 0, 0, true);
+        CacheEngine<Long, User> cache = new CacheEngineImpl.Builder(10)
+                .isEternal(true)
+                .build();
+
         cache.put(null, new User());
         cache.put(1L, null);
         cache.put(null, null);

@@ -31,8 +31,9 @@ class AppWithCacheTests {
 
     @Test
     void checkUserCached() {
-        CacheEngine<Long, User> cache = new CacheEngineImpl<>(
-                10, 0, 0, true);
+        CacheEngine<Long, User> cache = new CacheEngineImpl.Builder(10)
+                .isEternal(true)
+                .build();
 
         DbServiceUser dbService = new DbServiceUserImpl(sessionFactory);
         AppWithCache appWithCache = new AppWithCacheImpl(dbService, cache);

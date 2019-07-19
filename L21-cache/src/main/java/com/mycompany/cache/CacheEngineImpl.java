@@ -44,13 +44,43 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
      */
     private final boolean isEternal;
 
-    public CacheEngineImpl(int maxElements, long lifeTimeMs, long idleTimeMs, boolean isEternal) {
-        this.maxElements = maxElements;
-        this.lifeTimeMs = lifeTimeMs > 0 ? lifeTimeMs : 0;
-        this.idleTimeMs = idleTimeMs > 0 ? idleTimeMs : 0;
-        this.isEternal = lifeTimeMs == 0 && idleTimeMs == 0 || isEternal;
+    private CacheEngineImpl(Builder builder) {
+        this.maxElements = builder.maxElements;
+        this.lifeTimeMs = builder.lifeTimeMs > 0 ? builder.lifeTimeMs : 0;
+        this.idleTimeMs = builder.idleTimeMs > 0 ? builder.idleTimeMs : 0;
+        this.isEternal = builder.lifeTimeMs == 0 && builder.idleTimeMs == 0 || builder.isEternal;
         for (EventType eventType : EventType.values()) {
             listenersMap.put(eventType, new ArrayList<>());
+        }
+    }
+
+    public static class Builder {
+        private int maxElements;
+        private long lifeTimeMs;
+        private long idleTimeMs;
+        private boolean isEternal;
+
+        public Builder(int maxElements) {
+            this.maxElements = maxElements;
+        }
+
+        public Builder withLifeTime(long lifeTimeMs) {
+            this.lifeTimeMs = lifeTimeMs;
+            return this;
+        }
+
+        public Builder withIdleTime(long idleTimeMs) {
+            this.idleTimeMs = idleTimeMs;
+            return this;
+        }
+
+        public Builder isEternal(boolean isEternal) {
+            this.isEternal = isEternal;
+            return this;
+        }
+
+        public <K, V> CacheEngineImpl<K, V> build() {
+            return new CacheEngineImpl<>(this);
         }
     }
 
@@ -100,9 +130,6 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
             if (element != null) {
                 hits++;
                 element.setAccessed();
-                listenersMap.get(EventType.GET)
-                        .forEach(getListener -> getListener.notify(key, element.getValue(), EventType.GET));
-
                 return element.getValue();
             } else {
                 misses++;
