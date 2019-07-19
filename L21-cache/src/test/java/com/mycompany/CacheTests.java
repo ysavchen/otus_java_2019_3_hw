@@ -103,7 +103,7 @@ class CacheTests {
                     "Incorrect number of hits for idle time check");
         }
         //check elements are removed
-        Thread.sleep(600);
+        Thread.sleep(700);
         users.forEach(user -> cache.get(user.getId()));
         assertEquals(putElements, cache.getMissCount(),
                 "Incorrect number of misses for idle time check");
