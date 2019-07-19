@@ -82,16 +82,20 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
     @Override
     public V get(K key) {
         SoftReference<Element<K, V>> reference = elements.get(key);
-        Element<K, V> element = reference.get();
-        if (element != null) {
-            hits++;
-            element.setAccessed();
-            return element.getValue();
-        } else {
-            misses++;
-            elements.remove(key);
-            return null;
+        if (reference != null) {
+            Element<K, V> element = reference.get();
+            if (element != null) {
+                hits++;
+                element.setAccessed();
+                return element.getValue();
+            } else {
+                misses++;
+                elements.remove(key);
+                return null;
+            }
         }
+        misses++;
+        return null;
     }
 
     @Override
