@@ -41,7 +41,7 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
     private final long idleTimeMs;
 
     /**
-     * Flag to store elements without removal
+     * Flag to store elements without removal by lifeTime/idleTime.
      */
     private final boolean isEternal;
 
