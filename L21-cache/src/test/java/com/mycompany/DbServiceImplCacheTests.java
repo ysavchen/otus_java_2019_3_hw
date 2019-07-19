@@ -17,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-//todo: cache must be in DbService
 class DbServiceImplCacheTests {
 
     private static SessionFactory sessionFactory;
@@ -71,5 +70,27 @@ class DbServiceImplCacheTests {
         assertEquals(user, dbService.getUser(id).orElse(null),
                 "User is not cached");
         verify(cache, times(1)).get(id);
+    }
+
+    @Test
+    void checkUserReturnFromDbWhenCacheRemoved() {
+        CacheEngine<Long, User> cache = Mockito.spy(
+                new CacheEngineImpl.Builder(10)
+                        .isEternal(true)
+                        .build());
+
+        DbServiceUser dbService = new DbServiceUserImpl(sessionFactory);
+        dbService.addCache(cache);
+
+        User user = new User();
+        user.setName("Michael").setAge(35);
+
+        long id = dbService.saveUser(user);
+        verify(cache, times(1)).put(id, user);
+
+        dbService.removeCache();
+        assertEquals(user, dbService.getUser(id).orElse(null),
+                "User is not cached");
+        verify(cache, times(0)).get(id);
     }
 }
