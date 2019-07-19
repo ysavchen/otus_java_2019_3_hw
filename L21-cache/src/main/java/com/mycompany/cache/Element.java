@@ -1,40 +1,40 @@
 package com.mycompany.cache;
 
-public class Element<K, V> {
+class Element<K, V> {
 
     private final K key;
     private final V value;
     private final long creationTime;
     private long lastAccessTime;
 
-    public Element(K key, V value) {
+    Element(K key, V value) {
         this.key = key;
         this.value = value;
         this.creationTime = getCurrentTime();
         this.lastAccessTime = getCurrentTime();
     }
 
-    public K getKey() {
+    K getKey() {
         return key;
     }
 
-    public V getValue() {
+    V getValue() {
         return value;
     }
 
-    public long getCreationTime() {
+    long getCreationTime() {
         return creationTime;
     }
 
-    public long getLastAccessTime() {
+    long getLastAccessTime() {
         return lastAccessTime;
     }
 
-    public void setAccessed() {
+    void setAccessed() {
         lastAccessTime = getCurrentTime();
     }
 
-    public long getCurrentTime() {
+    long getCurrentTime() {
         return System.currentTimeMillis();
     }
 }
