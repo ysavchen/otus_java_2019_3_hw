@@ -86,6 +86,9 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
 
     @Override
     public void put(K key, V value) {
+        if (key == null || value == null) {
+            return;
+        }
         if (elements.size() == maxElements) {
             K firstKey = elements.keySet().iterator().next();
             elements.remove(firstKey);
@@ -175,16 +178,18 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
     }
 
     @Override
-    public void addListener(CacheListener<K, V> listener, EventType... eventTypes) {
-        for (var eventType : eventTypes) {
-            listenersMap.get(eventType).add(listener);
+    public void addListener(CacheListener<K, V> listener, EventType eventType, EventType... eventTypes) {
+        listenersMap.get(eventType).add(listener);
+        for (var type : eventTypes) {
+            listenersMap.get(type).add(listener);
         }
     }
 
     @Override
-    public void removeListener(CacheListener<K, V> listener, EventType... eventTypes) {
-        for (var eventType : eventTypes) {
-            listenersMap.get(eventType).remove(listener);
+    public void removeListener(CacheListener<K, V> listener, EventType eventType, EventType... eventTypes) {
+        listenersMap.get(eventType).remove(listener);
+        for (var type : eventTypes) {
+            listenersMap.get(type).remove(listener);
         }
     }
 }
