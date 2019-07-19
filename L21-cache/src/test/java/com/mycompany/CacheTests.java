@@ -10,8 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CacheTests {
 
@@ -126,6 +125,33 @@ class CacheTests {
         users.forEach(user -> cache.get(user.getId()));
         assertEquals(putElements, cache.getHitCount(),
                 "Duplicate elements are added");
+    }
+
+    @Test
+    void checkRemoveElement() {
+        CacheEngine<Long, User> cache = new CacheEngineImpl<>(
+                10, 0, 0, true);
+        cache.put(1L, new User());
+        assertNotNull(cache.get(1L), "no user in cache");
+        cache.remove(1L);
+        assertNull(cache.get(1L), "user is not removed from cache");
+    }
+
+    //todo: check the test
+    @Test
+    void checkNulls() {
+        CacheEngine<Long, User> cache = new CacheEngineImpl<>(
+                10, 0, 0, true);
+        cache.put(null, new User());
+        cache.put(1L, null);
+        cache.put(null, null);
+        cache.get(1L);
+        cache.get(null);
+    }
+
+    @Test
+    void checkEventListeners() {
+
     }
 
     private List<User> createUsers(int numUsers) {

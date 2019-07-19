@@ -1,10 +1,7 @@
 package com.mycompany.cache;
 
 import java.lang.ref.SoftReference;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.function.Function;
 
 public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
@@ -14,6 +11,8 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
     private final Map<K, SoftReference<Element<K, V>>> elements = new LinkedHashMap<>();
 
     private final Timer timer = new Timer();
+
+    private final Map<EventType, List<CacheListener<K, V>>> listenersMap = new HashMap<>();
 
     /**
      * Counter for cache hits
@@ -50,6 +49,9 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
         this.lifeTimeMs = lifeTimeMs > 0 ? lifeTimeMs : 0;
         this.idleTimeMs = idleTimeMs > 0 ? idleTimeMs : 0;
         this.isEternal = lifeTimeMs == 0 && idleTimeMs == 0 || isEternal;
+        for (EventType eventType : EventType.values()) {
+            listenersMap.put(eventType, new ArrayList<>());
+        }
     }
 
     @Override
@@ -61,6 +63,8 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
 
         Element<K, V> element = new Element<>(key, value);
         elements.put(key, new SoftReference<>(element));
+        listenersMap.get(EventType.PUT)
+                .forEach(putListener -> putListener.notify(key, value, EventType.PUT));
 
         if (!isEternal) {
             if (lifeTimeMs != 0) {
@@ -76,7 +80,16 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
 
     @Override
     public void remove(K key) {
+        SoftReference<Element<K, V>> reference = elements.get(key);
+        if (reference != null) {
+            Element<K, V> element = reference.get();
+            if (element != null) {
+                listenersMap.get(EventType.REMOVE)
+                        .forEach(putListener -> putListener.notify(key, element.getValue(), EventType.REMOVE));
+            }
 
+        }
+        elements.remove(key);
     }
 
     @Override
@@ -87,6 +100,9 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
             if (element != null) {
                 hits++;
                 element.setAccessed();
+                listenersMap.get(EventType.GET)
+                        .forEach(getListener -> getListener.notify(key, element.getValue(), EventType.GET));
+
                 return element.getValue();
             } else {
                 misses++;
@@ -132,12 +148,16 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
     }
 
     @Override
-    public void addListener(CacheListener listener) {
-
+    public void addListener(CacheListener<K, V> listener, EventType... eventTypes) {
+        for (var eventType : eventTypes) {
+            listenersMap.get(eventType).add(listener);
+        }
     }
 
     @Override
-    public void removeListener(CacheListener listener) {
-
+    public void removeListener(CacheListener<K, V> listener, EventType... eventTypes) {
+        for (var eventType : eventTypes) {
+            listenersMap.get(eventType).remove(listener);
+        }
     }
 }
