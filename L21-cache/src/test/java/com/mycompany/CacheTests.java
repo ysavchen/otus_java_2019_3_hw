@@ -11,31 +11,121 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CacheTests {
 
     @Test
     void checkHitCount() {
         int cacheSize = 10;
+        int putElements = 10;
         CacheEngine<Long, User> cache = new CacheEngineImpl<>(
                 cacheSize, 0, 0, true);
-        var users = createUsers(10);
+        var users = createUsers(putElements);
         users.forEach(user -> cache.put(user.getId(), user));
         users.forEach(user -> cache.get(user.getId()));
-        assertEquals(10, cache.getHitCount(),
+        assertEquals(putElements, cache.getHitCount(),
                 "Incorrect number of hits");
     }
 
     @Test
     void checkMissCount() {
         int cacheSize = 10;
+        int putElements = 30;
         CacheEngine<Long, User> cache = new CacheEngineImpl<>(
                 cacheSize, 0, 0, true);
-        var users = createUsers(30);
+        var users = createUsers(putElements);
         users.forEach(user -> cache.put(user.getId(), user));
         users.forEach(user -> cache.get(user.getId()));
         assertEquals(20, cache.getMissCount(),
                 "Incorrect number of misses");
+    }
+
+    @Test
+    void checkLifeTime() throws InterruptedException {
+        int cacheSize = 10;
+        int putElements = 10;
+        CacheEngine<Long, User> cache = new CacheEngineImpl<>(
+                cacheSize, 500, 0, false);
+        var users = createUsers(putElements);
+        users.forEach(user -> cache.put(user.getId(), user));
+
+        Thread.sleep(600);
+        users.forEach(user -> cache.get(user.getId()));
+        assertEquals(putElements, cache.getMissCount(),
+                "Incorrect number of misses for lifetime check");
+    }
+
+    @Test
+    void checkLifeTimeWithEternalTrue() throws InterruptedException {
+        int cacheSize = 10;
+        int putElements = 10;
+        CacheEngine<Long, User> cache = new CacheEngineImpl<>(
+                cacheSize, 500, 0, true);
+        var users = createUsers(putElements);
+        users.forEach(user -> cache.put(user.getId(), user));
+
+        Thread.sleep(600);
+        users.forEach(user -> cache.get(user.getId()));
+        assertEquals(putElements, cache.getHitCount(),
+                "Incorrect number of misses for lifetime check");
+    }
+
+    @Test
+    void checkIdleTime() throws InterruptedException {
+        int cacheSize = 10;
+        int putElements = 10;
+        CacheEngine<Long, User> cache = new CacheEngineImpl<>(
+                cacheSize, 0, 500, false);
+        var users = createUsers(putElements);
+        users.forEach(user -> cache.put(user.getId(), user));
+
+        //check elements' removal is postponed after a hit
+        for (int i = 0; i < 3; i++) {
+            Thread.sleep(300);
+            users.forEach(user -> cache.get(user.getId()));
+            assertTrue(cache.getHitCount() > 0,
+                    "Incorrect number of hits for idle time check");
+        }
+        //check elements are removed
+        Thread.sleep(600);
+        users.forEach(user -> cache.get(user.getId()));
+        assertEquals(putElements, cache.getMissCount(),
+                "Incorrect number of misses for idle time check");
+    }
+
+    @Test
+    void checkIdleTimeWithEternalTrue() throws InterruptedException {
+        int cacheSize = 10;
+        int putElements = 10;
+        CacheEngine<Long, User> cache = new CacheEngineImpl<>(
+                cacheSize, 0, 500, true);
+        var users = createUsers(putElements);
+        users.forEach(user -> cache.put(user.getId(), user));
+
+        Thread.sleep(700);
+        users.forEach(user -> cache.get(user.getId()));
+        assertEquals(putElements, cache.getHitCount(),
+                "Incorrect number of hits for idle time check");
+        Thread.sleep(700);
+        users.forEach(user -> cache.get(user.getId()));
+        assertEquals(0, cache.getMissCount(),
+                "Incorrect number of misses for idle time check");
+    }
+
+    @Test
+    void checkDuplicatesNotAddedToCache() {
+        int cacheSize = 10;
+        int putElements = 10;
+        CacheEngine<Long, User> cache = new CacheEngineImpl<>(
+                cacheSize, 0, 0, true);
+        var users = createUsers(putElements);
+        users.forEach(user -> cache.put(user.getId(), user));
+        users.forEach(user -> cache.put(user.getId(), user));
+        users.forEach(user -> cache.put(user.getId(), user));
+        users.forEach(user -> cache.get(user.getId()));
+        assertEquals(putElements, cache.getHitCount(),
+                "Duplicate elements are added");
     }
 
     private List<User> createUsers(int numUsers) {
