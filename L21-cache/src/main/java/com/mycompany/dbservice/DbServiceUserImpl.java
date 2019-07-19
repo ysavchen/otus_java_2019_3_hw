@@ -26,7 +26,7 @@ public class DbServiceUserImpl implements DbServiceUser {
     @SuppressWarnings("unchecked")
     @Override
     public long saveUser(User user) {
-        System.out.println("Save user");
+        System.out.println("Save user in DB");
         long id = 0;
         try (Session session = sessionFactory.openSession()) {
             try {
@@ -39,20 +39,13 @@ public class DbServiceUserImpl implements DbServiceUser {
                 System.out.println("Save is not successful" + ex.toString());
             }
         }
-        if (cache != null) {
-            cache.put(id, user);
-        }
         return id;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Optional<User> getUser(long id) {
-        System.out.println("Get user by id = " + id);
+        System.out.println("Get user by id = " + id + " from DB");
         User user = null;
-        if (cache != null) {
-            return Optional.ofNullable((User) cache.get(id));
-        }
         try (Session session = sessionFactory.openSession()) {
             try {
                 session.beginTransaction();

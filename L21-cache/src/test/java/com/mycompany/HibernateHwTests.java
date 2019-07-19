@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class HibernateHwTests {
 
-
     private static SessionFactory sessionFactory;
 
     @BeforeAll
