@@ -13,7 +13,7 @@ public class DbServiceUserImpl implements DbServiceUser {
 
     private final SessionFactory sessionFactory;
 
-    private CacheEngine cache;
+    private CacheEngine<Long, User> cache;
 
     public DbServiceUserImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
@@ -23,7 +23,10 @@ public class DbServiceUserImpl implements DbServiceUser {
         this.cache = cache;
     }
 
-    @SuppressWarnings("unchecked")
+    public void removeCache() {
+        this.cache = null;
+    }
+
     @Override
     public long saveUser(User user) {
         System.out.println("Save user in DB");
@@ -39,6 +42,9 @@ public class DbServiceUserImpl implements DbServiceUser {
                 System.out.println("Save is not successful" + ex.toString());
             }
         }
+        if (cache != null && id != 0) {
+            cache.put(id, user);
+        }
         return id;
     }
 
@@ -46,6 +52,12 @@ public class DbServiceUserImpl implements DbServiceUser {
     public Optional<User> getUser(long id) {
         System.out.println("Get user by id = " + id + " from DB");
         User user = null;
+        if (cache != null) {
+            user = cache.get(id);
+            if (user != null) {
+                return Optional.of(user);
+            }
+        }
         try (Session session = sessionFactory.openSession()) {
             try {
                 session.beginTransaction();

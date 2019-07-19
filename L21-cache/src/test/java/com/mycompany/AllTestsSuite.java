@@ -8,6 +8,6 @@ import org.junit.runner.RunWith;
 @SelectClasses({
         HibernateHwTests.class,
         CacheTests.class,
-        AppWithCacheTests.class})
+        DbServiceImplCacheTests.class})
 public class AllTestsSuite {
 }

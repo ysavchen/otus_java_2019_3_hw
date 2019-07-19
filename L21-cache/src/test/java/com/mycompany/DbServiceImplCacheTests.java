@@ -14,9 +14,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
-class AppWithCacheTests {
+//todo: cache must be in DbService
+class DbServiceImplCacheTests {
 
     private static SessionFactory sessionFactory;
 
@@ -38,12 +40,12 @@ class AppWithCacheTests {
                 .build();
 
         DbServiceUser dbService = new DbServiceUserImpl(sessionFactory);
-        AppWithCache appWithCache = new AppWithCacheImpl(dbService, cache);
+        dbService.addCache(cache);
 
         User user = new User();
         user.setName("Michael").setAge(35);
 
-        long id = appWithCache.addUser(user);
+        long id = dbService.saveUser(user);
         assertEquals(user, cache.get(id),
                 "User is not cached");
         assertEquals(user, dbService.getUser(id).orElse(null),
@@ -52,20 +54,22 @@ class AppWithCacheTests {
 
     @Test
     void checkUserReturnedFromCache() {
-        CacheEngine<Long, User> cache = new CacheEngineImpl.Builder(10)
-                .isEternal(true)
-                .build();
+        CacheEngine<Long, User> cache = Mockito.spy(
+                new CacheEngineImpl.Builder(10)
+                        .isEternal(true)
+                        .build());
 
-        DbServiceUser dbService = Mockito.mock(DbServiceUser.class);
-        AppWithCache appWithCache = new AppWithCacheImpl(dbService, cache);
+        DbServiceUser dbService = new DbServiceUserImpl(sessionFactory);
+        dbService.addCache(cache);
 
         User user = new User();
         user.setName("Michael").setAge(35);
 
-        when(dbService.saveUser(user)).thenReturn(1L);
-        long id = appWithCache.addUser(user);
-        assertEquals(user, appWithCache.getUser(id).orElse(null),
+        long id = dbService.saveUser(user);
+        verify(cache, times(1)).put(id, user);
+
+        assertEquals(user, dbService.getUser(id).orElse(null),
                 "User is not cached");
-        verify(dbService, times(0)).getUser(id);
+        verify(cache, times(1)).get(id);
     }
 }
