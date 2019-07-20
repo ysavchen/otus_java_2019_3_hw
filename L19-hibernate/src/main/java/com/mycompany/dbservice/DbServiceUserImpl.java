@@ -49,7 +49,7 @@ public class DbServiceUserImpl implements DbServiceUser {
                 }
 
                 session.getTransaction().commit();
-            } catch (Exception ex) {
+            } catch (RollbackException ex) {
                 session.getTransaction().rollback();
                 System.out.println("Save is not successful" + ex.toString());
             }
