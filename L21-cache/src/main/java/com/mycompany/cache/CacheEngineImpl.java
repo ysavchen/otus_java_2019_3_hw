@@ -90,8 +90,17 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
             return;
         }
         if (elements.size() == maxElements) {
-            K firstKey = elements.keySet().iterator().next();
-            elements.remove(firstKey);
+            K leastAccessKey = elements.keySet().stream()
+                    .max(Comparator.comparingLong(elementKey -> {
+                        var reference = elements.get(elementKey);
+                        var element = reference.get();
+                        if (element != null) {
+                            return element.getLastAccessTime();
+                        }
+                        return 0L;
+                    })).orElse(null);
+
+            elements.remove(leastAccessKey);
         }
 
         Element<K, V> element = new Element<>(key, value);
