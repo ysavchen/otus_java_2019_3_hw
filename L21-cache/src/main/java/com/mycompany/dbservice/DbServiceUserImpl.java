@@ -6,7 +6,6 @@ import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import javax.persistence.RollbackException;
 import java.util.Optional;
 
 public class DbServiceUserImpl implements DbServiceUser {
@@ -38,7 +37,7 @@ public class DbServiceUserImpl implements DbServiceUser {
                 session.saveOrUpdate(user);
                 id = user.getId();
                 session.getTransaction().commit();
-            } catch (RollbackException ex) {
+            } catch (Exception ex) {
                 session.getTransaction().rollback();
                 System.out.println("Save is not successful" + ex.toString());
             }
@@ -70,7 +69,7 @@ public class DbServiceUserImpl implements DbServiceUser {
                 }
 
                 session.getTransaction().commit();
-            } catch (RollbackException ex) {
+            } catch (Exception ex) {
                 session.getTransaction().rollback();
                 System.out.println("Save is not successful" + ex.toString());
             }
