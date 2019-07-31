@@ -42,39 +42,47 @@ public class DbServiceUserImpl implements DbServiceUser {
                 System.out.println("Save is not successful" + ex.toString());
             }
         }
-        if (cache != null && id != 0) {
-            cache.put(id, user);
-        }
+        putUserToCache(user);
         return id;
     }
 
     @Override
     public Optional<User> getUser(long id) {
         System.out.println("Get user by id = " + id + " from DB");
-        User user = null;
-        if (cache != null) {
-            user = cache.get(id);
-            if (user != null) {
-                return Optional.of(user);
+        User user = getUserFromCache(id);
+        if (user == null) {
+            try (Session session = sessionFactory.openSession()) {
+                try {
+                    session.beginTransaction();
+                    user = session.get(User.class, id);
+
+                    if (user != null) {
+                        Hibernate.initialize(user.getAddressData());
+                        Hibernate.initialize(user.getPhoneData());
+                    }
+
+                    session.getTransaction().commit();
+                } catch (Exception ex) {
+                    session.getTransaction().rollback();
+                    System.out.println("Save is not successful" + ex.toString());
+                }
             }
         }
-        try (Session session = sessionFactory.openSession()) {
-            try {
-                session.beginTransaction();
-                user = session.get(User.class, id);
 
-                if (user != null) {
-                    Hibernate.initialize(user.getAddressData());
-                    Hibernate.initialize(user.getPhoneData());
-                }
+        putUserToCache(user);
+        return Optional.ofNullable(user);
+    }
 
-                session.getTransaction().commit();
-            } catch (Exception ex) {
-                session.getTransaction().rollback();
-                System.out.println("Save is not successful" + ex.toString());
-            }
+    private User getUserFromCache(long id) {
+        if (cache != null) {
+            return cache.get(id);
+        }
+        return null;
+    }
 
-            return Optional.ofNullable(user);
+    private void putUserToCache(User user) {
+        if (cache != null && user != null && user.getId() != 0) {
+            cache.put(user.getId(), user);
         }
     }
 }
