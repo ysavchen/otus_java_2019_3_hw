@@ -134,7 +134,7 @@ class CacheTests {
     @Test
     void checkDuplicatesNotAddedToCache() {
         int cacheSize = 10;
-        int putElements = 10;
+        int putElements = 5;
         CacheEngine<Long, User> cache = new CacheEngineImpl.Builder(cacheSize)
                 .isEternal(true)
                 .build();
@@ -142,9 +142,10 @@ class CacheTests {
         var users = createUsers(putElements);
         users.forEach(user -> cache.put(user.getId(), user));
         users.forEach(user -> cache.put(user.getId(), user));
-        users.forEach(user -> cache.put(user.getId(), user));
         users.forEach(user -> cache.get(user.getId()));
         assertEquals(putElements, cache.getHitCount(),
+                "hitCount != putElements");
+        assertEquals(putElements, cache.getSize(),
                 "Duplicate elements are added");
     }
 

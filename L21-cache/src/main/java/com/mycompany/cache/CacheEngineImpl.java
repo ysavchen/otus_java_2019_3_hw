@@ -97,7 +97,8 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
                         if (element != null) {
                             return element.getLastAccessTime();
                         }
-                        return 0L;
+                        //to remove a softReference with null element from the 'elements' map
+                        return Long.MAX_VALUE;
                     })).orElse(null);
 
             elements.remove(leastAccessKey);
@@ -151,6 +152,11 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
         }
         misses++;
         return null;
+    }
+
+    @Override
+    public int getSize() {
+        return elements.size();
     }
 
     @Override

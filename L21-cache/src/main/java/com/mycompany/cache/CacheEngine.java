@@ -19,6 +19,8 @@ public interface CacheEngine<K, V> {
 
     int getMissCount();
 
+    int getSize();
+
     void addListener(CacheListener<K, V> listener, EventType eventType, EventType... eventTypes);
 
     void removeListener(CacheListener<K, V> listener, EventType eventType, EventType... eventTypes);
