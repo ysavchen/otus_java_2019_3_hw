@@ -90,18 +90,14 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
             return;
         }
         if (elements.size() == maxElements) {
-            K leastAccessKey = elements.keySet().stream()
-                    .min(Comparator.comparingLong(elementKey -> {
-                        var reference = elements.get(elementKey);
-                        var element = reference.get();
-                        if (element != null) {
-                            return element.getLastAccessTime();
-                        }
-                        //to remove a softReference with null element from the 'elements' map
-                        return Long.MIN_VALUE;
-                    })).orElse(null);
-
-            elements.remove(leastAccessKey);
+            elements.remove(elements.keySet().stream()
+                    .min(Comparator.comparingLong(elementKey ->
+                            Optional.ofNullable(elements.get(elementKey))
+                                    .map(SoftReference::get)
+                                    .map(Element::getLastAccessTime)
+                                    //to remove a softReference with null element from the 'elements' map
+                                    .orElse(Long.MIN_VALUE)))
+                    .orElse(null));
         }
 
         Element<K, V> element = new Element<>(key, value);
@@ -121,48 +117,40 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
     }
 
     private void notify(K key, V value, EventType eventType) {
-        try {
-            listenersMap.get(eventType)
-                    .forEach(listener -> listener.notify(key, value, eventType));
-        } catch (Exception ex) {
-            System.out.println("Exception in notify: " + ex.toString());
-        }
+        listenersMap.get(eventType).forEach(listener -> {
+            try {
+                listener.notify(key, value, eventType);
+            } catch (Exception ex) {
+                System.out.println("Exception in notify: " + ex.toString());
+            }
+        });
     }
 
     @Override
     public void remove(K key) {
-        SoftReference<Element<K, V>> reference = elements.get(key);
-        if (reference != null) {
-            Element<K, V> element = reference.get();
-            if (element != null) {
-                notify(key, element.getValue(), EventType.REMOVE);
-            }
+        Optional.ofNullable(elements.get(key))
+                .map(SoftReference::get)
+                .ifPresent(element -> notify(key, element.getValue(), EventType.REMOVE));
 
-        }
         elements.remove(key);
     }
 
     @Override
     public V get(K key) {
-        SoftReference<Element<K, V>> reference = elements.get(key);
-        if (reference != null) {
-            Element<K, V> element = reference.get();
-            if (element != null) {
-                hits++;
-                element.setAccessed();
-                V value = element.getValue();
-                notify(key, value, EventType.GET);
-                return value;
-            } else {
-                misses++;
-                notify(key, null, EventType.GET);
-                elements.remove(key);
-                return null;
-            }
-        }
-        misses++;
-        notify(key, null, EventType.GET);
-        return null;
+        V res = Optional.ofNullable(elements.get(key))
+                .map(SoftReference::get)
+                .map(element -> {
+                    hits++;
+                    element.setAccessed();
+                    return element.getValue();
+                }).orElseGet(() -> {
+                    misses++;
+                    notify(key, null, EventType.GET);
+                    elements.remove(key);
+                    return null;
+                });
+        notify(key, res, EventType.GET);
+        return res;
     }
 
     @Override
