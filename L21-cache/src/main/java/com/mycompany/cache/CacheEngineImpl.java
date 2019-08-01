@@ -91,14 +91,14 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
         }
         if (elements.size() == maxElements) {
             K leastAccessKey = elements.keySet().stream()
-                    .max(Comparator.comparingLong(elementKey -> {
+                    .min(Comparator.comparingLong(elementKey -> {
                         var reference = elements.get(elementKey);
                         var element = reference.get();
                         if (element != null) {
                             return element.getLastAccessTime();
                         }
                         //to remove a softReference with null element from the 'elements' map
-                        return Long.MAX_VALUE;
+                        return Long.MIN_VALUE;
                     })).orElse(null);
 
             elements.remove(leastAccessKey);

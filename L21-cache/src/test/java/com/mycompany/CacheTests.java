@@ -155,10 +155,26 @@ class CacheTests {
                 .isEternal(true)
                 .build();
 
-        cache.put(1L, new User());
+        cache.put(1L, new User().setId(1L));
         assertNotNull(cache.get(1L), "no user in cache");
         cache.remove(1L);
         assertNull(cache.get(1L), "user is not removed from cache");
+    }
+
+    @Test
+    void checkLeastUsedElementRemoved() throws InterruptedException {
+        CacheEngine<Long, User> cache = new CacheEngineImpl.Builder(2)
+                .isEternal(true)
+                .build();
+
+        cache.put(1L, new User().setId(1L));
+        cache.put(2L, new User().setId(2L));
+        cache.get(2L);
+        Thread.sleep(5);
+        cache.get(1L);
+        cache.put(3L, new User().setId(3L));
+        assertNull(cache.get(2L),
+                "Least accessed element is not removed");
     }
 
     @Test
