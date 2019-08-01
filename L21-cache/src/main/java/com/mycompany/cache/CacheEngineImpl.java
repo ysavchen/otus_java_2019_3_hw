@@ -161,6 +161,7 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
             }
         }
         misses++;
+        notify(key, null, EventType.GET);
         return null;
     }
 
