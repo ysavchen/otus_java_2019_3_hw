@@ -195,6 +195,26 @@ class CacheTests {
     }
 
     @Test
+    void checkGetListener() {
+        CacheEngine<Long, User> cache = new CacheEngineImpl.Builder(10)
+                .isEternal(true)
+                .build();
+
+        CacheListener<Long, User> getListener = Mockito.mock(CacheListener.class);
+        cache.addListener(getListener, EventType.GET);
+        User user1 = new User().setId(1L);
+        cache.put(1L, user1);
+        cache.get(1L);
+        verify(getListener, times(1)).notify(1L, user1, EventType.GET);
+
+        cache.removeListener(getListener, EventType.GET);
+        User user2 = new User().setId(2L);
+        cache.put(2L, user2);
+        cache.get(2L);
+        verify(getListener, times(0)).notify(2L, user2, EventType.GET);
+    }
+
+    @Test
     void checkRemoveListener() {
         CacheEngine<Long, User> cache = new CacheEngineImpl.Builder(10)
                 .isEternal(true)

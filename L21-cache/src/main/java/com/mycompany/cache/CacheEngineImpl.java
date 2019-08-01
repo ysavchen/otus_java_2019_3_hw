@@ -123,7 +123,7 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
     private void notify(K key, V value, EventType eventType) {
         try {
             listenersMap.get(eventType)
-                    .forEach(putListener -> putListener.notify(key, value, eventType));
+                    .forEach(listener -> listener.notify(key, value, eventType));
         } catch (Exception ex) {
             System.out.println("Exception in notify: " + ex.toString());
         }
@@ -150,9 +150,12 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
             if (element != null) {
                 hits++;
                 element.setAccessed();
-                return element.getValue();
+                V value = element.getValue();
+                notify(key, value, EventType.GET);
+                return value;
             } else {
                 misses++;
+                notify(key, null, EventType.GET);
                 elements.remove(key);
                 return null;
             }
