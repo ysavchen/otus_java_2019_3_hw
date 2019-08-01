@@ -106,8 +106,7 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
 
         Element<K, V> element = new Element<>(key, value);
         elements.put(key, new SoftReference<>(element));
-        listenersMap.get(EventType.PUT)
-                .forEach(putListener -> putListener.notify(key, value, EventType.PUT));
+        notify(key, value, EventType.PUT);
 
         if (!isEternal) {
             if (lifeTimeMs != 0) {
@@ -121,14 +120,22 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
         }
     }
 
+    private void notify(K key, V value, EventType eventType) {
+        try {
+            listenersMap.get(eventType)
+                    .forEach(putListener -> putListener.notify(key, value, eventType));
+        } catch (Exception ex) {
+            System.out.println("Exception in notify: " + ex.toString());
+        }
+    }
+
     @Override
     public void remove(K key) {
         SoftReference<Element<K, V>> reference = elements.get(key);
         if (reference != null) {
             Element<K, V> element = reference.get();
             if (element != null) {
-                listenersMap.get(EventType.REMOVE)
-                        .forEach(putListener -> putListener.notify(key, element.getValue(), EventType.REMOVE));
+                notify(key, element.getValue(), EventType.REMOVE);
             }
 
         }
