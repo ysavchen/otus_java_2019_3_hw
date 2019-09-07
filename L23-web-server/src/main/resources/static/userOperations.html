@@ -1,23 +1,12 @@
-<html xmlns="http://www.w3.org/1999/xhtml" content="text/html;">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Info Page</title>
-    <script type="text/JavaScript">
-        function getDataFromServer() {
-            fetch('http://localhost:8080/data/' + new Date())
-                .then(function (response) {
-                    return response.json();
-                })
-                .then(function (dataSrv) {
-                    document.getElementById("dataHolder").innerHTML = dataSrv;
-                })
-
-        }
-    </script>
+    <title>User Operations</title>
 </head>
-<body onload="getDataFromServer();">
+<body>
 <h1>User Operations</h1>
 <div id="addUserSection">
-    <input type="button" id="addUserButton" value="Add">
+    <input type="button" id="addUserButton" value="Add user">
     <table id="addUser">
         <thead>
         <tr id="columns">
@@ -33,8 +22,9 @@
         </thead>
         <tbody></tbody>
     </table>
-
 </div>
 <div id="dataHolder"></div>
+<script type="application/javascript" src="userOperations.js"></script>
+<link href="userOperations.css" type="text/css" rel="stylesheet"/>
 </body>
 </html>

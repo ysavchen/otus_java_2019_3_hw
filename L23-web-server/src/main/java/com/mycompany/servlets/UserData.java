@@ -1,25 +1,30 @@
 package com.mycompany.servlets;
 
-import com.mycompany.JettyServer;
+import com.google.gson.Gson;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URL;
 
-public class UserOperations extends HttpServlet {
+public class UserData extends HttpServlet {
+
+    private static final Gson gson = new Gson();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        URL file = JettyServer.class.getClassLoader().getResource("userOperations.html");
-        String resultAsString = "";
-        if (file != null) {
-            resultAsString = file.toString();
+        String[] requestParams = request.getPathInfo().split("/");
+        String dataParam = "defaultValue";
+        if (requestParams.length == 2) {
+            dataParam = requestParams[1];
         }
 
-        response.setContentType("text/html");
+        System.out.println("request params:" + dataParam);
+
+        String resultAsString = gson.toJson("from server:" + dataParam);
+
+        response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_OK);
         PrintWriter printWriter = response.getWriter();
         printWriter.print(resultAsString);
