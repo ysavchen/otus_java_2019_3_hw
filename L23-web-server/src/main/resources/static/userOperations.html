@@ -1,0 +1,40 @@
+<html xmlns="http://www.w3.org/1999/xhtml" content="text/html;">
+<head>
+    <title>Info Page</title>
+    <script type="text/JavaScript">
+        function getDataFromServer() {
+            fetch('http://localhost:8080/data/' + new Date())
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (dataSrv) {
+                    document.getElementById("dataHolder").innerHTML = dataSrv;
+                })
+
+        }
+    </script>
+</head>
+<body onload="getDataFromServer();">
+<h1>User Operations</h1>
+<div id="addUserSection">
+    <input type="button" id="addUserButton" value="Add">
+    <table id="addUser">
+        <thead>
+        <tr id="columns">
+            <td>Name</td>
+            <td>Surname</td>
+            <td>Age</td>
+        </tr>
+        <tr id="userInputFields">
+            <td><input id="name" type="text"/></td>
+            <td><input id="surname" type="text"/></td>
+            <td><input id="age" type="text"/></td>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+</div>
+<div id="dataHolder"></div>
+</body>
+</html>
