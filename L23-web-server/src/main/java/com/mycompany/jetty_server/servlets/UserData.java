@@ -1,6 +1,8 @@
-package com.mycompany.servlets;
+package com.mycompany.jetty_server.servlets;
 
 import com.google.gson.Gson;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.SessionFactory;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -8,9 +10,19 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * Returns a list of saved users
+ */
+@Slf4j
 public class UserData extends HttpServlet {
 
-    private static final Gson gson = new Gson();
+    private final SessionFactory sessionFactory;
+
+    private final Gson gson = new Gson();
+
+    public UserData(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -20,7 +32,7 @@ public class UserData extends HttpServlet {
             dataParam = requestParams[1];
         }
 
-        System.out.println("request params:" + dataParam);
+        logger.info("request params:" + dataParam);
 
         String resultAsString = gson.toJson("from server:" + dataParam);
 

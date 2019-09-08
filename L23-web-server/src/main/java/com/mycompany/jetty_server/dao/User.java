@@ -1,4 +1,4 @@
-package com.mycompany.dao;
+package com.mycompany.jetty_server.dao;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;

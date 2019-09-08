@@ -1,6 +1,6 @@
-package com.mycompany.servlets;
+package com.mycompany.jetty_server.servlets;
 
-import com.mycompany.JettyServer;
+import com.mycompany.jetty_server.JettyServer;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

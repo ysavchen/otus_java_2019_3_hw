@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<hibernate-mapping xmlns="http://www.hibernate.org/xsd/orm/hbm">
+
+    <sql-query name="getAllUsers">
+        <return class="com.mycompany.jetty_server.dao.User"/>
+        select user.*
+        from User user
+    </sql-query>
+
+</hibernate-mapping>

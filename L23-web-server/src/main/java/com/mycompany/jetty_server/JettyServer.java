@@ -1,7 +1,8 @@
-package com.mycompany;
+package com.mycompany.jetty_server;
 
-import com.mycompany.servlets.UserData;
-import com.mycompany.servlets.UserOperations;
+import com.mycompany.jetty_server.servlets.UserData;
+import com.mycompany.jetty_server.servlets.UserOperations;
+import com.mycompany.jetty_server.servlets.UserStore;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.HashLoginService;
@@ -14,6 +15,10 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.security.Constraint;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -24,6 +29,8 @@ public class JettyServer {
 
     private final static int PORT = 8080;
 
+    private static SessionFactory sessionFactory;
+
     public static void main(String[] args) throws Exception {
         new JettyServer().start();
     }
@@ -32,12 +39,15 @@ public class JettyServer {
         Server server = createServer(PORT);
         server.start();
         server.join();
+
+        connectToDb();
     }
 
     private Server createServer(int port) throws MalformedURLException {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(new UserOperations()), "/userOperations");
-        context.addServlet(new ServletHolder(new UserData()), "/userOperations/*");
+        context.addServlet(new ServletHolder(new UserData(sessionFactory)), "/userOperations/*");
+        context.addServlet(new ServletHolder(new UserStore(sessionFactory)), "/userStore");
 
         Server server = new Server(port);
         server.setHandler(new HandlerList(context));
@@ -94,5 +104,15 @@ public class JettyServer {
         security.setConstraintMappings(Collections.singletonList(mapping));
 
         return security;
+    }
+
+    static void connectToDb() {
+        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
+                .configure()
+                .build();
+
+        sessionFactory = new MetadataSources(registry)
+                .buildMetadata()
+                .buildSessionFactory();
     }
 }
