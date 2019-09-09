@@ -1,10 +1,10 @@
 package com.mycompany.jetty_server.dao;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
+@Table(name = "User")
 public class User {
 
     @Id
