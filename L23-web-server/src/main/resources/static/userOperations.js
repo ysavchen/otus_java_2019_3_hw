@@ -1,16 +1,6 @@
 window.onload = function () {
-    getDataFromServer();
     document.getElementById("addUserButton").addEventListener("click", handleAddUserButton);
-}
-
-function getDataFromServer() {
-    fetch('http://localhost:8080/userData/' + new Date())
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (dataSrv) {
-            document.getElementById("dataHolder").innerHTML = dataSrv;
-        })
+    document.getElementById("allUsersButton").addEventListener("click", handleAllUsersButton);
 }
 
 function handleAddUserButton() {
@@ -23,10 +13,7 @@ function handleAddUserButton() {
     }
 
     const userStoreUrl = "http://localhost:8080/userStore";
-    let user = { name: document.getElementById("name").value,
-                 surname: document.getElementById("surname").value,
-                 age: document.getElementById("age").value
-               };
+    let user = { name: name, surname: surname, age: age };
 
     fetch(userStoreUrl, {
         method: 'POST',
@@ -46,4 +33,15 @@ function handleAddUserButton() {
             document.getElementById("age").value = "";
             document.getElementById("surname").value = "";
         })
+}
+
+function handleAllUsersButton() {
+    fetch('http://localhost:8080/allUsersData')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (dataSrv) {
+                //todo: [object Object],[object Object]
+                document.getElementById("dataHolder").innerHTML = dataSrv;
+            })
 }

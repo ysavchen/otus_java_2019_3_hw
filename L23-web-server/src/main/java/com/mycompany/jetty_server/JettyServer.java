@@ -1,6 +1,6 @@
 package com.mycompany.jetty_server;
 
-import com.mycompany.jetty_server.servlets.UserData;
+import com.mycompany.jetty_server.servlets.AllUsersData;
 import com.mycompany.jetty_server.servlets.UserOperations;
 import com.mycompany.jetty_server.servlets.UserStore;
 import org.eclipse.jetty.security.ConstraintMapping;
@@ -45,7 +45,7 @@ public class JettyServer {
     private Server createServer(int port) throws MalformedURLException {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(new UserOperations()), "/userOperations");
-        context.addServlet(new ServletHolder(new UserData(sessionFactory)), "/userOperations/*");
+        context.addServlet(new ServletHolder(new AllUsersData(sessionFactory)), "/allUsersData");
         context.addServlet(new ServletHolder(new UserStore(sessionFactory)), "/userStore");
 
         Server server = new Server(port);
