@@ -32,6 +32,7 @@ public class JettyServer {
     private static SessionFactory sessionFactory;
 
     public static void main(String[] args) throws Exception {
+        connectToDb();
         new JettyServer().start();
     }
 
@@ -39,8 +40,6 @@ public class JettyServer {
         Server server = createServer(PORT);
         server.start();
         server.join();
-
-        connectToDb();
     }
 
     private Server createServer(int port) throws MalformedURLException {

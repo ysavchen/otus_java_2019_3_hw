@@ -1,5 +1,22 @@
+body {
+    font-style: normal;
+    font-variant: normal;
+    font-size: 14px;
+    background-color: #fafafa;
+}
+
 #userInputFields td input {
-    width: 900px;
+    width: 206px;
     border: solid 1px #cccccc;
     border-radius: 3px;
+}
+
+.buttons {
+    border: solid 1px #cccccc;
+    border-radius: 3px;
+    height: 25px;
+    width: 80px;
+    cursor: pointer;
+    /* space between buttons */
+    margin-bottom: 4px;
 }
