@@ -7,6 +7,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -36,5 +37,26 @@ public class DbServiceTests {
         long id = dbService.saveUser(user);
         assertEquals(user, dbService.getUser(id).orElse(null),
                 "User is not saved or not loaded");
+    }
+
+    @Test
+    void getAllUsersTest() {
+        User user1 = new User()
+                .setName("Frank")
+                .setSurname("Kenley");
+        User user2 = new User()
+                .setName("Thomas")
+                .setSurname("Lester");
+
+        DbServiceUser dbService = new DbServiceUserImpl(sessionFactory);
+        dbService.saveUser(user1);
+        dbService.saveUser(user2);
+        assertEquals(2, dbService.getAllUsers().size(),
+                "Users are not loaded");
+    }
+
+    @AfterAll
+    static void closeConnection() {
+        sessionFactory.close();
     }
 }
