@@ -1,5 +1,7 @@
 package com.mycompany.jetty_server;
 
+import com.mycompany.jetty_server.dbservice.DbServiceUser;
+import com.mycompany.jetty_server.dbservice.DbServiceUserImpl;
 import com.mycompany.jetty_server.servlets.AllUsersData;
 import com.mycompany.jetty_server.servlets.UserOperations;
 import com.mycompany.jetty_server.servlets.UserStore;
@@ -29,10 +31,8 @@ public class JettyServer {
 
     private final static int PORT = 8080;
 
-    private static SessionFactory sessionFactory;
-
     public static void main(String[] args) throws Exception {
-        connectToDb();
+
         new JettyServer().start();
     }
 
@@ -43,10 +43,12 @@ public class JettyServer {
     }
 
     private Server createServer(int port) throws MalformedURLException {
+        DbServiceUser dbServiceUser = connectToDb();
+
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(new UserOperations()), "/userOperations");
-        context.addServlet(new ServletHolder(new AllUsersData(sessionFactory)), "/allUsersData");
-        context.addServlet(new ServletHolder(new UserStore(sessionFactory)), "/userStore");
+        context.addServlet(new ServletHolder(new AllUsersData(dbServiceUser)), "/allUsersData");
+        context.addServlet(new ServletHolder(new UserStore(dbServiceUser)), "/userStore");
 
         Server server = new Server(port);
         server.setHandler(new HandlerList(context));
@@ -77,7 +79,7 @@ public class JettyServer {
         constraint.setRoles(new String[]{"admin"});
 
         ConstraintMapping mapping = new ConstraintMapping();
-        mapping.setPathSpec("/userOperations/*");
+        mapping.setPathSpec("/userOperations.html");
         mapping.setConstraint(constraint);
 
         ConstraintSecurityHandler security = new ConstraintSecurityHandler();
@@ -105,13 +107,15 @@ public class JettyServer {
         return security;
     }
 
-    static void connectToDb() {
+    private DbServiceUserImpl connectToDb() {
         final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .configure()
                 .build();
 
-        sessionFactory = new MetadataSources(registry)
+        final SessionFactory sessionFactory = new MetadataSources(registry)
                 .buildMetadata()
                 .buildSessionFactory();
+
+        return new DbServiceUserImpl(sessionFactory);
     }
 }

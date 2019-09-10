@@ -3,9 +3,7 @@ package com.mycompany.jetty_server.servlets;
 import com.google.gson.Gson;
 import com.mycompany.jetty_server.dao.User;
 import com.mycompany.jetty_server.dbservice.DbServiceUser;
-import com.mycompany.jetty_server.dbservice.DbServiceUserImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.SessionFactory;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,8 +21,8 @@ public class AllUsersData extends HttpServlet {
     private final DbServiceUser dbServiceUser;
     private final Gson gson = new Gson();
 
-    public AllUsersData(SessionFactory sessionFactory) {
-        this.dbServiceUser = new DbServiceUserImpl(sessionFactory);
+    public AllUsersData(DbServiceUser dbServiceUser) {
+        this.dbServiceUser = dbServiceUser;
     }
 
     @Override

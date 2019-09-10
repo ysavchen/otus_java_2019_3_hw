@@ -8,10 +8,6 @@ function handleAddUserButton() {
     let surname = document.getElementById("surname");
     let age = document.getElementById("age");
 
-    //if(!Number.isInteger(age)) {
-    //    age = 0;
-    //}
-
     const userStoreUrl = "http://localhost:8080/userStore";
     let user = { name: name.value, surname: surname.value, age: age.value };
 
@@ -27,11 +23,6 @@ function handleAddUserButton() {
          })
         .then(function (dataSrv) {
             document.getElementById("infoSection").innerHTML = dataSrv;
-        })
-        .then(function () {
-            name.value = "";
-            surname.value = "";
-            age.value = "";
         });
 }
 
