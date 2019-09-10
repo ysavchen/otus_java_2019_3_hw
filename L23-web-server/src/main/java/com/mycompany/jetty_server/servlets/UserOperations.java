@@ -1,28 +1,33 @@
 package com.mycompany.jetty_server.servlets;
 
 import com.mycompany.jetty_server.JettyServer;
+import lombok.SneakyThrows;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class UserOperations extends HttpServlet {
 
+    @SneakyThrows
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        URL file = JettyServer.class.getClassLoader().getResource("userOperations.html");
-        String resultAsString = "";
-        if (file != null) {
-            resultAsString = file.toString();
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+        URL url = JettyServer.class.getClassLoader().getResource("static/userOperations.html");
+        String page;
+        if (url != null) {
+            page = Files.readString(Paths.get(url.toURI()));
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            throw new RuntimeException("userOperations.html file not found");
         }
 
-        response.setContentType("text/html");
-        response.setStatus(HttpServletResponse.SC_OK);
         PrintWriter printWriter = response.getWriter();
-        printWriter.print(resultAsString);
+        printWriter.print(page);
         printWriter.flush();
     }
 }
