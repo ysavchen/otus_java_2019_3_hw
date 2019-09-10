@@ -1,5 +1,5 @@
 #workspace {
-    width: 750px;
+    width: 730px;
 }
 
 body {
@@ -13,28 +13,27 @@ body {
     float: left;
     margin-left: 1px;
     min-height: 200px;
-    min-width: 650px;
+    min-width: 600px;
     /* border to check block area */
-    border: solid 1px #1E90FF;
+    /* border: solid 1px #1E90FF; */
 }
 
 #rightSideSection {
     width: 90px;
     float: right;
-    margin-right: 4px;
     /* border to check block area */
-    border: solid 1px orange;
+    /* border: solid 1px orange; */
 }
 
 #infoSection {
-    height: 35px;
+    height: 30px;
     margin-bottom: 5px;
     /* border to check block area */
-    border: solid 1px aquamarine;
+    /* border: solid 1px aquamarine; */
 }
 
 #userInputFields td input {
-    width: 205px;
+    width: 200px;
     border: solid 1px #cccccc;
     border-radius: 3px;
 }
@@ -47,7 +46,7 @@ body {
     /* width keeps buttons vertically */
     width: 90px;
     /* border to check block area */
-    border: solid 1px mediumslateblue;
+    /* border: solid 1px mediumslateblue; */
 }
 
 #actionButtons input {
