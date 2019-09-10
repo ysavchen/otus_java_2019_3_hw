@@ -79,7 +79,7 @@ public class JettyServer {
         constraint.setRoles(new String[]{"admin"});
 
         ConstraintMapping mapping = new ConstraintMapping();
-        mapping.setPathSpec("/userOperations.html");
+        mapping.setPathSpec("/*");
         mapping.setConstraint(constraint);
 
         ConstraintSecurityHandler security = new ConstraintSecurityHandler();
