@@ -1,3 +1,6 @@
+const userStoreUrl = "http://localhost:8080/userStore";
+const allUsersDataUrl = "http://localhost:8080/allUsersData";
+
 window.onload = function () {
     document.getElementById("addUserButton").addEventListener("click", handleAddUserButton);
     document.getElementById("allUsersButton").addEventListener("click", handleAllUsersButton);
@@ -8,7 +11,6 @@ function handleAddUserButton() {
     let surname = document.getElementById("surname");
     let age = document.getElementById("age");
 
-    const userStoreUrl = "http://localhost:8080/userStore";
     let user = { name: name.value, surname: surname.value, age: age.value };
 
     fetch(userStoreUrl, {
@@ -27,15 +29,14 @@ function handleAddUserButton() {
 }
 
 function handleAllUsersButton() {
-    fetch('http://localhost:8080/allUsersData')
+    fetch(allUsersDataUrl)
             .then(function (response) {
                 return response.json();
             })
             .then(function (dataSrv) {
                 let table = document.createElement("table");
-                table.setAttribute("id", "allUsersTable");
-
                 let head = document.createElement("thead");
+
                 let columns = document.createElement("tr");
                 let nameColumn = document.createElement("td");
                 nameColumn.textContent = "Name";
@@ -69,6 +70,8 @@ function handleAllUsersButton() {
                 table.appendChild(head);
                 table.appendChild(body);
 
-                document.getElementById("dataHolder").appendChild(table);
+                const holder = document.getElementById("dataHolder");
+                holder.innerHTML = "";
+                holder.appendChild(table);
             });
 }
