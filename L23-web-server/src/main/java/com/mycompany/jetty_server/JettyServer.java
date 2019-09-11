@@ -23,6 +23,7 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
@@ -42,7 +43,7 @@ public class JettyServer {
         server.join();
     }
 
-    private Server createServer(int port) throws MalformedURLException {
+    Server createServer(int port) throws MalformedURLException, FileNotFoundException {
         DbServiceUser dbServiceUser = connectToDb();
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
@@ -72,7 +73,7 @@ public class JettyServer {
         return resourceHandler;
     }
 
-    private SecurityHandler createSecurityHandler(ServletContextHandler context) throws MalformedURLException {
+    private SecurityHandler createSecurityHandler(ServletContextHandler context) throws MalformedURLException, FileNotFoundException {
         Constraint constraint = new Constraint();
         constraint.setName("auth");
         constraint.setAuthenticate(true);
@@ -97,7 +98,7 @@ public class JettyServer {
         }
 
         if (propFile == null) {
-            throw new RuntimeException("Realm property file not found");
+            throw new FileNotFoundException("Realm property file not found");
         }
 
         security.setLoginService(new HashLoginService("MyRealm", propFile.getPath()));
