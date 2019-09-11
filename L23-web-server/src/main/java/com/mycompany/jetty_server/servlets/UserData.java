@@ -16,12 +16,12 @@ import java.util.List;
  * Returns a list of saved users
  */
 @Slf4j
-public class AllUsersData extends HttpServlet {
+public class UserData extends HttpServlet {
 
     private final DbServiceUser dbServiceUser;
     private final Gson gson = new Gson();
 
-    public AllUsersData(DbServiceUser dbServiceUser) {
+    public UserData(DbServiceUser dbServiceUser) {
         this.dbServiceUser = dbServiceUser;
     }
 

@@ -1,9 +1,9 @@
 const userStoreUrl = "http://localhost:8080/userStore";
-const allUsersDataUrl = "http://localhost:8080/allUsersData";
+const allUsersDataUrl = "http://localhost:8080/userData";
 
 window.onload = function () {
     document.getElementById("addUserButton").addEventListener("click", handleAddUserButton);
-    document.getElementById("allUsersButton").addEventListener("click", handleAllUsersButton);
+    document.getElementById("userDataButton").addEventListener("click", handleAllUsersButton);
 }
 
 function handleAddUserButton() {

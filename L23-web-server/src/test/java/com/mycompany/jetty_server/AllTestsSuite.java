@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(JUnitPlatform.class)
 @SelectClasses({
-        AllUsersDataTests.class,
+        UserDataTests.class,
         DbServiceUserTests.class,
         UserOperationsTests.class,
         UserStoreTests.class})

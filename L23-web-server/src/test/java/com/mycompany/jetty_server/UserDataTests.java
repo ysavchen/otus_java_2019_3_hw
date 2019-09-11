@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AllUsersDataTests extends ServletTestBase {
+public class UserDataTests extends ServletTestBase {
 
     private static Server server;
 
@@ -41,12 +41,12 @@ public class AllUsersDataTests extends ServletTestBase {
         assertEquals(HttpStatus.OK_200, storeConnection.getResponseCode(),
                 "HttpStatus is not OK from /userStore");
 
-        var userDataConnection = connectWithAuth("/allUsersData");
+        var userDataConnection = connectWithAuth("/userData");
         userDataConnection.setRequestMethod("GET");
         String response = readResponse(userDataConnection);
         assertEquals(HttpStatus.OK_200, userDataConnection.getResponseCode(),
-                "HttpStatus is not OK from /allUsersData");
+                "HttpStatus is not OK from /userData");
         assertEquals(gson.toJson(List.of(user.setId(1))), response,
-                "User data from /allUsersData is not valid");
+                "User data from /userData is not valid");
     }
 }
