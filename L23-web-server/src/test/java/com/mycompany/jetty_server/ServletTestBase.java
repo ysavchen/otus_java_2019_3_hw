@@ -47,7 +47,10 @@ public abstract class ServletTestBase {
 
     @SneakyThrows
     void sendData(String data, HttpURLConnection connection) {
-        connection.setDoOutput(true);
+        if (!connection.getDoOutput()) {
+            connection.setDoOutput(true);
+        }
+
         var writer = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
         try (writer) {
             writer.write(data);

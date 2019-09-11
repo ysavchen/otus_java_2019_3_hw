@@ -38,7 +38,7 @@ public class UserStoreTests extends ServletTestBase {
         String response = gson.fromJson(readResponse(connection), String.class);
 
         assertEquals(HttpStatus.OK_200, connection.getResponseCode(),
-                "responseCode is not correct for doPost");
+                "HttpStatus is not OK from /userStore");
         assertEquals("<p>User is saved with id = 1</p>", response,
                 "Response is not correct for doPost");
     }

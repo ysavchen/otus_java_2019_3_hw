@@ -35,7 +35,7 @@ public class UserOperationsTests extends ServletTestBase {
         String expPage = getResourceContent("static/userOperations.html");
 
         assertEquals(HttpStatus.OK_200, connection.getResponseCode(),
-                "HttpStatus is not OK for /userOperations");
+                "HttpStatus is not OK from /userOperations");
         assertEquals(expPage.replaceAll("\\s+", ""),
                 response.replaceAll("\\s+", ""),
                 "Response content is not correct");
