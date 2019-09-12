@@ -22,7 +22,7 @@ public class DbServiceUserImpl implements DbServiceUser {
     @Override
     public long saveUser(User user) {
         logger.info("Save user");
-        long id = 0;
+        long id = 0L;
         try (Session session = sessionFactory.openSession()) {
             try {
                 session.beginTransaction();

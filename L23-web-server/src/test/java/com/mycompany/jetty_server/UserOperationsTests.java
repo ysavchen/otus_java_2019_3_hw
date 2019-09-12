@@ -16,7 +16,7 @@ public class UserOperationsTests extends ServletTestBase {
 
     @BeforeAll
     static void startServer() throws Exception {
-        JettyServer jettyServer = new JettyServer();
+        JettyServer jettyServer = new JettyServer(DbUtils.connectToDb());
         server = jettyServer.createServer(PORT);
         server.start();
     }
@@ -27,7 +27,7 @@ public class UserOperationsTests extends ServletTestBase {
     }
 
     @Test
-    void checkConnection() throws IOException {
+    void checkUserOperations() throws IOException {
         var connection = connectWithAuth("/userOperations");
         connection.setRequestMethod("GET");
 

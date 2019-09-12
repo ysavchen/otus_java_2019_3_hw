@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DbServiceUserTests {
 
@@ -31,7 +32,9 @@ public class DbServiceUserTests {
     @Test
     void createAndLoadUser() {
         User user = new User();
-        user.setName("Michael").setAge(35);
+        user.setName("Michael")
+                .setSurname("Schmidt")
+                .setAge(35);
 
         DbServiceUser dbService = new DbServiceUserImpl(sessionFactory);
         long id = dbService.saveUser(user);
@@ -42,17 +45,29 @@ public class DbServiceUserTests {
     @Test
     void getAllUsersTest() {
         User user1 = new User()
-                .setName("Frank")
-                .setSurname("Kenley");
+                .setName("Frank");
         User user2 = new User()
-                .setName("Thomas")
                 .setSurname("Lester");
+        User user3 = new User()
+                .setAge(25);
+        User user4 = new User()
+                .setName("Alex")
+                .setSurname("Schmidt")
+                .setAge(30);
 
         DbServiceUser dbService = new DbServiceUserImpl(sessionFactory);
         dbService.saveUser(user1);
         dbService.saveUser(user2);
-        assertEquals(2, dbService.getAllUsers().size(),
+        dbService.saveUser(user3);
+        dbService.saveUser(user4);
+
+        var users = dbService.getAllUsers();
+        assertEquals(4, users.size(),
                 "Users are not loaded");
+        assertTrue(users.contains(user1), "user1 is not loaded");
+        assertTrue(users.contains(user2), "user2 is not loaded");
+        assertTrue(users.contains(user3), "user3 is not loaded");
+        assertTrue(users.contains(user4), "user4 is not loaded");
     }
 
     @AfterAll

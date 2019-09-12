@@ -1,7 +1,6 @@
 package com.mycompany.jetty_server;
 
 import com.mycompany.jetty_server.dbservice.DbServiceUser;
-import com.mycompany.jetty_server.dbservice.DbServiceUserImpl;
 import com.mycompany.jetty_server.servlets.UserData;
 import com.mycompany.jetty_server.servlets.UserOperations;
 import com.mycompany.jetty_server.servlets.UserStore;
@@ -17,10 +16,6 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.security.Constraint;
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -32,9 +27,15 @@ public class JettyServer {
 
     private final static int PORT = 8080;
 
+    private final DbServiceUser dbServiceUser;
+
     public static void main(String[] args) throws Exception {
 
-        new JettyServer().start();
+        new JettyServer(DbUtils.connectToDb()).start();
+    }
+
+    public JettyServer(DbServiceUser dbServiceUser) {
+        this.dbServiceUser = dbServiceUser;
     }
 
     private void start() throws Exception {
@@ -44,8 +45,6 @@ public class JettyServer {
     }
 
     Server createServer(int port) throws MalformedURLException, FileNotFoundException {
-        DbServiceUser dbServiceUser = connectToDb();
-
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(new UserOperations()), "/userOperations");
         context.addServlet(new ServletHolder(new UserData(dbServiceUser)), "/userData");
@@ -108,15 +107,4 @@ public class JettyServer {
         return security;
     }
 
-    private DbServiceUserImpl connectToDb() {
-        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
-                .configure()
-                .build();
-
-        final SessionFactory sessionFactory = new MetadataSources(registry)
-                .buildMetadata()
-                .buildSessionFactory();
-
-        return new DbServiceUserImpl(sessionFactory);
-    }
 }

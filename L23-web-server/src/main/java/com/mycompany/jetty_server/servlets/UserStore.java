@@ -40,7 +40,7 @@ public class UserStore extends HttpServlet {
             message = "User is not saved. \n Error: " + ex.getCause();
         }
 
-        String resultAsString = gson.toJson("<p>" + message + "</p>");
+        String resultAsString = gson.toJson(message);
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_OK);
         PrintWriter printWriter = response.getWriter();
