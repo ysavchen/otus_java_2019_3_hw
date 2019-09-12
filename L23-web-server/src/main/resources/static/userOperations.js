@@ -7,11 +7,16 @@ window.onload = function () {
 }
 
 function handleAddUserButton() {
-    let name = document.getElementById("name");
-    let surname = document.getElementById("surname");
-    let age = document.getElementById("age");
+    let name = document.getElementById("name").value;
+    let surname = document.getElementById("surname").value;
+    let age = document.getElementById("age").value;
 
-    let user = { name: name.value, surname: surname.value, age: age.value };
+    if(!Number.isInteger(parseInt(age, 10))) {
+        showInfoMessage("Invalid value for age: " + age);
+        return;
+    }
+
+    let user = { name: name, surname: surname, age: age };
 
     fetch(userStoreUrl, {
         method: 'POST',
@@ -23,9 +28,17 @@ function handleAddUserButton() {
         .then(function (response) {
             return response.json();
          })
-        .then(function (dataSrv) {
-            document.getElementById("infoSection").innerHTML = dataSrv;
+        .then(function (message) {
+            showInfoMessage(message);
         });
+}
+
+function showInfoMessage(message) {
+    let p = document.createElement("p")
+    p.textContent = message;
+    let info = document.getElementById("infoSection");
+    info.innerHTML = "";
+    info.appendChild(p);
 }
 
 function handleAllUsersButton() {
