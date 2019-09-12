@@ -1,10 +1,12 @@
 package com.mycompany.jetty_server;
 
+import com.mycompany.jetty_server.dbservice.DbServiceUser;
 import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.server.Server;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.io.IOException;
 
@@ -16,7 +18,7 @@ public class UserOperationsTests extends ServletTestBase {
 
     @BeforeAll
     static void startServer() throws Exception {
-        JettyServer jettyServer = new JettyServer(DbUtils.connectToDb());
+        JettyServer jettyServer = new JettyServer(Mockito.mock(DbServiceUser.class));
         server = jettyServer.createServer(PORT);
         server.start();
     }
