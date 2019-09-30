@@ -22,18 +22,18 @@ public class DbServiceUserImpl implements DbServiceUser {
     public long saveUser(User user) {
         logger.info("Save user");
         long id = 0L;
-        try (Session session = sessionFactory.openSession()) {
-            try {
-                session.beginTransaction();
 
-                session.saveOrUpdate(user);
-                id = user.getId();
+        Session session = sessionFactory.openSession();
+        try (session) {
+            session.beginTransaction();
 
-                session.getTransaction().commit();
-            } catch (Exception ex) {
-                session.getTransaction().rollback();
-                logger.error("Save is not successful", ex);
-            }
+            session.saveOrUpdate(user);
+            id = user.getId();
+
+            session.getTransaction().commit();
+        } catch (Exception ex) {
+            session.getTransaction().rollback();
+            logger.error("Save is not successful", ex);
         }
         return id;
     }
@@ -42,17 +42,17 @@ public class DbServiceUserImpl implements DbServiceUser {
     public Optional<User> getUser(long id) {
         logger.info("Get user by id = " + id);
         User user = null;
-        try (Session session = sessionFactory.openSession()) {
-            try {
-                session.beginTransaction();
 
-                user = session.get(User.class, id);
+        Session session = sessionFactory.openSession();
+        try (session) {
+            session.beginTransaction();
 
-                session.getTransaction().commit();
-            } catch (Exception ex) {
-                session.getTransaction().rollback();
-                logger.error("Get user (id = " + id + ") is not successful", ex);
-            }
+            user = session.get(User.class, id);
+
+            session.getTransaction().commit();
+        } catch (Exception ex) {
+            session.getTransaction().rollback();
+            logger.error("Get user (id = " + id + ") is not successful", ex);
         }
         return Optional.ofNullable(user);
     }
@@ -62,19 +62,18 @@ public class DbServiceUserImpl implements DbServiceUser {
         logger.info("Get all users");
         List<User> users = new ArrayList<>();
 
-        try (Session session = sessionFactory.openSession()) {
-            try {
-                session.beginTransaction();
+        Session session = sessionFactory.openSession();
+        try (session) {
+            session.beginTransaction();
 
-                users = session
-                        .createNamedQuery("getAllUsers", User.class)
-                        .getResultList();
+            users = session
+                    .createNamedQuery("getAllUsers", User.class)
+                    .getResultList();
 
-                session.getTransaction().commit();
-            } catch (Exception ex) {
-                session.getTransaction().rollback();
-                logger.error("Get all users is not successful", ex);
-            }
+            session.getTransaction().commit();
+        } catch (Exception ex) {
+            session.getTransaction().rollback();
+            logger.error("Get all users is not successful", ex);
         }
         return users;
     }
