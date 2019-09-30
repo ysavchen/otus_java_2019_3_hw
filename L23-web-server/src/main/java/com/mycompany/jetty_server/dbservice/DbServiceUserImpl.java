@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import javax.persistence.RollbackException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +30,7 @@ public class DbServiceUserImpl implements DbServiceUser {
                 id = user.getId();
 
                 session.getTransaction().commit();
-            } catch (RollbackException ex) {
+            } catch (Exception ex) {
                 session.getTransaction().rollback();
                 logger.error("Save is not successful", ex);
             }
@@ -50,7 +49,7 @@ public class DbServiceUserImpl implements DbServiceUser {
                 user = session.get(User.class, id);
 
                 session.getTransaction().commit();
-            } catch (RollbackException ex) {
+            } catch (Exception ex) {
                 session.getTransaction().rollback();
                 logger.error("Get user (id = " + id + ") is not successful", ex);
             }
@@ -72,7 +71,7 @@ public class DbServiceUserImpl implements DbServiceUser {
                         .getResultList();
 
                 session.getTransaction().commit();
-            } catch (RollbackException ex) {
+            } catch (Exception ex) {
                 session.getTransaction().rollback();
                 logger.error("Get all users is not successful", ex);
             }
