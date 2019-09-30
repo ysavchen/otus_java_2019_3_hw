@@ -63,7 +63,7 @@ public class UserRepositoryImpl implements UserRepository {
         List<User> users = new ArrayList<>();
 
         Session session = sessionFactory.openSession();
-        try {
+        try (session) {
             session.beginTransaction();
 
             users = session
