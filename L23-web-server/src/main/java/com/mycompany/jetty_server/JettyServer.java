@@ -22,6 +22,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
 public class JettyServer {
@@ -65,7 +67,8 @@ public class JettyServer {
         if (fileDir == null) {
             throw new RuntimeException("File Directory not found");
         }
-        resourceHandler.setResourceBase(fileDir.getPath());
+        String decodedUrl = URLDecoder.decode(fileDir.getPath(), StandardCharsets.UTF_8);
+        resourceHandler.setResourceBase(decodedUrl);
         return resourceHandler;
     }
 
@@ -97,7 +100,8 @@ public class JettyServer {
             throw new FileNotFoundException("Realm property file not found");
         }
 
-        security.setLoginService(new HashLoginService("MyRealm", propFile.getPath()));
+        security.setLoginService(new HashLoginService("MyRealm",
+                URLDecoder.decode(propFile.getPath(), StandardCharsets.UTF_8)));
         security.setHandler(new HandlerList(context));
         security.setConstraintMappings(Collections.singletonList(mapping));
 
