@@ -12,7 +12,7 @@ import org.mockito.Mockito;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-public class UserStoreTests extends ServletTestBase {
+public class UserStoreServletTests extends ServletTestBase {
 
     private static Server server;
     private static DbServiceUser dbServiceUser;

@@ -12,7 +12,7 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class UserOperationsTests extends ServletTestBase {
+public class UserOperationsServletTests extends ServletTestBase {
 
     private static Server server;
 

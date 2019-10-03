@@ -12,12 +12,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 @Slf4j
-public class UserStore extends HttpServlet {
+public class UserStoreServlet extends HttpServlet {
 
     private final DbServiceUser dbServiceUser;
     private final Gson gson = new Gson();
 
-    public UserStore(DbServiceUser dbServiceUser) {
+    public UserStoreServlet(DbServiceUser dbServiceUser) {
         this.dbServiceUser = dbServiceUser;
     }
 

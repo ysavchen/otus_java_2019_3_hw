@@ -11,7 +11,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class UserOperations extends HttpServlet {
+public class UserOperationsServlet extends HttpServlet {
 
     @SneakyThrows
     @Override

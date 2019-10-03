@@ -7,9 +7,9 @@ import org.junit.runner.RunWith;
 @RunWith(JUnitPlatform.class)
 @SelectClasses({
         DbServiceUserTests.class,
-        UserOperationsTests.class,
-        UserStoreTests.class,
-        UserDataTests.class,
+        UserOperationsServletTests.class,
+        UserStoreServletTests.class,
+        UserDataServletTests.class,
         ServerDbIntegrationTests.class})
 public class AllTestsSuite {
 }

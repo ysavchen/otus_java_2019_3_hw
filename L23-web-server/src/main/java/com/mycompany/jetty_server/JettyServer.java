@@ -1,9 +1,9 @@
 package com.mycompany.jetty_server;
 
 import com.mycompany.jetty_server.dbservice.DbServiceUser;
-import com.mycompany.jetty_server.servlets.UserData;
-import com.mycompany.jetty_server.servlets.UserOperations;
-import com.mycompany.jetty_server.servlets.UserStore;
+import com.mycompany.jetty_server.servlets.UserDataServlet;
+import com.mycompany.jetty_server.servlets.UserOperationsServlet;
+import com.mycompany.jetty_server.servlets.UserStoreServlet;
 import lombok.SneakyThrows;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
@@ -43,9 +43,9 @@ public class JettyServer {
 
     Server createServer() {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.addServlet(new ServletHolder(new UserOperations()), "/userOperations");
-        context.addServlet(new ServletHolder(new UserData(dbServiceUser)), "/userData");
-        context.addServlet(new ServletHolder(new UserStore(dbServiceUser)), "/userStore");
+        context.addServlet(new ServletHolder(new UserOperationsServlet()), "/userOperations");
+        context.addServlet(new ServletHolder(new UserDataServlet(dbServiceUser)), "/userData");
+        context.addServlet(new ServletHolder(new UserStoreServlet(dbServiceUser)), "/userStore");
 
         Server server = new Server(port);
         server.setHandler(new HandlerList(context));
