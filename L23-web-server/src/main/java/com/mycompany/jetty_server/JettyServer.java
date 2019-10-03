@@ -86,6 +86,14 @@ public class JettyServer {
         //как декодировать стороку с юзером:паролем https://www.base64decode.org/
         security.setAuthenticator(new BasicAuthenticator());
 
+        security.setLoginService(new HashLoginService("MyRealm", getRealmPropsPath()));
+        security.setHandler(new HandlerList(context));
+        security.setConstraintMappings(Collections.singletonList(mapping));
+
+        return security;
+    }
+
+    private String getRealmPropsPath() throws FileNotFoundException, MalformedURLException {
         URL propFile = null;
         File realmFile = new File("./realm.properties");
         if (realmFile.exists()) {
@@ -100,12 +108,7 @@ public class JettyServer {
             throw new FileNotFoundException("Realm property file not found");
         }
 
-        security.setLoginService(new HashLoginService("MyRealm",
-                URLDecoder.decode(propFile.getPath(), StandardCharsets.UTF_8)));
-        security.setHandler(new HandlerList(context));
-        security.setConstraintMappings(Collections.singletonList(mapping));
-
-        return security;
+        return URLDecoder.decode(propFile.getPath(), StandardCharsets.UTF_8);
     }
 
 }
