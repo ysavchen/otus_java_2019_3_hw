@@ -18,8 +18,8 @@ public class UserOperationsTests extends ServletTestBase {
 
     @BeforeAll
     static void startServer() throws Exception {
-        JettyServer jettyServer = new JettyServer(Mockito.mock(DbServiceUser.class));
-        server = jettyServer.createServer(PORT);
+        JettyServer jettyServer = new JettyServer(PORT, Mockito.mock(DbServiceUser.class));
+        server = jettyServer.createServer();
         server.start();
     }
 

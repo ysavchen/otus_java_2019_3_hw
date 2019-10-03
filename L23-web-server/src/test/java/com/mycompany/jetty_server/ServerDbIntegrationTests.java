@@ -22,8 +22,8 @@ public class ServerDbIntegrationTests extends ServletTestBase {
     @BeforeAll
     static void startServer() throws Exception {
         dbServiceUser = DbUtils.connectToDb();
-        JettyServer jettyServer = new JettyServer(dbServiceUser);
-        server = jettyServer.createServer(PORT);
+        JettyServer jettyServer = new JettyServer(PORT, dbServiceUser);
+        server = jettyServer.createServer();
         server.start();
     }
 

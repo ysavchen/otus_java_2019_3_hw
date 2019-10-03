@@ -4,6 +4,7 @@ import com.mycompany.jetty_server.dbservice.DbServiceUser;
 import com.mycompany.jetty_server.servlets.UserData;
 import com.mycompany.jetty_server.servlets.UserOperations;
 import com.mycompany.jetty_server.servlets.UserStore;
+import lombok.SneakyThrows;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.HashLoginService;
@@ -25,26 +26,22 @@ import java.util.Collections;
 
 public class JettyServer {
 
-    private final static int PORT = 8080;
-
+    private final int port;
     private final DbServiceUser dbServiceUser;
 
-    public static void main(String[] args) throws Exception {
-
-        new JettyServer(DbUtils.connectToDb()).start();
-    }
-
-    public JettyServer(DbServiceUser dbServiceUser) {
+    public JettyServer(int port, DbServiceUser dbServiceUser) {
+        this.port = port;
         this.dbServiceUser = dbServiceUser;
     }
 
-    private void start() throws Exception {
-        Server server = createServer(PORT);
+    @SneakyThrows
+    public void start() {
+        Server server = createServer();
         server.start();
         server.join();
     }
 
-    Server createServer(int port) throws MalformedURLException, FileNotFoundException {
+    Server createServer() throws MalformedURLException, FileNotFoundException {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(new UserOperations()), "/userOperations");
         context.addServlet(new ServletHolder(new UserData(dbServiceUser)), "/userData");
