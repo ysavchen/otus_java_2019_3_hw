@@ -1,6 +1,5 @@
 package com.mycompany.jetty_server.servlets;
 
-import com.mycompany.jetty_server.JettyServer;
 import lombok.SneakyThrows;
 
 import javax.servlet.http.HttpServlet;
@@ -16,7 +15,7 @@ public class UserOperationsServlet extends HttpServlet {
     @SneakyThrows
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
-        URL url = JettyServer.class.getClassLoader().getResource("static/userOperations.html");
+        URL url = UserOperationsServlet.class.getClassLoader().getResource("static/userOperations.html");
         String page;
         if (url != null) {
             page = Files.readString(Paths.get(url.toURI()));
