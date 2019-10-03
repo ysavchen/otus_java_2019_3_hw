@@ -29,9 +29,13 @@ public class UserStoreServlet extends HttpServlet {
             json.append(userData);
         }
 
+        String message = storeUser(gson.fromJson(json.toString(), User.class));
+        sendResponse(response, message);
+    }
+
+    private String storeUser(User user) {
         String message;
         try {
-            User user = gson.fromJson(json.toString(), User.class);
             long id = dbServiceUser.saveUser(user);
 
             message = "User is saved with id = " + id;
@@ -39,7 +43,10 @@ public class UserStoreServlet extends HttpServlet {
             logger.error("Error: " + ex);
             message = "User is not saved. \n Error: " + ex.getCause();
         }
+        return message;
+    }
 
+    private void sendResponse(HttpServletResponse response, String message) throws IOException {
         String resultAsString = gson.toJson(message);
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_OK);
