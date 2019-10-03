@@ -20,11 +20,10 @@ import org.eclipse.jetty.util.security.Constraint;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
+import java.util.List;
 
 public class JettyServer {
 
@@ -36,14 +35,13 @@ public class JettyServer {
         this.dbServiceUser = dbServiceUser;
     }
 
-    @SneakyThrows
-    public void start() {
+    public void start() throws Exception {
         Server server = createServer();
         server.start();
         server.join();
     }
 
-    Server createServer() throws MalformedURLException, FileNotFoundException {
+    Server createServer() {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(new UserOperations()), "/userOperations");
         context.addServlet(new ServletHolder(new UserData(dbServiceUser)), "/userData");
@@ -72,28 +70,20 @@ public class JettyServer {
         return resourceHandler;
     }
 
-    private SecurityHandler createSecurityHandler(ServletContextHandler context) throws MalformedURLException, FileNotFoundException {
-        Constraint constraint = new Constraint();
-        constraint.setName("auth");
-        constraint.setAuthenticate(true);
-        constraint.setRoles(new String[]{"admin"});
-
-        ConstraintMapping mapping = new ConstraintMapping();
-        mapping.setPathSpec("/*");
-        mapping.setConstraint(constraint);
-
+    private SecurityHandler createSecurityHandler(ServletContextHandler context) {
         ConstraintSecurityHandler security = new ConstraintSecurityHandler();
         //как декодировать стороку с юзером:паролем https://www.base64decode.org/
         security.setAuthenticator(new BasicAuthenticator());
 
         security.setLoginService(new HashLoginService("MyRealm", getRealmPropsPath()));
         security.setHandler(new HandlerList(context));
-        security.setConstraintMappings(Collections.singletonList(mapping));
+        security.setConstraintMappings(List.of(getConstraintMapping()));
 
         return security;
     }
 
-    private String getRealmPropsPath() throws FileNotFoundException, MalformedURLException {
+    @SneakyThrows
+    private String getRealmPropsPath() {
         URL propFile = null;
         File realmFile = new File("./realm.properties");
         if (realmFile.exists()) {
@@ -109,6 +99,18 @@ public class JettyServer {
         }
 
         return URLDecoder.decode(propFile.getPath(), StandardCharsets.UTF_8);
+    }
+
+    private ConstraintMapping getConstraintMapping() {
+        Constraint constraint = new Constraint();
+        constraint.setName("auth");
+        constraint.setAuthenticate(true);
+        constraint.setRoles(new String[]{"admin"});
+
+        ConstraintMapping mapping = new ConstraintMapping();
+        mapping.setPathSpec("/*");
+        mapping.setConstraint(constraint);
+        return mapping;
     }
 
 }
