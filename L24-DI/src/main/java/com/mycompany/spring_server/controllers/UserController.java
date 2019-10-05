@@ -3,7 +3,6 @@ package com.mycompany.spring_server.controllers;
 import com.mycompany.spring_server.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Slf4j
@@ -17,7 +16,7 @@ public class UserController {
     }
 
     @GetMapping({"/", "/userOperations"})
-    public String userOperations(Model model) {
+    public String userOperations() {
         return "userOperations.html";
     }
 }
