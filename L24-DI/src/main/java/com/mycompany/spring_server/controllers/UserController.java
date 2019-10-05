@@ -17,6 +17,6 @@ public class UserController {
 
     @GetMapping({"/", "/userOperations"})
     public String userOperations() {
-        return "userOperations.html";
+        return "userOperations";
     }
 }
