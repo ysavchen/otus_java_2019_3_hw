@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <title>User Operations</title>
-    <link href="userOperations.css" type="text/css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/userOperations.css}"/>
 </head>
 <body>
 <h1>User Operations</h1>
@@ -34,6 +34,6 @@
         </div>
     </div>
 </div>
-<script type="application/javascript" src="userOperations.js"></script>
+<script type="application/javascript" th:src="@{/userOperations.js}"></script>
 </body>
 </html>

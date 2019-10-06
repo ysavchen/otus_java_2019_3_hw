@@ -15,8 +15,18 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping({"/", "/userOperations"})
-    public String userOperations() {
-        return "userOperations";
+    @GetMapping({"/", "/userOperations", "/userOperations.html"})
+    public String userOperationsHtml() {
+        return "userOperations.html";
+    }
+
+    @GetMapping("/userOperations.css")
+    public String userOperationsCss() {
+        return "userOperations.css";
+    }
+
+    @GetMapping("/userOperations.js")
+    public String userOperationsJs() {
+        return "userOperations.js";
     }
 }
