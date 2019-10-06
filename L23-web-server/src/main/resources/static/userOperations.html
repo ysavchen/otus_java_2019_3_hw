@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>User Operations</title>
+    <link href="userOperations.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>User Operations</h1>
+<div id="workspace">
+    <div id="infoSection"></div>
+    <div id="leftSideSection">
+        <table id="addUser">
+            <thead>
+            <tr id="columns">
+                <td>Name</td>
+                <td>Surname</td>
+                <td>Age</td>
+            </tr>
+            <tr id="userInputFields">
+                <td><input id="name" type="text"/></td>
+                <td><input id="surname" type="text"/></td>
+                <td><input id="age" type="text"/></td>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <div id="dataHolder"></div>
+    </div>
+    <div id="rightSideSection">
+        <div id="actionButtons">
+            <input type="button" id="addUserButton" value="Add user">
+            <input type="button" id="userDataButton" value="User data">
+        </div>
+    </div>
+</div>
+<script type="application/javascript" src="userOperations.js"></script>
+</body>
+</html>
