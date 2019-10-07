@@ -8,9 +8,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
@@ -31,45 +29,45 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public SpringResourceTemplateResolver htmlTemplateResolver() {
-        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-        templateResolver.setApplicationContext(this.applicationContext);
-        templateResolver.setPrefix("/WEB-INF/templates/");
-        templateResolver.setSuffix(".html");
-        templateResolver.setTemplateMode(TemplateMode.HTML);
-        templateResolver.setCacheable(false);
-        templateResolver.setCharacterEncoding("UTF-8");
-        return templateResolver;
+    public SpringResourceTemplateResolver htmlResolver() {
+        SpringResourceTemplateResolver htmlResolver = new SpringResourceTemplateResolver();
+        htmlResolver.setApplicationContext(this.applicationContext);
+        htmlResolver.setPrefix("/WEB-INF/templates/");
+        htmlResolver.setSuffix(".html");
+        htmlResolver.setTemplateMode(TemplateMode.HTML);
+        htmlResolver.setCacheable(false);
+        htmlResolver.setCharacterEncoding("UTF-8");
+        return htmlResolver;
     }
 
     @Bean
-    public SpringResourceTemplateResolver cssTemplateResolver() {
-        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-        templateResolver.setApplicationContext(this.applicationContext);
-        templateResolver.setPrefix("/WEB-INF/templates/");
-        templateResolver.setSuffix(".css");
-        templateResolver.setTemplateMode(TemplateMode.CSS);
-        templateResolver.setCacheable(false);
-        templateResolver.setCharacterEncoding("UTF-8");
-        return templateResolver;
+    public SpringResourceTemplateResolver cssResolver() {
+        SpringResourceTemplateResolver cssResolver = new SpringResourceTemplateResolver();
+        cssResolver.setApplicationContext(this.applicationContext);
+        cssResolver.setPrefix("/WEB-INF/templates/");
+        cssResolver.setSuffix(".css");
+        cssResolver.setTemplateMode(TemplateMode.CSS);
+        cssResolver.setCacheable(false);
+        cssResolver.setCharacterEncoding("UTF-8");
+        return cssResolver;
     }
 
     @Bean
-    public SpringResourceTemplateResolver jsTemplateResolver() {
-        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-        templateResolver.setApplicationContext(this.applicationContext);
-        templateResolver.setPrefix("/WEB-INF/templates/");
-        templateResolver.setSuffix(".js");
-        templateResolver.setTemplateMode(TemplateMode.JAVASCRIPT);
-        templateResolver.setCacheable(false);
-        templateResolver.setCharacterEncoding("UTF-8");
-        return templateResolver;
+    public SpringResourceTemplateResolver jsResolver() {
+        SpringResourceTemplateResolver jsResolver = new SpringResourceTemplateResolver();
+        jsResolver.setApplicationContext(this.applicationContext);
+        jsResolver.setPrefix("/WEB-INF/templates/");
+        jsResolver.setSuffix(".js");
+        jsResolver.setTemplateMode(TemplateMode.JAVASCRIPT);
+        jsResolver.setCacheable(false);
+        jsResolver.setCharacterEncoding("UTF-8");
+        return jsResolver;
     }
 
     @Bean
     public SpringTemplateEngine templateEngine() {
         SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-        templateEngine.setTemplateResolvers(Set.of(htmlTemplateResolver(), cssTemplateResolver(), jsTemplateResolver()));
+        templateEngine.setTemplateResolvers(Set.of(htmlResolver(), cssResolver(), jsResolver()));
         return templateEngine;
     }
 
@@ -91,15 +89,5 @@ public class WebConfig implements WebMvcConfigurer {
         return new MetadataSources(registry)
                 .buildMetadata()
                 .buildSessionFactory();
-    }
-
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**").addResourceLocations("/WEB-INF/templates/");
-    }
-
-    @Override
-    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-        configurer.enable();
     }
 }
