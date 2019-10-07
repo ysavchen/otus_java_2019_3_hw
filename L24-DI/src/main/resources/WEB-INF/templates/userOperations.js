@@ -1,5 +1,5 @@
-const userStoreUrl = "http://localhost:8080/userStore";
-const allUsersDataUrl = "http://localhost:8080/userData";
+const userStoreUrl = "http://localhost:8080/SpringServer/userStore";
+const allUsersDataUrl = "http://localhost:8080/SpringServer/userData";
 
 window.onload = function () {
     document.getElementById("addUserButton").addEventListener("click", handleAddUserButton);
@@ -28,8 +28,8 @@ function handleAddUserButton() {
         .then(function (response) {
             return response.json();
          })
-        .then(function (message) {
-            showInfoMessage(message);
+        .then(function (srvData) {
+            showInfoMessage(srvData.message);
         });
 }
 

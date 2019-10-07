@@ -29,4 +29,5 @@ public class UserController {
     public String userOperationsJs() {
         return "userOperations.js";
     }
+
 }
