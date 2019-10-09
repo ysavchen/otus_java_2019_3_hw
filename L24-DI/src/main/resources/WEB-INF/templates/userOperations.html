@@ -34,6 +34,10 @@
         </div>
     </div>
 </div>
+<script th:inline="javascript">
+        const userStoreUrl = [[@{/userStore}]];
+        const allUsersDataUrl = [[@{/userData}]];
+</script>
 <script type="application/javascript" th:src="@{/userOperations.js}"></script>
 </body>
 </html>

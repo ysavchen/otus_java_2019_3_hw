@@ -1,5 +1,4 @@
-const userStoreUrl = "http://localhost:8080/SpringServer/userStore";
-const allUsersDataUrl = "http://localhost:8080/SpringServer/userData";
+"use strict";
 
 window.onload = function () {
     document.getElementById("addUserButton").addEventListener("click", handleAddUserButton);
