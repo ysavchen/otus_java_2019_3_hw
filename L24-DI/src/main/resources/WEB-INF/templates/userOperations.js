@@ -28,8 +28,8 @@ function handleAddUserButton() {
         .then(function (response) {
             return response.json();
          })
-        .then(function (srvData) {
-            showInfoMessage(srvData.message);
+        .then(function (message) {
+            showInfoMessage(message);
         });
 }
 

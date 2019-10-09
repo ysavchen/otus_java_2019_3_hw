@@ -6,12 +6,14 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Slf4j
 @Repository
+@Transactional
 public class UserRepositoryImpl implements UserRepository {
 
     private final SessionFactory sessionFactory;
@@ -26,7 +28,7 @@ public class UserRepositoryImpl implements UserRepository {
         long id = 0L;
 
         Session session = sessionFactory.openSession();
-        try (session) {
+        try {
             session.beginTransaction();
 
             session.saveOrUpdate(user);
@@ -46,7 +48,7 @@ public class UserRepositoryImpl implements UserRepository {
         User user = null;
 
         Session session = sessionFactory.openSession();
-        try (session) {
+        try {
             session.beginTransaction();
 
             user = session.get(User.class, id);
@@ -65,7 +67,7 @@ public class UserRepositoryImpl implements UserRepository {
         List<User> users = new ArrayList<>();
 
         Session session = sessionFactory.openSession();
-        try (session) {
+        try {
             session.beginTransaction();
 
             users = session
