@@ -15,8 +15,6 @@ import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 
-import java.util.Set;
-
 @Configuration
 @ComponentScan
 @EnableWebMvc
@@ -29,7 +27,7 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public SpringResourceTemplateResolver htmlResolver() {
+    public SpringResourceTemplateResolver templateResolver() {
         SpringResourceTemplateResolver htmlResolver = new SpringResourceTemplateResolver();
         htmlResolver.setApplicationContext(this.applicationContext);
         htmlResolver.setPrefix("/WEB-INF/templates/");
@@ -41,33 +39,9 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public SpringResourceTemplateResolver cssResolver() {
-        SpringResourceTemplateResolver cssResolver = new SpringResourceTemplateResolver();
-        cssResolver.setApplicationContext(this.applicationContext);
-        cssResolver.setPrefix("/WEB-INF/templates/");
-        cssResolver.setSuffix(".css");
-        cssResolver.setTemplateMode(TemplateMode.CSS);
-        cssResolver.setCacheable(false);
-        cssResolver.setCharacterEncoding("UTF-8");
-        return cssResolver;
-    }
-
-    @Bean
-    public SpringResourceTemplateResolver jsResolver() {
-        SpringResourceTemplateResolver jsResolver = new SpringResourceTemplateResolver();
-        jsResolver.setApplicationContext(this.applicationContext);
-        jsResolver.setPrefix("/WEB-INF/templates/");
-        jsResolver.setSuffix(".js");
-        jsResolver.setTemplateMode(TemplateMode.JAVASCRIPT);
-        jsResolver.setCacheable(false);
-        jsResolver.setCharacterEncoding("UTF-8");
-        return jsResolver;
-    }
-
-    @Bean
     public SpringTemplateEngine templateEngine() {
         SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-        templateEngine.setTemplateResolvers(Set.of(htmlResolver(), cssResolver(), jsResolver()));
+        templateEngine.setTemplateResolver(templateResolver());
         return templateEngine;
     }
 

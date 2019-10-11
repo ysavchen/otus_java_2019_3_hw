@@ -13,14 +13,4 @@ public class UserController {
         return "userOperations.html";
     }
 
-    @GetMapping("/userOperations.css")
-    public String userOperationsCss() {
-        return "userOperations.css";
-    }
-
-    @GetMapping("/userOperations.js")
-    public String userOperationsJs() {
-        return "userOperations.js";
-    }
-
 }
