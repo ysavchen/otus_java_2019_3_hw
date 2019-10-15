@@ -129,8 +129,8 @@
         .then(function (response) {
             return response.json();
          })
-        .then(function (message) {
-            showInfoMessage(message);
+        .then(function (data) {
+            showInfoMessage(data.message);
         });
     }
 
