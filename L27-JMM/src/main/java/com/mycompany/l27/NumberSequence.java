@@ -13,40 +13,37 @@ public class NumberSequence {
 
     public static void main(String[] args) {
         NumberSequence numberSequence = new NumberSequence();
-        new Thread(() -> {
+        numberSequence.newThread("tread_a").start();
+        numberSequence.newThread("tread_b").start();
+    }
+
+    private synchronized Thread newThread(String name) {
+        var thread = new Thread(() -> {
             while (true) {
                 for (int i = 1; i < 11; i++) {
-                    numberSequence.printCounter(i, "thread1");
+                    printCounter(i, name);
                 }
-                for (int k = 9; k > 0; k--) {
-                    numberSequence.printCounter(k, "thread1");
-                }
-            }
-        }).start();
-        new Thread(() -> {
-            while (true) {
-                for (int x = 1; x < 11; x++) {
-                    numberSequence.printCounter(x, "thread2");
-                }
-                for (int y = 9; y > 0; y--) {
-                    numberSequence.printCounter(y, "thread2");
+                for (int k = 9; k > 1; k--) {
+                    printCounter(k, name);
                 }
             }
-        }).start();
+        });
+        thread.setName(name);
+        return thread;
     }
 
     private synchronized void printCounter(int counter, String message) {
         if (syncMessage.equals(message)) {
             wait(this);
-        } else {
-            System.out.println(counter);
-            syncMessage = message;
-            sleep(1_000);
-            notifyAll();
         }
+        System.out.println(Thread.currentThread().getName() + ": " + counter);
+        syncMessage = message;
+        sleep(1_000);
+        notifyAll();
     }
 
-    public static void wait(Object object) {
+
+    private static void wait(Object object) {
         try {
             object.wait();
         } catch (InterruptedException ex) {
