@@ -9,33 +9,56 @@ package com.mycompany.l27;
  */
 public class NumberSequence {
 
-    private int counter = 1;
-    private volatile boolean isPrinted1 = false;
-    private volatile boolean isPrinted2 = false;
+    private String syncMessage = "";
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         NumberSequence numberSequence = new NumberSequence();
-        numberSequence.go();
-    }
-
-    private void go() throws InterruptedException {
-        Thread thread1 = new Thread(() -> {
-        });
-        Thread thread2 = new Thread(() -> {
-        });
-
-        thread1.start();
-        thread2.start();
-
-        thread1.join();
-        thread2.join();
-    }
-
-    private void printCounter() {
-        while (counter < 10) {
-            synchronized (this) {
-                System.out.println(Thread.currentThread().getId() + " :" + counter);
+        new Thread(() -> {
+            while (true) {
+                for (int i = 1; i < 11; i++) {
+                    numberSequence.printCounter(i, "thread1");
+                }
+                for (int k = 9; k > 0; k--) {
+                    numberSequence.printCounter(k, "thread1");
+                }
             }
+        }).start();
+        new Thread(() -> {
+            while (true) {
+                for (int x = 1; x < 11; x++) {
+                    numberSequence.printCounter(x, "thread2");
+                }
+                for (int y = 9; y > 0; y--) {
+                    numberSequence.printCounter(y, "thread2");
+                }
+            }
+        }).start();
+    }
+
+    private synchronized void printCounter(int counter, String message) {
+        if (syncMessage.equals(message)) {
+            wait(this);
+        } else {
+            System.out.println(counter);
+            syncMessage = message;
+            sleep(1_000);
+            notifyAll();
+        }
+    }
+
+    public static void wait(Object object) {
+        try {
+            object.wait();
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private static void sleep(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
         }
     }
 }
