@@ -42,7 +42,6 @@ public class NumberSequence {
         notifyAll();
     }
 
-
     private static void wait(Object object) {
         try {
             object.wait();
