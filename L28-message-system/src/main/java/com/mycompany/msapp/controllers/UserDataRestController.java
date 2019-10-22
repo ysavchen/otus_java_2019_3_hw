@@ -1,5 +1,6 @@
 package com.mycompany.msapp.controllers;
 
+import com.mycompany.msapp.domain.User;
 import com.mycompany.msapp.repository.UserRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +17,7 @@ public class UserDataRestController {
     }
 
     @GetMapping(path = "/userData")
-    public List userData() {
+    public List<User> userData() {
         return userRepository.getAllUsers();
     }
 }

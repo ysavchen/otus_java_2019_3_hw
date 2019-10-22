@@ -10,7 +10,6 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Slf4j
 @Repository
@@ -72,7 +71,7 @@ public class UserRepositoryImpl implements UserRepository {
             session.beginTransaction();
 
             users = session
-                    .createQuery("select user.* from User user", User.class)
+                    .createQuery("from User", User.class)
                     .getResultList();
 
             session.getTransaction().commit();
