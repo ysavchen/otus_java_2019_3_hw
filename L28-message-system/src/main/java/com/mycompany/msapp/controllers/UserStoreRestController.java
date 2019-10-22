@@ -1,7 +1,7 @@
-package com.mycompany.app.controllers;
+package com.mycompany.msapp.controllers;
 
-import com.mycompany.app.domain.User;
-import com.mycompany.app.repository.UserRepository;
+import com.mycompany.msapp.domain.User;
+import com.mycompany.msapp.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,9 +18,9 @@ public class UserStoreRestController {
     }
 
     @PostMapping(path = "/userStore")
-    public JsonMessage userStore(@RequestBody User user) {
+    public String userStore(@RequestBody User user) {
         logger.info("User to store: " + user.toString());
-        return new JsonMessage(storeUser(user));
+        return storeUser(user);
     }
 
     private String storeUser(User user) {

@@ -1,6 +1,6 @@
-package com.mycompany.app.repository;
+package com.mycompany.msapp.repository;
 
-import com.mycompany.app.domain.User;
+import com.mycompany.msapp.domain.User;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Repository
@@ -71,7 +72,7 @@ public class UserRepositoryImpl implements UserRepository {
             session.beginTransaction();
 
             users = session
-                    .createNamedQuery("getAllUsers", User.class)
+                    .createQuery("select user.* from User user", User.class)
                     .getResultList();
 
             session.getTransaction().commit();

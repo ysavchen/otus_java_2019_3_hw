@@ -1,4 +1,4 @@
-package com.mycompany.app.controllers;
+package com.mycompany.msapp.controllers;
 
 public class JsonMessage {
 

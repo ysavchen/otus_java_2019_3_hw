@@ -1,6 +1,6 @@
-package com.mycompany.app.repository;
+package com.mycompany.msapp.repository;
 
-import com.mycompany.app.domain.User;
+import com.mycompany.msapp.domain.User;
 
 import java.util.List;
 import java.util.Optional;

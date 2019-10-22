@@ -1,13 +1,13 @@
-package com.mycompany.app;
+package com.mycompany.msapp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AppMsMain {
+public class MsApp {
 
     public static void main(String[] args) {
-        SpringApplication.run(AppMsMain.class, args);
+        SpringApplication.run(MsApp.class, args);
     }
 
 }

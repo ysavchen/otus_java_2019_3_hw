@@ -1,4 +1,4 @@
-package com.mycompany.app.domain;
+package com.mycompany.msapp.domain;
 
 import lombok.Data;
 
