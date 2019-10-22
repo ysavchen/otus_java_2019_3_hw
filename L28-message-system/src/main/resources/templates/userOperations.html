@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8"/>
     <title>User Operations</title>
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-    <style type="text/css">
+    <style>
         #workspace {
             width: 730px;
         }
@@ -67,6 +67,7 @@
             /* space between buttons */
             margin-bottom: 5px;
         }
+
     </style>
 </head>
 <body>
@@ -202,6 +203,7 @@
         holder.innerHTML = "";
         holder.appendChild(table);
     }
+
 </script>
 </body>
 </html>
