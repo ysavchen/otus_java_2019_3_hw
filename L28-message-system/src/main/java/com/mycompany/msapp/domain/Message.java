@@ -2,27 +2,27 @@ package com.mycompany.msapp.domain;
 
 public class Message {
 
-    private final String infoContent;
-    private final String userDataContent;
+    private String newUserContent;
 
-    public Message(String infoContent, String userDataContent) {
-        this.infoContent = infoContent;
-        this.userDataContent = userDataContent;
+    public Message() {
     }
 
-    public String getInfoContent() {
-        return infoContent;
+    public Message(String newUserContent) {
+        this.newUserContent = newUserContent;
     }
 
-    public String getUserDataContent() {
-        return userDataContent;
+    public String getNewUserContent() {
+        return newUserContent;
+    }
+
+    public void setNewUserContent(String newUserContent) {
+        this.newUserContent = newUserContent;
     }
 
     @Override
     public String toString() {
         return "Message{" +
-                "infoContent='" + infoContent + '\'' +
-                ", userDataContent='" + userDataContent + '\'' +
+                "newUserContent='" + newUserContent + '\'' +
                 '}';
     }
 }

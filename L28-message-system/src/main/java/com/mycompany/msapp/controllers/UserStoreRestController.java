@@ -1,16 +1,15 @@
 package com.mycompany.msapp.controllers;
 
 import com.google.gson.Gson;
-import com.mycompany.msapp.domain.Message;
 import com.mycompany.msapp.domain.User;
 import com.mycompany.msapp.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
-@Controller
+@RestController
 public class UserStoreRestController {
 
     private final UserRepository userRepository;
@@ -20,19 +19,10 @@ public class UserStoreRestController {
         this.userRepository = userRepository;
     }
 
-    @MessageMapping("/userStore")
-    @SendTo("/infoMessage/response")
-    public Message userStore(Message message) {
-        logger.info("Controller(userStore) got message: " + message.toString());
-        User user = gson.fromJson(message.getUserDataContent(), User.class);
-        logger.info("Controller(userStore) user: " + user);
-
-        var messageToSend = new Message(
-                storeUser(user),  //infoContent
-                gson.toJson(userRepository.getAllUsers())  //userDataContent
-        );
-        logger.info("Controller(userStore) response message: " + messageToSend);
-        return messageToSend;
+    @PostMapping(path = "/userStore")
+    public String userStore(@RequestBody User user) {
+        logger.info("User to store: " + user.toString());
+        return gson.toJson(storeUser(user));
     }
 
     private String storeUser(User user) {
