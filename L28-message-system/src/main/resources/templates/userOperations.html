@@ -68,7 +68,6 @@
             margin-bottom: 5px;
         }
 
-
     </style>
 </head>
 <body>
@@ -76,7 +75,7 @@
 <div id="workspace">
     <div id="infoSection"></div>
     <div id="leftSideSection">
-        <table id="storeUser">
+        <table id="addUser">
             <thead>
             <tr id="columns">
                 <td>Name</td>
@@ -91,34 +90,30 @@
             </thead>
             <tbody></tbody>
         </table>
-        <br/>
         <div id="dataHolder"></div>
     </div>
     <div id="rightSideSection">
         <div id="actionButtons">
-            <input type="button" id="storeUserButton" value="Store user">
-            <input type="button" id="usersDataButton" value="Users data">
+            <input type="button" id="addUserButton" value="Add user">
+            <input type="button" id="userDataButton" value="User data">
         </div>
     </div>
 </div>
 <script type="application/javascript">
     "use strict";
 
-    const DEBUG = false;
-
     const userStoreUrl = '/userStore';
-    const usersDataUrl = '/usersData';
-    let isSubscribed = false;
+    const allUsersDataUrl = '/userData';
 
     let stompClient = null;
 
     $(function () {
-        $("#storeUserButton").click(storeUser);
-        $("#usersDataButton").click(usersData);
+        $("#addUserButton").click(addUser);
+        $("#userDataButton").click(userData);
         webSocketConnect();
     });
 
-    const storeUser = () => {
+    const addUser = () => {
         let name = $("#name").val();
         let surname = $("#surname").val();
         let age = $("#age").val();
@@ -128,21 +123,7 @@
             return;
         }
 
-        let user = { name: name, surname: surname, age: age };
-        fetch(userStoreUrl, {
-            method: 'POST',
-            body: JSON.stringify(user),
-            headers:{
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(function (response) {
-            return response.json();
-         })
-        .then(function(info) {
-            showInfoMessage(info);
-            sendUser(user);
-        });
+        sendUser({ name: name, surname: surname, age: age });
     }
 
     function showInfoMessage(message) {
@@ -154,54 +135,36 @@
     }
 
     function sendUser(user) {
-        if(stompClient != null) {
-            stompClient.send('/app/newUser', {}, JSON.stringify({'newUserContent': JSON.stringify(user)}));
-        }
+        stompClient.send('/app/userStore', {}, JSON.stringify({'infoContent': '', 'userDataContent': JSON.stringify(user)}));
     }
 
-    const usersData = () => {
-        fetch(usersDataUrl)
-            .then(function (response) {
-                return response.json();
-            })
-            .then(showUsersData)
-            .then(function() {
-                if(!isSubscribed) {
-                    stompClient.subscribe('/newUser/response', (message) => {
-                        let user = JSON.parse(message.body).newUserContent;
-                        DEBUG && console.log("User to display: " + user);
-                        displayNewUser(JSON.parse(user));
-                    });
-                    isSubscribed = true;
-                }
-            });
+    const userData = () => {
+        stompClient.send('/app/userData', {}, '');
     }
 
     function webSocketConnect() {
         if (stompClient == null) {
-            stompClient = Stomp.over(new SockJS('/user-websocket'));
+            stompClient = Stomp.over(new SockJS('/user-data-websocket'));
             stompClient.connect({}, (frame) => {
                 console.log('Connected: ' + frame);
+
+                stompClient.subscribe('/infoMessage/response', (message) => {
+                    let info = JSON.parse(message.body).infoContent;
+                    console.log('infoContent from server: ' + info);
+                    showInfoMessage(info);
+                });
+
+                stompClient.subscribe('/userDataContent/response', (message) => {
+                    let content = JSON.parse(message.body).userDataContent;
+                    console.log('userDataContent from server: ' + content);
+                    showUserData(JSON.parse(content));
+                });
             });
         }
     }
 
-    function displayNewUser(user) {
-        let table = document.getElementById("usersDataTable");
-        let body = document.getElementById("usersDataBody");
-        if (table != null) {
-             createUserRow(body, user);
-        }
-
-        table.appendChild(body);
-        const holder = document.getElementById("dataHolder");
-        holder.innerHTML = "";
-        holder.appendChild(table);
-    }
-
-    function showUsersData(data) {
+    function showUserData(dataSrv) {
         let table = document.createElement("table");
-        table.setAttribute("id", "usersDataTable");
         let head = document.createElement("thead");
         let columns = document.createElement("tr");
 
@@ -215,9 +178,18 @@
         ageColumn.textContent = "Age";
 
         let body = document.createElement("tbody");
-        body.setAttribute("id", "usersDataBody");
-        for (let user of data) {
-            createUserRow(body, user);
+        for (let user of dataSrv) {
+             let row = document.createElement("tr");
+             let nameData = document.createElement("td");
+             nameData.textContent = user.name;
+             let surnameData = document.createElement("td");
+             surnameData.textContent = user.surname;
+             let ageData = document.createElement("td");
+             ageData.textContent = user.age;
+             row.appendChild(nameData);
+             row.appendChild(surnameData);
+             row.appendChild(ageData);
+             body.appendChild(row);
         }
 
         columns.appendChild(nameColumn);
@@ -230,20 +202,6 @@
         const holder = document.getElementById("dataHolder");
         holder.innerHTML = "";
         holder.appendChild(table);
-    }
-
-    function createUserRow(body, user) {
-        let row = document.createElement("tr");
-        let nameData = document.createElement("td");
-        nameData.textContent = user.name;
-        let surnameData = document.createElement("td");
-        surnameData.textContent = user.surname;
-        let ageData = document.createElement("td");
-        ageData.textContent = user.age;
-        row.appendChild(nameData);
-        row.appendChild(surnameData);
-        row.appendChild(ageData);
-        body.appendChild(row);
     }
 
 </script>
