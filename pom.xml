@@ -33,7 +33,6 @@
         <module>L17-jdbc</module>
         <module>L19-hibernate</module>
         <module>L21-cache</module>
-        <module>L28-message-system</module>
     </modules>
 
     <properties>
