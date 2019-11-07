@@ -1,4 +1,4 @@
-package com.mycompany.msapp.domain;
+package com.mycompany.msapp.controllers;
 
 public class WSMessage {
 

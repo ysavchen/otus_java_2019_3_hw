@@ -2,7 +2,6 @@ package com.mycompany.msapp.controllers;
 
 import com.google.gson.Gson;
 import com.mycompany.msapp.domain.User;
-import com.mycompany.msapp.domain.WSMessage;
 import com.mycompany.msapp.frontend.FrontendService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
