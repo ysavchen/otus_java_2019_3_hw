@@ -2,7 +2,7 @@ package com.mycompany.msapp.messageSystem;
 
 public interface MsClient {
 
-    void addHandler(MessageType type, RequestHandler requestHandler);
+    void addHandler(MessageType type, MessageHandler requestHandler);
 
     boolean sendMessage(Message msg);
 

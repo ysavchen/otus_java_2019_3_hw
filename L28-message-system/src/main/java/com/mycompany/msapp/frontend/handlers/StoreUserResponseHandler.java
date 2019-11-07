@@ -3,14 +3,14 @@ package com.mycompany.msapp.frontend.handlers;
 import com.mycompany.msapp.common.Serializers;
 import com.mycompany.msapp.frontend.FrontendService;
 import com.mycompany.msapp.messageSystem.Message;
-import com.mycompany.msapp.messageSystem.RequestHandler;
+import com.mycompany.msapp.messageSystem.MessageHandler;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
-public class StoreUserResponseHandler implements RequestHandler {
+public class StoreUserResponseHandler implements MessageHandler {
 
     private final FrontendService frontendService;
 

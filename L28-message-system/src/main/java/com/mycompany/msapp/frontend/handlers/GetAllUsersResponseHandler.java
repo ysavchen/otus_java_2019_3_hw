@@ -4,7 +4,7 @@ import com.mycompany.msapp.common.Serializers;
 import com.mycompany.msapp.domain.User;
 import com.mycompany.msapp.frontend.FrontendService;
 import com.mycompany.msapp.messageSystem.Message;
-import com.mycompany.msapp.messageSystem.RequestHandler;
+import com.mycompany.msapp.messageSystem.MessageHandler;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
-public class GetAllUsersResponseHandler implements RequestHandler {
+public class GetAllUsersResponseHandler implements MessageHandler {
 
     private final FrontendService frontendService;
 

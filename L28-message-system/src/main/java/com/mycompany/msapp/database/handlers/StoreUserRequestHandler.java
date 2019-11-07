@@ -4,13 +4,13 @@ import com.mycompany.msapp.common.Serializers;
 import com.mycompany.msapp.database.DBService;
 import com.mycompany.msapp.domain.User;
 import com.mycompany.msapp.messageSystem.Message;
-import com.mycompany.msapp.messageSystem.RequestHandler;
+import com.mycompany.msapp.messageSystem.MessageHandler;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 
 @Slf4j
-public class StoreUserRequestHandler implements RequestHandler {
+public class StoreUserRequestHandler implements MessageHandler {
     private final DBService dbService;
     private static final String RESPONSE_MSG_TYPE = "StoreUser";
 

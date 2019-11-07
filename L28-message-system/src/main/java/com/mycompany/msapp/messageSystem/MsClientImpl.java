@@ -12,7 +12,7 @@ public class MsClientImpl implements MsClient {
 
     private final String name;
     private final MessageSystem messageSystem;
-    private final Map<String, RequestHandler> handlers = new ConcurrentHashMap<>();
+    private final Map<String, MessageHandler> handlers = new ConcurrentHashMap<>();
 
     public MsClientImpl(String name, MessageSystem messageSystem) {
         this.name = name;
@@ -20,7 +20,7 @@ public class MsClientImpl implements MsClient {
     }
 
     @Override
-    public void addHandler(MessageType type, RequestHandler requestHandler) {
+    public void addHandler(MessageType type, MessageHandler requestHandler) {
         this.handlers.put(type.getValue(), requestHandler);
     }
 
@@ -42,7 +42,7 @@ public class MsClientImpl implements MsClient {
     public void handle(Message msg) {
         logger.info("new message:{}", msg);
         try {
-            RequestHandler requestHandler = handlers.get(msg.getType());
+            MessageHandler requestHandler = handlers.get(msg.getType());
             if (requestHandler != null) {
                 requestHandler.handle(msg).ifPresent(this::sendMessage);
             } else {
@@ -62,7 +62,6 @@ public class MsClientImpl implements MsClient {
     public <T> Message produceMessage(String to, T data, MessageType msgType) {
         return new Message(name, to, null, msgType.getValue(), Serializers.serialize(data));
     }
-
 
     @Override
     public boolean equals(Object o) {
