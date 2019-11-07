@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class Message {
+
     static final Message VOID_MESSAGE = new Message();
 
     private final UUID id = UUID.randomUUID();

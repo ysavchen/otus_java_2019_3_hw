@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class GetAllUsersRequestHandler implements MessageHandler {
+
     private final DBService dbService;
     private static final String RESPONSE_MSG_TYPE = "AllUsersData";
 

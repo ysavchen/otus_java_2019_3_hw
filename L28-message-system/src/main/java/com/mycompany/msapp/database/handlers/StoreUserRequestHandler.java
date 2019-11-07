@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @Slf4j
 public class StoreUserRequestHandler implements MessageHandler {
+
     private final DBService dbService;
     private static final String RESPONSE_MSG_TYPE = "StoreUser";
 

@@ -15,6 +15,7 @@ import java.util.function.Consumer;
 
 @Slf4j
 public class FrontendServiceImpl implements FrontendService {
+
     private final Map<UUID, Consumer<?>> consumerMap = new ConcurrentHashMap<>();
     private final MsClient msClient;
     private final String databaseServiceClientName;
