@@ -12,12 +12,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/infoMessage", "/userDataContent");
+        config.enableSimpleBroker("/infoMessage", "/usersDataContent");
         config.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/user-data-websocket").withSockJS();
+        registry.addEndpoint("/users-data-websocket").withSockJS();
     }
 }

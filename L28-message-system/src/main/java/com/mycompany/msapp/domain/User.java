@@ -3,11 +3,12 @@ package com.mycompany.msapp.domain;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Data
 @Entity
 @Table(name = "User")
-public class User {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue

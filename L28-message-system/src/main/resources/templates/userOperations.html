@@ -75,7 +75,7 @@
 <div id="workspace">
     <div id="infoSection"></div>
     <div id="leftSideSection">
-        <table id="addUser">
+        <table id="storeUser">
             <thead>
             <tr id="columns">
                 <td>Name</td>
@@ -90,12 +90,13 @@
             </thead>
             <tbody></tbody>
         </table>
+        <br/>
         <div id="dataHolder"></div>
     </div>
     <div id="rightSideSection">
         <div id="actionButtons">
-            <input type="button" id="addUserButton" value="Add user">
-            <input type="button" id="userDataButton" value="User data">
+            <input type="button" id="storeUserButton" value="Store user">
+            <input type="button" id="usersDataButton" value="Users data">
         </div>
     </div>
 </div>
@@ -103,17 +104,17 @@
     "use strict";
 
     const userStoreUrl = '/userStore';
-    const allUsersDataUrl = '/userData';
+    const allUsersDataUrl = '/usersData';
 
     let stompClient = null;
 
     $(function () {
-        $("#addUserButton").click(addUser);
-        $("#userDataButton").click(userData);
+        $("#storeUserButton").click(storeUser);
+        $("#usersDataButton").click(usersData);
         webSocketConnect();
     });
 
-    const addUser = () => {
+    const storeUser = () => {
         let name = $("#name").val();
         let surname = $("#surname").val();
         let age = $("#age").val();
@@ -135,16 +136,16 @@
     }
 
     function sendUser(user) {
-        stompClient.send('/app/userStore', {}, JSON.stringify({'infoContent': '', 'userDataContent': JSON.stringify(user)}));
+        stompClient.send('/app/userStore', {}, JSON.stringify({'infoContent': '', 'usersDataContent': JSON.stringify(user)}));
     }
 
-    const userData = () => {
-        stompClient.send('/app/userData', {}, '');
+    const usersData = () => {
+        stompClient.send('/app/usersData', {}, '');
     }
 
     function webSocketConnect() {
         if (stompClient == null) {
-            stompClient = Stomp.over(new SockJS('/user-data-websocket'));
+            stompClient = Stomp.over(new SockJS('/users-data-websocket'));
             stompClient.connect({}, (frame) => {
                 console.log('Connected: ' + frame);
 
@@ -154,16 +155,16 @@
                     showInfoMessage(info);
                 });
 
-                stompClient.subscribe('/userDataContent/response', (message) => {
-                    let content = JSON.parse(message.body).userDataContent;
-                    console.log('userDataContent from server: ' + content);
-                    showUserData(JSON.parse(content));
+                stompClient.subscribe('/usersDataContent/response', (message) => {
+                    let content = JSON.parse(message.body).usersDataContent;
+                    console.log('usersDataContent from server: ' + content);
+                    showUsersData(JSON.parse(content));
                 });
             });
         }
     }
 
-    function showUserData(dataSrv) {
+    function showUsersData(dataSrv) {
         let table = document.createElement("table");
         let head = document.createElement("thead");
         let columns = document.createElement("tr");
@@ -203,7 +204,6 @@
         holder.innerHTML = "";
         holder.appendChild(table);
     }
-
 </script>
 </body>
 </html>

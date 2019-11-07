@@ -1,28 +1,28 @@
 package com.mycompany.msapp.domain;
 
-public class Message {
+public class WSMessage {
 
     private final String infoContent;
-    private final String userDataContent;
+    private final String usersDataContent;
 
-    public Message(String infoContent, String userDataContent) {
+    public WSMessage(String infoContent, String usersDataContent) {
         this.infoContent = infoContent;
-        this.userDataContent = userDataContent;
+        this.usersDataContent = usersDataContent;
     }
 
     public String getInfoContent() {
         return infoContent;
     }
 
-    public String getUserDataContent() {
-        return userDataContent;
+    public String getUsersDataContent() {
+        return usersDataContent;
     }
 
     @Override
     public String toString() {
         return "Message{" +
                 "infoContent='" + infoContent + '\'' +
-                ", userDataContent='" + userDataContent + '\'' +
+                ", usersDataContent='" + usersDataContent + '\'' +
                 '}';
     }
 }
