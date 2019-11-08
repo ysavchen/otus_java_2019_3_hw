@@ -10,7 +10,7 @@ public interface MsClient {
 
     String getName();
 
-    <T> Message produceMessage(String to, MessageType msgType);
+    Message produceMessage(String to, MessageType msgType);
 
     <T> Message produceMessage(String to, T data, MessageType msgType);
 }
