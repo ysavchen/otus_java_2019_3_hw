@@ -54,7 +54,7 @@ public class MsClientImpl implements MsClient {
     }
 
     @Override
-    public <T> Message produceMessage(String to, MessageType msgType) {
+    public Message produceMessage(String to, MessageType msgType) {
         return new Message(name, to, null, msgType.getValue(), Serializers.serialize(""));
     }
 
