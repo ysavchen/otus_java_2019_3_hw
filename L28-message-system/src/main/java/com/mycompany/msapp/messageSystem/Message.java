@@ -83,7 +83,6 @@ public class Message {
         return payloadLength;
     }
 
-
     public Optional<UUID> getSourceMessageId() {
         return sourceMessageId;
     }
