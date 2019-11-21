@@ -1,4 +1,4 @@
-package com.mycompany.mutiprocess.message_system.common;
+package com.mycompany.mutiprocess.ms_client.common;
 
 import lombok.extern.slf4j.Slf4j;
 

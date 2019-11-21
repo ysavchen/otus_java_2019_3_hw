@@ -1,7 +1,7 @@
 package com.mycompany.mutiprocess.frontend.controllers;
 
 import com.google.gson.Gson;
-import com.mycompany.mutiprocess.frontend.FrontendService;
+import com.mycompany.mutiprocess.frontend.service.FrontendService;
 import com.mycompany.mutiprocess.frontend.domain.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -24,7 +24,7 @@ public class UserStoreController {
 
     @MessageMapping("/userStore")
     public void userStore(WSMessage message) {
-        logger.info("Controller(userStore) got message: " + message.toString());
+        logger.info("Controller(userStore) got message: {}", message);
         User user = gson.fromJson(message.getUsersDataContent(), User.class);
 
         frontendService.storeUser(user, infoMessage -> {

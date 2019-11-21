@@ -1,7 +1,7 @@
 package com.mycompany.mutiprocess.frontend.controllers;
 
 import com.google.gson.Gson;
-import com.mycompany.mutiprocess.frontend.FrontendService;
+import com.mycompany.mutiprocess.frontend.service.FrontendService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

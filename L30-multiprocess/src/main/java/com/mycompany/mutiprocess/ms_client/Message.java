@@ -1,4 +1,4 @@
-package com.mycompany.mutiprocess.message_system;
+package com.mycompany.mutiprocess.ms_client;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -6,13 +6,13 @@ import java.util.UUID;
 
 public class Message {
 
-    static final Message VOID_MESSAGE = new Message();
+    public static final Message VOID_MESSAGE = new Message();
 
     private final UUID id = UUID.randomUUID();
-    private final String from;
-    private final String to;
+    private final ClientType from;
+    private final ClientType to;
     private final Optional<UUID> sourceMessageId;
-    private final String type;
+    private final MessageType messageType;
     private final int payloadLength;
     private final byte[] payload;
 
@@ -20,16 +20,16 @@ public class Message {
         this.from = null;
         this.to = null;
         this.sourceMessageId = Optional.empty();
-        this.type = "voidTechnicalMessage";
+        this.messageType = MessageType.VOID_TECHNICAL_MESSAGE;
         this.payload = new byte[1];
         this.payloadLength = payload.length;
     }
 
-    public Message(String from, String to, Optional<UUID> sourceMessageId, String type, byte[] payload) {
+    public Message(ClientType from, ClientType to, Optional<UUID> sourceMessageId, MessageType messageType, byte[] payload) {
         this.from = from;
         this.to = to;
         this.sourceMessageId = sourceMessageId;
-        this.type = type;
+        this.messageType = messageType;
         this.payloadLength = payload.length;
         this.payload = payload;
     }
@@ -54,7 +54,7 @@ public class Message {
                 ", from='" + from + '\'' +
                 ", to='" + to + '\'' +
                 ", sourceMessageId=" + sourceMessageId +
-                ", type='" + type + '\'' +
+                ", type='" + messageType + '\'' +
                 ", payloadLength=" + payloadLength +
                 '}';
     }
@@ -63,16 +63,16 @@ public class Message {
         return id;
     }
 
-    public String getFrom() {
+    public ClientType getFrom() {
         return from;
     }
 
-    public String getTo() {
+    public ClientType getTo() {
         return to;
     }
 
-    public String getType() {
-        return type;
+    public MessageType getType() {
+        return messageType;
     }
 
     public byte[] getPayload() {

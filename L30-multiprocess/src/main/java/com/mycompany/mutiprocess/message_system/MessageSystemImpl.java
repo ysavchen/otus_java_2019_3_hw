@@ -1,5 +1,8 @@
 package com.mycompany.mutiprocess.message_system;
 
+import com.mycompany.mutiprocess.ms_client.ClientType;
+import com.mycompany.mutiprocess.ms_client.Message;
+import com.mycompany.mutiprocess.ms_client.MsClient;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
@@ -15,7 +18,7 @@ public class MessageSystemImpl implements MessageSystem {
 
     private final AtomicBoolean runFlag = new AtomicBoolean(true);
 
-    private final Map<String, MsClient> clientMap = new ConcurrentHashMap<>();
+    private final Map<ClientType, MsClient> clientMap = new ConcurrentHashMap<>();
     private final BlockingQueue<Message> messageQueue = new ArrayBlockingQueue<>(MESSAGE_QUEUE_SIZE);
 
     private final ExecutorService msgProcessor = Executors.newSingleThreadExecutor(runnable -> {
@@ -88,18 +91,17 @@ public class MessageSystemImpl implements MessageSystem {
         }
     }
 
-
     @Override
     public void addClient(MsClient msClient) {
-        logger.info("new client:{}", msClient.getName());
-        if (clientMap.containsKey(msClient.getName())) {
-            throw new IllegalArgumentException("Error. client: " + msClient.getName() + " already exists");
+        logger.info("new client:{}", msClient.getType());
+        if (clientMap.containsKey(msClient.getType())) {
+            throw new IllegalArgumentException("Error. client: " + msClient.getType() + " already exists");
         }
-        clientMap.put(msClient.getName(), msClient);
+        clientMap.put(msClient.getType(), msClient);
     }
 
     @Override
-    public void removeClient(String clientId) {
+    public void removeClient(ClientType clientId) {
         MsClient removedClient = clientMap.remove(clientId);
         if (removedClient == null) {
             logger.warn("client not found: {}", clientId);

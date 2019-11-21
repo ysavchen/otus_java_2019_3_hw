@@ -1,9 +1,9 @@
 package com.mycompany.mutiprocess.frontend.handlers;
 
-import com.mycompany.mutiprocess.frontend.FrontendService;
-import com.mycompany.mutiprocess.message_system.Message;
-import com.mycompany.mutiprocess.message_system.MessageHandler;
-import com.mycompany.mutiprocess.message_system.common.Serializers;
+import com.mycompany.mutiprocess.frontend.service.FrontendService;
+import com.mycompany.mutiprocess.ms_client.Message;
+import com.mycompany.mutiprocess.ms_client.MessageHandler;
+import com.mycompany.mutiprocess.ms_client.common.Serializers;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package com.mycompany.mutiprocess.frontend;
+package com.mycompany.mutiprocess.frontend.service;
 
 import com.mycompany.mutiprocess.frontend.domain.User;
 

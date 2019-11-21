@@ -1,9 +1,10 @@
-package com.mycompany.mutiprocess.frontend;
+package com.mycompany.mutiprocess.frontend.service;
 
 import com.mycompany.mutiprocess.frontend.domain.User;
-import com.mycompany.mutiprocess.message_system.Message;
-import com.mycompany.mutiprocess.message_system.MessageType;
-import com.mycompany.mutiprocess.message_system.MsClient;
+import com.mycompany.mutiprocess.ms_client.ClientType;
+import com.mycompany.mutiprocess.ms_client.Message;
+import com.mycompany.mutiprocess.ms_client.MessageType;
+import com.mycompany.mutiprocess.ms_client.MsClient;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -18,11 +19,11 @@ public class FrontendServiceImpl implements FrontendService {
 
     private final Map<UUID, Consumer<?>> consumerMap = new ConcurrentHashMap<>();
     private final MsClient msClient;
-    private final String databaseServiceClientName;
+    private final ClientType databaseClient;
 
-    public FrontendServiceImpl(MsClient msClient, String databaseServiceClientName) {
+    public FrontendServiceImpl(MsClient msClient, ClientType databaseClient) {
         this.msClient = msClient;
-        this.databaseServiceClientName = databaseServiceClientName;
+        this.databaseClient = databaseClient;
     }
 
     @Override
@@ -37,14 +38,14 @@ public class FrontendServiceImpl implements FrontendService {
 
     @Override
     public void storeUser(User user, Consumer<String> dataConsumer) {
-        Message outMsg = msClient.produceMessage(databaseServiceClientName, user, MessageType.STORE_USER);
+        Message outMsg = msClient.produceMessage(databaseClient, user, MessageType.STORE_USER);
         consumerMap.put(outMsg.getId(), dataConsumer);
         msClient.sendMessage(outMsg);
     }
 
     @Override
     public void getAllUsers(Consumer<List<User>> dataConsumer) {
-        Message outMsg = msClient.produceMessage(databaseServiceClientName, MessageType.ALL_USERS_DATA);
+        Message outMsg = msClient.produceMessage(databaseClient, MessageType.ALL_USERS_DATA);
         consumerMap.put(outMsg.getId(), dataConsumer);
         msClient.sendMessage(outMsg);
     }

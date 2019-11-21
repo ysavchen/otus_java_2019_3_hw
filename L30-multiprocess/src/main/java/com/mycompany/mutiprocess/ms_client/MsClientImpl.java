@@ -1,6 +1,6 @@
-package com.mycompany.mutiprocess.message_system;
+package com.mycompany.mutiprocess.ms_client;
 
-import com.mycompany.mutiprocess.message_system.common.Serializers;
+import com.mycompany.mutiprocess.ms_client.common.Serializers;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
@@ -10,28 +10,30 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class MsClientImpl implements MsClient {
 
-    private final String name;
-    private final MessageSystem messageSystem;
-    private final Map<String, MessageHandler> handlers = new ConcurrentHashMap<>();
+    private final ClientType clientType;
+    private final Map<MessageType, MessageHandler> handlers = new ConcurrentHashMap<>();
 
-    public MsClientImpl(String name, MessageSystem messageSystem) {
-        this.name = name;
-        this.messageSystem = messageSystem;
+    public MsClientImpl(ClientType clientType) {
+        this.clientType = clientType;
     }
 
     @Override
     public void addHandler(MessageType type, MessageHandler requestHandler) {
-        this.handlers.put(type.getValue(), requestHandler);
+        this.handlers.put(type, requestHandler);
     }
 
     @Override
-    public String getName() {
-        return name;
+    public ClientType getType() {
+        return clientType;
     }
 
     @Override
     public boolean sendMessage(Message msg) {
-        boolean result = messageSystem.newMessage(msg);
+
+
+        //send message to MessageSystem
+        boolean result = false;
+
         if (!result) {
             logger.error("the last message was rejected: {}", msg);
         }
@@ -54,13 +56,13 @@ public class MsClientImpl implements MsClient {
     }
 
     @Override
-    public Message produceMessage(String to, MessageType msgType) {
-        return new Message(name, to, null, msgType.getValue(), Serializers.serialize(""));
+    public Message produceMessage(ClientType to, MessageType msgType) {
+        return new Message(clientType, to, null, msgType, Serializers.serialize(""));
     }
 
     @Override
-    public <T> Message produceMessage(String to, T data, MessageType msgType) {
-        return new Message(name, to, null, msgType.getValue(), Serializers.serialize(data));
+    public <T> Message produceMessage(ClientType to, T data, MessageType msgType) {
+        return new Message(clientType, to, null, msgType, Serializers.serialize(data));
     }
 
     @Override
@@ -68,11 +70,11 @@ public class MsClientImpl implements MsClient {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MsClientImpl msClient = (MsClientImpl) o;
-        return Objects.equals(name, msClient.name);
+        return Objects.equals(clientType, msClient.clientType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(clientType);
     }
 }
