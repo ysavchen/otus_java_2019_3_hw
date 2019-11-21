@@ -24,7 +24,7 @@ public class UserStoreController {
 
     @MessageMapping("/userStore")
     public void userStore(WSMessage message) {
-        logger.info("Controller(userStore) got message: {}", message);
+        logger.info("Got message: {}", message);
         User user = gson.fromJson(message.getUsersDataContent(), User.class);
 
         frontendService.storeUser(user, infoMessage -> {
@@ -32,7 +32,7 @@ public class UserStoreController {
                     infoMessage,  //infoContent
                     ""  //userDataContent
             );
-            logger.debug("Controller(userData) response message: {}", messageToSend);
+            logger.info("Response message: {}", messageToSend);
             simpMessagingTemplate.convertAndSend("/infoMessage/response", messageToSend);
         });
     }

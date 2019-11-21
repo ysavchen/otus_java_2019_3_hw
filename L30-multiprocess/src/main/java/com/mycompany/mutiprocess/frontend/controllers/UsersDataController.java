@@ -28,7 +28,7 @@ public class UsersDataController {
                     "",  //infoContent
                     gson.toJson(data)  //userDataContent
             );
-            logger.debug("Controller(userData) response message: {}", messageToSend);
+            logger.info("Response message: {}", messageToSend);
             simpMessagingTemplate.convertAndSend("/usersDataContent/response", messageToSend);
         });
     }
