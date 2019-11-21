@@ -1,4 +1,4 @@
-package com.mycompany.mutiprocess.database;
+package com.mycompany.mutiprocess.database.service;
 
 import com.mycompany.mutiprocess.database.domain.User;
 

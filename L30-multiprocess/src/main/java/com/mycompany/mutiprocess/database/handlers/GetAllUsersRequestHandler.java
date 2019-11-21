@@ -1,6 +1,6 @@
 package com.mycompany.mutiprocess.database.handlers;
 
-import com.mycompany.mutiprocess.database.DBService;
+import com.mycompany.mutiprocess.database.service.DBService;
 import com.mycompany.mutiprocess.database.domain.User;
 import com.mycompany.mutiprocess.ms_client.Message;
 import com.mycompany.mutiprocess.ms_client.MessageHandler;
