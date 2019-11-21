@@ -4,14 +4,12 @@ import com.mycompany.mutiprocess.database.domain.User;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-@Repository
 @Transactional
 public class DBServiceImpl implements DBService {
 
