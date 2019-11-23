@@ -18,7 +18,7 @@ import java.net.Socket;
 
 public class DatabaseClient {
 
-    private static final int PORT = 2020;
+    private static final int PORT = 8081;
     private static final String HOST = "localhost";
 
     public static void main(String[] args) {

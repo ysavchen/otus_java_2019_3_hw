@@ -1,11 +1,11 @@
 package com.mycompany.mutiprocess.ms_client;
 
+import com.google.gson.Gson;
 import com.mycompany.mutiprocess.ms_client.common.Serializers;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Map;
 import java.util.Objects;
@@ -16,11 +16,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MsClientImpl implements MsClient {
 
     private final UUID id;
-    private Socket clientSocket;
-    private ObjectOutputStream out;
+    private PrintWriter out;
 
     private final ClientType clientType;
     private final Map<MessageType, MessageHandler> handlers = new ConcurrentHashMap<>();
+    private final Gson gson = new Gson();
 
     public MsClientImpl(ClientType clientType) {
         this.id = UUID.randomUUID();
@@ -39,9 +39,8 @@ public class MsClientImpl implements MsClient {
     @SneakyThrows
     @Override
     public void registerClient(Socket clientSocket) {
-        this.clientSocket = clientSocket;
-        this.out = new ObjectOutputStream(clientSocket.getOutputStream());
-        Message outMsg = produceMessage(clientType, null, MessageType.REGISTER_CLIENT);
+        this.out = new PrintWriter(clientSocket.getOutputStream());
+        Message outMsg = produceMessage(null, null, MessageType.REGISTER_CLIENT);
         sendMessage(outMsg);
     }
 
@@ -56,14 +55,9 @@ public class MsClientImpl implements MsClient {
     }
 
     @Override
-    public boolean sendMessage(Message message) {
-        try {
-            out.writeObject(message);
-            return true;
-        } catch (IOException ex) {
-            logger.error("error", ex);
-        }
-        return false;
+    public void sendMessage(Message message) {
+        out.println(gson.toJson(message));
+        out.flush();
     }
 
     @Override
@@ -97,5 +91,13 @@ public class MsClientImpl implements MsClient {
     @Override
     public int hashCode() {
         return Objects.hash(clientType);
+    }
+
+    @Override
+    public String toString() {
+        return "MsClientImpl{" +
+                "id=" + id +
+                ", clientType=" + clientType +
+                '}';
     }
 }

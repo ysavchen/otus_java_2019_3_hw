@@ -93,10 +93,9 @@ public class MessageSystemImpl implements MessageSystem {
 
     @Override
     public void addClient(MsClient msClient) {
-        logger.info("new client:{}, id = {}", msClient.getType(), msClient.getId());
+        logger.info("new client: {}", msClient);
         if (clientMap.containsKey(msClient.getId())) {
-            throw new IllegalArgumentException(
-                    "Error. client (" + msClient.getType() + ", id = " + msClient.getId() + ") already exists");
+            throw new IllegalArgumentException(msClient + " already exists");
         }
         clientMap.put(msClient.getId(), msClient);
     }
@@ -105,7 +104,7 @@ public class MessageSystemImpl implements MessageSystem {
     public void removeClient(MsClient msClient) {
         MsClient removedClient = clientMap.remove(msClient.getId());
         if (removedClient == null) {
-            logger.warn("client not found: {}, id = {}", msClient.getType(), msClient.getId());
+            logger.warn("client not found: {}", msClient);
         } else {
             logger.info("removed client: {}", removedClient);
         }

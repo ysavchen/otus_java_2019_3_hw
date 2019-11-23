@@ -11,7 +11,7 @@ public interface MsClient {
 
     void addHandler(MessageType type, MessageHandler requestHandler);
 
-    boolean sendMessage(Message msg);
+    void sendMessage(Message msg);
 
     void handle(Message msg);
 

@@ -8,7 +8,9 @@ public enum MessageType {
 
     VOID_TECHNICAL_MESSAGE("voidTechnicalMessage"),
 
-    REGISTER_CLIENT("registerClient");
+    REGISTER_CLIENT("registerClient"),
+
+    REMOVE_CLIENT("removeClient");
 
     private final String value;
 
