@@ -41,7 +41,7 @@ public class DatabaseClient {
         DBService dbService = new DBServiceImpl(sessionFactory());
         databaseMsClient.addHandler(MessageType.STORE_USER, new StoreUserRequestHandler(dbService));
         databaseMsClient.addHandler(MessageType.ALL_USERS_DATA, new GetAllUsersRequestHandler(dbService));
-        databaseMsClient.registerClient(new Socket(HOST, PORT));
+        databaseMsClient.registerMsClient(new Socket(HOST, PORT));
         return dbService;
     }
 }

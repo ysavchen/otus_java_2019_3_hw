@@ -7,7 +7,7 @@ public interface MsClient {
 
     UUID getId();
 
-    void registerClient(Socket clientSocket);
+    void registerMsClient(Socket clientSocket);
 
     void addHandler(MessageType type, MessageHandler requestHandler);
 

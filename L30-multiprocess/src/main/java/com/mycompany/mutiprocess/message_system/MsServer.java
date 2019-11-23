@@ -11,10 +11,13 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Slf4j
 public class MsServer {
 
+    private final ExecutorService executor = Executors.newFixedThreadPool(10);
     private static final int PORT = 8081;
     private MessageSystem messageSystem;
 
@@ -30,10 +33,9 @@ public class MsServer {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             while (!Thread.currentThread().isInterrupted()) {
                 logger.info("waiting for client connection");
-                try (Socket clientSocket = serverSocket.accept()) {
-                    //new Thread(() -> clientHandler(clientSocket)).start();
-                    clientHandler(clientSocket);
-                }
+                Socket clientSocket = serverSocket.accept();
+                executor.submit(() -> clientHandler(clientSocket));
+
             }
         } catch (Exception ex) {
             logger.error("error", ex);
@@ -51,7 +53,7 @@ public class MsServer {
                     if (message.getType() == MessageType.REGISTER_CLIENT) {
 
                         msClient = new MsClientImpl(message.getFromClientId(), message.getFrom());
-                        messageSystem.addClient(msClient);
+                        messageSystem.addClient(msClient, clientSocket);
                     } else if (message.getType() == MessageType.REMOVE_CLIENT) {
                         messageSystem.removeClient(msClient);
                         break;

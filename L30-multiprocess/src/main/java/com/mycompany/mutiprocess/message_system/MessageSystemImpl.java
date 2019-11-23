@@ -4,6 +4,8 @@ import com.mycompany.mutiprocess.ms_client.Message;
 import com.mycompany.mutiprocess.ms_client.MsClient;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.*;
@@ -19,6 +21,7 @@ public class MessageSystemImpl implements MessageSystem {
     private final AtomicBoolean runFlag = new AtomicBoolean(true);
 
     private final Map<UUID, MsClient> clientMap = new ConcurrentHashMap<>();
+    private final Map<UUID, Socket> clientSockets = new ConcurrentHashMap<>();
     private final BlockingQueue<Message> messageQueue = new ArrayBlockingQueue<>(MESSAGE_QUEUE_SIZE);
 
     private final ExecutorService msgProcessor = Executors.newSingleThreadExecutor(runnable -> {
@@ -50,12 +53,12 @@ public class MessageSystemImpl implements MessageSystem {
                 if (msg == Message.VOID_MESSAGE) {
                     logger.info("received the stop message");
                 } else {
-                    MsClient clientTo = clientMap.get(msg.getFromClientId());
-                    if (clientTo == null) {
-                        logger.warn("client not found");
-                    } else {
-                        msgHandler.submit(() -> handleMessage(clientTo, msg));
-                    }
+                    clientMap.values().stream()
+                            .filter(client -> client.getType() == msg.getTo())
+                            .findAny()
+                            .ifPresentOrElse(
+                                    clientTo -> msgHandler.submit(() -> handleMessage(clientTo, msg)),
+                                    () -> logger.warn("client not found"));
                 }
             } catch (InterruptedException ex) {
                 logger.error(ex.getMessage(), ex);
@@ -73,13 +76,18 @@ public class MessageSystemImpl implements MessageSystem {
         logger.info("msgHandler has been shut down");
     }
 
-
-    private void handleMessage(MsClient msClient, Message msg) {
+    private void handleMessage(MsClient msClient, Message message) {
         try {
-            msClient.handle(msg);
+            Socket clientSocket = clientSockets.get(msClient.getId());
+            try (PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
+                out.println(message);
+                out.flush();
+            } catch (Exception ex) {
+                logger.error("error", ex);
+            }
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
-            logger.error("message:{}", msg);
+            logger.error("message:{}", msClient);
         }
     }
 
@@ -92,17 +100,20 @@ public class MessageSystemImpl implements MessageSystem {
     }
 
     @Override
-    public void addClient(MsClient msClient) {
+    public void addClient(MsClient msClient, Socket clientSocket) {
         logger.info("new client: {}", msClient);
         if (clientMap.containsKey(msClient.getId())) {
             throw new IllegalArgumentException(msClient + " already exists");
         }
         clientMap.put(msClient.getId(), msClient);
+        clientSockets.put(msClient.getId(), clientSocket);
     }
 
     @Override
     public void removeClient(MsClient msClient) {
         MsClient removedClient = clientMap.remove(msClient.getId());
+        //todo: is socket supposed to be closed?
+        Socket clientSocket = clientSockets.remove(msClient.getId());
         if (removedClient == null) {
             logger.warn("client not found: {}", msClient);
         } else {

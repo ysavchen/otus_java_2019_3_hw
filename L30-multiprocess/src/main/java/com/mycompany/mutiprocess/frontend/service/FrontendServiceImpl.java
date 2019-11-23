@@ -30,7 +30,7 @@ public class FrontendServiceImpl implements FrontendService {
     public FrontendServiceImpl(MsClient msClient, ClientType databaseClient) {
         this.msClient = msClient;
         this.databaseClient = databaseClient;
-        this.msClient.registerClient(new Socket(HOST, PORT));
+        this.msClient.registerMsClient(new Socket(HOST, PORT));
     }
 
     @Override

@@ -38,7 +38,7 @@ public class MsClientImpl implements MsClient {
 
     @SneakyThrows
     @Override
-    public void registerClient(Socket clientSocket) {
+    public void registerMsClient(Socket clientSocket) {
         this.out = new PrintWriter(clientSocket.getOutputStream());
         Message outMsg = produceMessage(null, null, MessageType.REGISTER_CLIENT);
         sendMessage(outMsg);
