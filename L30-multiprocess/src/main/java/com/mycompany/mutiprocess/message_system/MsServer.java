@@ -5,6 +5,7 @@ import com.mycompany.mutiprocess.ms_client.Message;
 import com.mycompany.mutiprocess.ms_client.MessageType;
 import com.mycompany.mutiprocess.ms_client.MsClient;
 import com.mycompany.mutiprocess.ms_client.MsClientImpl;
+import com.mycompany.mutiprocess.ms_client.common.Serializers;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
@@ -19,6 +20,7 @@ public class MsServer {
 
     private final ExecutorService executor = Executors.newFixedThreadPool(10);
     private static final int MS_SERVER_PORT = 8081;
+    private static final String HOST = "localhost";
     private MessageSystem messageSystem;
 
     private final Gson gson = new Gson();
@@ -54,6 +56,12 @@ public class MsServer {
 
                         msClient = new MsClientImpl(message.getFromClientId(), message.getFrom());
                         messageSystem.addClient(msClient, clientSocket);
+
+                    } else if (message.getType() == MessageType.REGISTER_MESSAGE_CONSUMER) {
+                        int serverPort = Serializers.deserialize(message.getPayload(), Integer.class);
+                        var messageConsumer = new MessageConsumerImpl(message.getFrom(), new Socket(HOST, serverPort));
+                        messageSystem.addMessageConsumer(messageConsumer);
+
                     } else if (message.getType() == MessageType.REMOVE_CLIENT) {
                         messageSystem.removeClient(msClient);
                         break;

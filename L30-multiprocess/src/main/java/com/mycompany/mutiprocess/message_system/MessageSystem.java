@@ -9,6 +9,8 @@ public interface MessageSystem {
 
     void addClient(MsClient msClient, Socket clientSocket);
 
+    void addMessageConsumer(MessageConsumer consumer);
+
     void removeClient(MsClient msClient);
 
     boolean newMessage(Message msg);

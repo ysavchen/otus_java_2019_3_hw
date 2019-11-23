@@ -1,6 +1,5 @@
 package com.mycompany.mutiprocess.message_system;
 
-import com.mycompany.mutiprocess.ms_client.ClientType;
 import com.mycompany.mutiprocess.ms_client.Message;
 import com.mycompany.mutiprocess.ms_client.MsClient;
 import lombok.SneakyThrows;
@@ -16,13 +15,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class MessageSystemImpl implements MessageSystem {
 
-    private static final int FRONTEND_SERVER_PORT = 8082;
-    private static final int DB_SERVER_PORT = 8083;
-    private static final String HOST = "localhost";
-
-    private Socket clientSocketFrontend;
-    private Socket clientSocketDatabase;
-
     private static final int MESSAGE_QUEUE_SIZE = 1_000;
     private static final int MSG_HANDLER_THREAD_LIMIT = 2;
 
@@ -30,6 +22,8 @@ public class MessageSystemImpl implements MessageSystem {
 
     private final Map<UUID, MsClient> clientMap = new ConcurrentHashMap<>();
     private final Map<UUID, Socket> clientSockets = new ConcurrentHashMap<>();
+    private final Map<UUID, MessageConsumer> serverSocketMap = new ConcurrentHashMap<>();
+
     private final BlockingQueue<Message> messageQueue = new ArrayBlockingQueue<>(MESSAGE_QUEUE_SIZE);
 
     private final ExecutorService msgProcessor = Executors.newSingleThreadExecutor(runnable -> {
@@ -86,19 +80,13 @@ public class MessageSystemImpl implements MessageSystem {
 
     private void handleMessage(MsClient msClient, Message message) {
         try {
-            if (msClient.getType() == ClientType.FRONTEND_SERVICE) {
-                if (clientSocketFrontend == null) {
-                    clientSocketFrontend = new Socket(HOST, FRONTEND_SERVER_PORT);
-                }
-                msClient.sendMessage(message, clientSocketFrontend);
-            }
-
-            if (msClient.getType() == ClientType.DATABASE_SERVICE) {
-                if (clientSocketDatabase == null) {
-                    clientSocketDatabase = new Socket(HOST, DB_SERVER_PORT);
-                }
-                msClient.sendMessage(message, clientSocketDatabase);
-            }
+            serverSocketMap.values()
+                    .stream()
+                    .filter(server -> server.getType() == msClient.getType())
+                    .findAny()
+                    .ifPresentOrElse(
+                            server -> msClient.sendMessage(message, server.getClientSocket()),
+                            () -> logger.warn("server not found"));
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
             logger.error("message:{}", msClient);
@@ -121,6 +109,13 @@ public class MessageSystemImpl implements MessageSystem {
         }
         clientMap.put(msClient.getId(), msClient);
         clientSockets.put(msClient.getId(), clientSocket);
+    }
+
+    @SneakyThrows
+    @Override
+    public void addMessageConsumer(MessageConsumer consumer) {
+        logger.info("new server: {}", consumer);
+        serverSocketMap.put(consumer.getId(), consumer);
     }
 
     @SneakyThrows

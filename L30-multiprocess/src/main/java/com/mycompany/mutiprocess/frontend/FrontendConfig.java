@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Random;
 
 @EnableAsync
 @Configuration
@@ -42,8 +43,16 @@ public class FrontendConfig {
 
     @Bean
     public FrontendServer frontendServer(MsClient frontendMsClient, Socket clientSocket) {
-        FrontendServer server = new FrontendServer(frontendMsClient, clientSocket);
+        int serverPort = getRandomPort(8085, 8090);
+        FrontendServer server = new FrontendServer(serverPort, frontendMsClient, clientSocket);
         server.start();
         return server;
+    }
+
+    public int getRandomPort(int min, int max) {
+        Random random = new Random();
+        return random.ints(min, max)
+                .findFirst()
+                .getAsInt();
     }
 }

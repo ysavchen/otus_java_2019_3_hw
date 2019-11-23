@@ -16,6 +16,6 @@ public class DBStarter {
         Socket socket = new Socket(HOST, MS_PORT);
 
         new DBClient(dbMsClient, socket).start();
-        new DBServer(dbMsClient, socket).start();
+        new DBServer(8085, dbMsClient, socket).start();
     }
 }

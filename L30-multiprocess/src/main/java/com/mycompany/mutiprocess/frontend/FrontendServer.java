@@ -2,6 +2,7 @@ package com.mycompany.mutiprocess.frontend;
 
 import com.google.gson.Gson;
 import com.mycompany.mutiprocess.ms_client.Message;
+import com.mycompany.mutiprocess.ms_client.MessageType;
 import com.mycompany.mutiprocess.ms_client.MsClient;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,22 +16,25 @@ import java.util.concurrent.Executors;
 @Slf4j
 public class FrontendServer {
 
-    private static final int FRONTEND_SERVER_PORT = 8082;
+    private final int serverPort;
     private final ExecutorService executor = Executors.newFixedThreadPool(10);
-    private final MsClient frontendMsClient;
+    private final MsClient msClient;
     private final Socket clientSocket;
     private final Gson gson = new Gson();
 
-    public FrontendServer(MsClient frontendMsClient, Socket clientSocket) {
-
-        this.frontendMsClient = frontendMsClient;
+    public FrontendServer(int serverPort, MsClient msClient, Socket clientSocket) {
+        this.serverPort = serverPort;
+        this.msClient = msClient;
         this.clientSocket = clientSocket;
     }
 
     public void start() {
+        Message regServerMsg = msClient.produceMessage(null, serverPort, MessageType.REGISTER_MESSAGE_CONSUMER);
+        msClient.sendMessage(regServerMsg, clientSocket);
+
         //first executor.submit() added as Spring blocks further initialization on serverSocket.accept()
         executor.submit(() -> {
-            try (ServerSocket serverSocket = new ServerSocket(FRONTEND_SERVER_PORT)) {
+            try (ServerSocket serverSocket = new ServerSocket(serverPort)) {
                 while (!Thread.currentThread().isInterrupted()) {
                     logger.info("Frontend Server waiting for client connection");
                     Socket socket = serverSocket.accept();
@@ -43,6 +47,7 @@ public class FrontendServer {
         executor.shutdown();
     }
 
+    //gets input data from the connected socket and sends to clientSocket
     private void clientHandler(Socket socket) {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
 
@@ -50,7 +55,7 @@ public class FrontendServer {
                 String input = in.readLine();
                 if (input != null) {
                     Message message = gson.fromJson(input, Message.class);
-                    frontendMsClient.handle(message, clientSocket);
+                    msClient.handle(message, clientSocket);
                 }
             }
         } catch (Exception ex) {

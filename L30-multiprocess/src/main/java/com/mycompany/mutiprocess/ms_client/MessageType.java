@@ -10,6 +10,8 @@ public enum MessageType {
 
     REGISTER_CLIENT("registerClient"),
 
+    REGISTER_MESSAGE_CONSUMER("registerMessageConsumer"),
+
     REMOVE_CLIENT("removeClient");
 
     private final String value;
