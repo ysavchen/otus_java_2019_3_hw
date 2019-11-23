@@ -43,13 +43,13 @@ public class FrontendConfig {
 
     @Bean
     public FrontendServer frontendServer(MsClient frontendMsClient, Socket clientSocket) {
-        int serverPort = getRandomPort(8085, 8090);
+        int serverPort = getRandomPort(8285, 8385);
         FrontendServer server = new FrontendServer(serverPort, frontendMsClient, clientSocket);
         server.start();
         return server;
     }
 
-    public int getRandomPort(int min, int max) {
+    private int getRandomPort(int min, int max) {
         Random random = new Random();
         return random.ints(min, max)
                 .findFirst()
