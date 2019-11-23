@@ -1,10 +1,10 @@
 package com.mycompany.mutiprocess.message_system;
 
+import com.mycompany.mutiprocess.ms_client.ClientType;
 import com.mycompany.mutiprocess.ms_client.Message;
 import com.mycompany.mutiprocess.ms_client.MsClient;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Map;
 import java.util.UUID;
@@ -14,6 +14,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 public class MessageSystemImpl implements MessageSystem {
+
+    private static final int FRONTEND_SERVER_PORT = 8082;
+    private static final int DB_SERVER_PORT = 8083;
+    private static final String HOST = "localhost";
+
+    private Socket clientSocketFrontend;
+    private Socket clientSocketDatabase;
 
     private static final int MESSAGE_QUEUE_SIZE = 1_000;
     private static final int MSG_HANDLER_THREAD_LIMIT = 2;
@@ -78,12 +85,19 @@ public class MessageSystemImpl implements MessageSystem {
 
     private void handleMessage(MsClient msClient, Message message) {
         try {
-            Socket clientSocket = clientSockets.get(msClient.getId());
-            try (PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
-                out.println(message);
-                out.flush();
-            } catch (Exception ex) {
-                logger.error("error", ex);
+            if (msClient.getType() == ClientType.FRONTEND_SERVICE) {
+                if (clientSocketFrontend == null) {
+                    clientSocketFrontend = new Socket(HOST, FRONTEND_SERVER_PORT);
+
+                }
+                msClient.sendMessage(message, clientSocketFrontend);
+            }
+
+            if (msClient.getType() == ClientType.DATABASE_SERVICE) {
+                if (clientSocketDatabase == null) {
+                    clientSocketDatabase = new Socket(HOST, DB_SERVER_PORT);
+                }
+                msClient.sendMessage(message, clientSocketDatabase);
             }
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);

@@ -7,13 +7,11 @@ public interface MsClient {
 
     UUID getId();
 
-    void registerMsClient(Socket clientSocket);
-
     void addHandler(MessageType type, MessageHandler requestHandler);
 
-    void sendMessage(Message msg);
+    void sendMessage(Message msg, Socket clientSocket);
 
-    void handle(Message msg);
+    void handle(Message msg, Socket clientSocket);
 
     ClientType getType();
 

@@ -1,4 +1,4 @@
-package com.mycompany.mutiprocess.database.domain;
+package com.mycompany.mutiprocess.ms_client.domain;
 
 import lombok.Data;
 

@@ -1,6 +1,6 @@
 package com.mycompany.mutiprocess.database.service;
 
-import com.mycompany.mutiprocess.database.domain.User;
+import com.mycompany.mutiprocess.ms_client.domain.User;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

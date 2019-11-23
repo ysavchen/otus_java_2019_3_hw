@@ -20,7 +20,7 @@ public class StoreUserResponseHandler implements MessageHandler {
     }
 
     @Override
-    public Optional<Message> handle(Message msg) {
+    public Optional<Message> handle(Message msg, UUID clientId) {
         logger.info("new message:{}", msg);
         try {
             String infoMessage = Serializers.deserialize(msg.getPayload(), String.class);

@@ -4,10 +4,7 @@ import com.mycompany.mutiprocess.database.handlers.GetAllUsersRequestHandler;
 import com.mycompany.mutiprocess.database.handlers.StoreUserRequestHandler;
 import com.mycompany.mutiprocess.database.service.DBService;
 import com.mycompany.mutiprocess.database.service.DBServiceImpl;
-import com.mycompany.mutiprocess.ms_client.ClientType;
-import com.mycompany.mutiprocess.ms_client.MessageType;
-import com.mycompany.mutiprocess.ms_client.MsClient;
-import com.mycompany.mutiprocess.ms_client.MsClientImpl;
+import com.mycompany.mutiprocess.ms_client.*;
 import lombok.SneakyThrows;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
@@ -18,10 +15,11 @@ import java.net.Socket;
 
 public class DatabaseClient {
 
-    private static final int PORT = 8081;
+    private static final int MS_PORT = 8081;
     private static final String HOST = "localhost";
 
     public static void main(String[] args) {
+
         new DatabaseClient().start();
     }
 
@@ -37,11 +35,16 @@ public class DatabaseClient {
 
     @SneakyThrows
     private DBService start() {
-        MsClient databaseMsClient = new MsClientImpl(ClientType.DATABASE_SERVICE);
+        MsClient dbMsClient = new MsClientImpl(ClientType.DATABASE_SERVICE);
         DBService dbService = new DBServiceImpl(sessionFactory());
-        databaseMsClient.addHandler(MessageType.STORE_USER, new StoreUserRequestHandler(dbService));
-        databaseMsClient.addHandler(MessageType.ALL_USERS_DATA, new GetAllUsersRequestHandler(dbService));
-        databaseMsClient.registerMsClient(new Socket(HOST, PORT));
+        dbMsClient.addHandler(MessageType.STORE_USER, new StoreUserRequestHandler(dbService));
+        dbMsClient.addHandler(MessageType.ALL_USERS_DATA, new GetAllUsersRequestHandler(dbService));
+
+        Message registerMsg = dbMsClient.produceMessage(null, null, MessageType.REGISTER_CLIENT);
+        Socket clientSocket = new Socket(HOST, MS_PORT);
+        dbMsClient.sendMessage(registerMsg, clientSocket);
+
+        new DatabaseServer(dbMsClient, clientSocket).start();
         return dbService;
     }
 }

@@ -1,6 +1,7 @@
 package com.mycompany.mutiprocess.frontend.service;
 
-import com.mycompany.mutiprocess.frontend.domain.User;
+
+import com.mycompany.mutiprocess.ms_client.domain.User;
 
 import java.util.List;
 import java.util.Optional;

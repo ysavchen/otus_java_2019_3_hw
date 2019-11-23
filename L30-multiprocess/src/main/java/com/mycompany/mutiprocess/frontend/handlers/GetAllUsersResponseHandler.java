@@ -1,10 +1,10 @@
 package com.mycompany.mutiprocess.frontend.handlers;
 
-import com.mycompany.mutiprocess.frontend.domain.User;
 import com.mycompany.mutiprocess.frontend.service.FrontendService;
 import com.mycompany.mutiprocess.ms_client.Message;
 import com.mycompany.mutiprocess.ms_client.MessageHandler;
 import com.mycompany.mutiprocess.ms_client.common.Serializers;
+import com.mycompany.mutiprocess.ms_client.domain.User;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public class GetAllUsersResponseHandler implements MessageHandler {
     }
 
     @Override
-    public Optional<Message> handle(Message msg) {
+    public Optional<Message> handle(Message msg, UUID clientId) {
         logger.info("new message:{}", msg);
         try {
             List<User> users = Serializers.deserialize(msg.getPayload(), List.class);

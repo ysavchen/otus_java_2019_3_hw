@@ -15,33 +15,24 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class MsClientImpl implements MsClient {
 
-    private final UUID id;
-    private PrintWriter out;
+    private final UUID clientId;
 
     private final ClientType clientType;
     private final Map<MessageType, MessageHandler> handlers = new ConcurrentHashMap<>();
     private final Gson gson = new Gson();
 
     public MsClientImpl(ClientType clientType) {
-        this.id = UUID.randomUUID();
+        this.clientId = UUID.randomUUID();
         this.clientType = clientType;
     }
 
     public MsClientImpl(UUID clientId, ClientType clientType) {
-        this.id = clientId;
+        this.clientId = clientId;
         this.clientType = clientType;
     }
 
     public UUID getId() {
-        return id;
-    }
-
-    @SneakyThrows
-    @Override
-    public void registerMsClient(Socket clientSocket) {
-        this.out = new PrintWriter(clientSocket.getOutputStream());
-        Message outMsg = produceMessage(null, null, MessageType.REGISTER_CLIENT);
-        sendMessage(outMsg);
+        return clientId;
     }
 
     @Override
@@ -54,19 +45,21 @@ public class MsClientImpl implements MsClient {
         return clientType;
     }
 
+    @SneakyThrows
     @Override
-    public void sendMessage(Message message) {
+    public void sendMessage(Message message, Socket clientSocket) {
+        PrintWriter out = new PrintWriter(clientSocket.getOutputStream());
         out.println(gson.toJson(message));
         out.flush();
     }
 
     @Override
-    public void handle(Message msg) {
+    public void handle(Message msg, Socket clientSocket) {
         logger.info("new message:{}", msg);
         try {
             MessageHandler requestHandler = handlers.get(msg.getType());
             if (requestHandler != null) {
-                requestHandler.handle(msg).ifPresent(this::sendMessage);
+                requestHandler.handle(msg, clientId).ifPresent(message -> sendMessage(message, clientSocket));
             } else {
                 logger.error("handler not found for the message type:{}", msg.getType());
             }
@@ -77,7 +70,7 @@ public class MsClientImpl implements MsClient {
 
     @Override
     public <T> Message produceMessage(ClientType to, T data, MessageType msgType) {
-        return new Message(clientType, to, null, id, msgType, Serializers.serialize(data));
+        return new Message(clientType, to, null, clientId, msgType, Serializers.serialize(data));
     }
 
     @Override
@@ -96,7 +89,7 @@ public class MsClientImpl implements MsClient {
     @Override
     public String toString() {
         return "MsClientImpl{" +
-                "id=" + id +
+                "clientId=" + clientId +
                 ", clientType=" + clientType +
                 '}';
     }
