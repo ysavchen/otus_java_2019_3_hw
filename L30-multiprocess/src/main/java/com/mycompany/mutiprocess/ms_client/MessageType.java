@@ -6,7 +6,9 @@ public enum MessageType {
 
     ALL_USERS_DATA("AllUsersData"),
 
-    VOID_TECHNICAL_MESSAGE("voidTechnicalMessage");
+    VOID_TECHNICAL_MESSAGE("voidTechnicalMessage"),
+
+    REGISTER_CLIENT("registerClient");
 
     private final String value;
 

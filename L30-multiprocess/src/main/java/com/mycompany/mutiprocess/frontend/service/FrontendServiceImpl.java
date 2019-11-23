@@ -5,8 +5,10 @@ import com.mycompany.mutiprocess.ms_client.ClientType;
 import com.mycompany.mutiprocess.ms_client.Message;
 import com.mycompany.mutiprocess.ms_client.MessageType;
 import com.mycompany.mutiprocess.ms_client.MsClient;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import java.net.Socket;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,13 +19,18 @@ import java.util.function.Consumer;
 @Slf4j
 public class FrontendServiceImpl implements FrontendService {
 
+    private static final int PORT = 8080;
+    private static final String HOST = "localhost";
+
     private final Map<UUID, Consumer<?>> consumerMap = new ConcurrentHashMap<>();
     private final MsClient msClient;
     private final ClientType databaseClient;
 
+    @SneakyThrows
     public FrontendServiceImpl(MsClient msClient, ClientType databaseClient) {
         this.msClient = msClient;
         this.databaseClient = databaseClient;
+        this.msClient.registerClient(new Socket(HOST, PORT));
     }
 
     @Override
@@ -45,7 +52,7 @@ public class FrontendServiceImpl implements FrontendService {
 
     @Override
     public void getAllUsers(Consumer<List<User>> dataConsumer) {
-        Message outMsg = msClient.produceMessage(databaseClient, MessageType.ALL_USERS_DATA);
+        Message outMsg = msClient.produceMessage(databaseClient, null, MessageType.ALL_USERS_DATA);
         consumerMap.put(outMsg.getId(), dataConsumer);
         msClient.sendMessage(outMsg);
     }

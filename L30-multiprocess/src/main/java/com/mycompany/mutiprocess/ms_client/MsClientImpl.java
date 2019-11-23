@@ -1,20 +1,48 @@
 package com.mycompany.mutiprocess.ms_client;
 
 import com.mycompany.mutiprocess.ms_client.common.Serializers;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 public class MsClientImpl implements MsClient {
 
+    private final UUID id;
+    private Socket clientSocket;
+    private ObjectOutputStream out;
+
     private final ClientType clientType;
     private final Map<MessageType, MessageHandler> handlers = new ConcurrentHashMap<>();
 
     public MsClientImpl(ClientType clientType) {
+        this.id = UUID.randomUUID();
         this.clientType = clientType;
+    }
+
+    public MsClientImpl(UUID clientId, ClientType clientType) {
+        this.id = clientId;
+        this.clientType = clientType;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    @SneakyThrows
+    @Override
+    public void registerClient(Socket clientSocket) {
+        this.clientSocket = clientSocket;
+        this.out = new ObjectOutputStream(clientSocket.getOutputStream());
+        Message outMsg = produceMessage(clientType, null, MessageType.REGISTER_CLIENT);
+        sendMessage(outMsg);
     }
 
     @Override
@@ -28,16 +56,14 @@ public class MsClientImpl implements MsClient {
     }
 
     @Override
-    public boolean sendMessage(Message msg) {
-
-
-        //send message to MessageSystem
-        boolean result = false;
-
-        if (!result) {
-            logger.error("the last message was rejected: {}", msg);
+    public boolean sendMessage(Message message) {
+        try {
+            out.writeObject(message);
+            return true;
+        } catch (IOException ex) {
+            logger.error("error", ex);
         }
-        return result;
+        return false;
     }
 
     @Override
@@ -56,13 +82,8 @@ public class MsClientImpl implements MsClient {
     }
 
     @Override
-    public Message produceMessage(ClientType to, MessageType msgType) {
-        return new Message(clientType, to, null, msgType, Serializers.serialize(""));
-    }
-
-    @Override
     public <T> Message produceMessage(ClientType to, T data, MessageType msgType) {
-        return new Message(clientType, to, null, msgType, Serializers.serialize(data));
+        return new Message(clientType, to, null, id, msgType, Serializers.serialize(data));
     }
 
     @Override

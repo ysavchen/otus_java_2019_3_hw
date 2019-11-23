@@ -1,11 +1,11 @@
 package com.mycompany.mutiprocess.message_system;
 
-import com.mycompany.mutiprocess.ms_client.ClientType;
 import com.mycompany.mutiprocess.ms_client.Message;
 import com.mycompany.mutiprocess.ms_client.MsClient;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -18,7 +18,7 @@ public class MessageSystemImpl implements MessageSystem {
 
     private final AtomicBoolean runFlag = new AtomicBoolean(true);
 
-    private final Map<ClientType, MsClient> clientMap = new ConcurrentHashMap<>();
+    private final Map<UUID, MsClient> clientMap = new ConcurrentHashMap<>();
     private final BlockingQueue<Message> messageQueue = new ArrayBlockingQueue<>(MESSAGE_QUEUE_SIZE);
 
     private final ExecutorService msgProcessor = Executors.newSingleThreadExecutor(runnable -> {
@@ -50,7 +50,7 @@ public class MessageSystemImpl implements MessageSystem {
                 if (msg == Message.VOID_MESSAGE) {
                     logger.info("received the stop message");
                 } else {
-                    MsClient clientTo = clientMap.get(msg.getTo());
+                    MsClient clientTo = clientMap.get(msg.getFromClientId());
                     if (clientTo == null) {
                         logger.warn("client not found");
                     } else {
@@ -93,20 +93,21 @@ public class MessageSystemImpl implements MessageSystem {
 
     @Override
     public void addClient(MsClient msClient) {
-        logger.info("new client:{}", msClient.getType());
-        if (clientMap.containsKey(msClient.getType())) {
-            throw new IllegalArgumentException("Error. client: " + msClient.getType() + " already exists");
+        logger.info("new client:{}, id = {}", msClient.getType(), msClient.getId());
+        if (clientMap.containsKey(msClient.getId())) {
+            throw new IllegalArgumentException(
+                    "Error. client (" + msClient.getType() + ", id = " + msClient.getId() + ") already exists");
         }
-        clientMap.put(msClient.getType(), msClient);
+        clientMap.put(msClient.getId(), msClient);
     }
 
     @Override
-    public void removeClient(ClientType clientId) {
-        MsClient removedClient = clientMap.remove(clientId);
+    public void removeClient(MsClient msClient) {
+        MsClient removedClient = clientMap.remove(msClient.getId());
         if (removedClient == null) {
-            logger.warn("client not found: {}", clientId);
+            logger.warn("client not found: {}, id = {}", msClient.getType(), msClient.getId());
         } else {
-            logger.info("removed client:{}", removedClient);
+            logger.info("removed client: {}", removedClient);
         }
     }
 

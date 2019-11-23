@@ -1,14 +1,16 @@
 package com.mycompany.mutiprocess.ms_client;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-public class Message {
+public class Message implements Serializable {
 
     public static final Message VOID_MESSAGE = new Message();
 
     private final UUID id = UUID.randomUUID();
+    private final UUID fromClientId;
     private final ClientType from;
     private final ClientType to;
     private final Optional<UUID> sourceMessageId;
@@ -20,15 +22,18 @@ public class Message {
         this.from = null;
         this.to = null;
         this.sourceMessageId = Optional.empty();
+        this.fromClientId = null;
         this.messageType = MessageType.VOID_TECHNICAL_MESSAGE;
         this.payload = new byte[1];
         this.payloadLength = payload.length;
     }
 
-    public Message(ClientType from, ClientType to, Optional<UUID> sourceMessageId, MessageType messageType, byte[] payload) {
+    public Message(ClientType from, ClientType to, Optional<UUID> sourceMessageId,
+                   UUID fromClientId, MessageType messageType, byte[] payload) {
         this.from = from;
         this.to = to;
         this.sourceMessageId = sourceMessageId;
+        this.fromClientId = fromClientId;
         this.messageType = messageType;
         this.payloadLength = payload.length;
         this.payload = payload;
@@ -69,6 +74,10 @@ public class Message {
 
     public ClientType getTo() {
         return to;
+    }
+
+    public UUID getFromClientId() {
+        return fromClientId;
     }
 
     public MessageType getType() {

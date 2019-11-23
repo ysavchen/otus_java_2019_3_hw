@@ -23,7 +23,7 @@ public class StoreUserRequestHandler implements MessageHandler {
     public Optional<Message> handle(Message msg) {
         User user = Serializers.deserialize(msg.getPayload(), User.class);
         String info = storeUser(user);
-        return Optional.of(new Message(msg.getTo(), msg.getFrom(), Optional.of(msg.getId()), MessageType.STORE_USER, Serializers.serialize(info)));
+        return Optional.of(new Message(msg.getTo(), msg.getFrom(), Optional.of(msg.getId()), msg.getFromClientId(), MessageType.STORE_USER, Serializers.serialize(info)));
     }
 
     private String storeUser(User user) {

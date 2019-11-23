@@ -1,7 +1,7 @@
 package com.mycompany.mutiprocess.database.handlers;
 
-import com.mycompany.mutiprocess.database.service.DBService;
 import com.mycompany.mutiprocess.database.domain.User;
+import com.mycompany.mutiprocess.database.service.DBService;
 import com.mycompany.mutiprocess.ms_client.Message;
 import com.mycompany.mutiprocess.ms_client.MessageHandler;
 import com.mycompany.mutiprocess.ms_client.MessageType;
@@ -21,6 +21,6 @@ public class GetAllUsersRequestHandler implements MessageHandler {
     @Override
     public Optional<Message> handle(Message msg) {
         List<User> users = dbService.getAllUsers();
-        return Optional.of(new Message(msg.getTo(), msg.getFrom(), Optional.of(msg.getId()), MessageType.ALL_USERS_DATA, Serializers.serialize(users)));
+        return Optional.of(new Message(msg.getTo(), msg.getFrom(), Optional.of(msg.getId()), msg.getFromClientId(), MessageType.ALL_USERS_DATA, Serializers.serialize(users)));
     }
 }
