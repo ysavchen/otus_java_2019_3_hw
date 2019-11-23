@@ -18,7 +18,7 @@ import java.util.concurrent.Executors;
 public class MsServer {
 
     private final ExecutorService executor = Executors.newFixedThreadPool(10);
-    private static final int MS_PORT = 8081;
+    private static final int MS_SERVER_PORT = 8081;
     private MessageSystem messageSystem;
 
     private final Gson gson = new Gson();
@@ -30,9 +30,9 @@ public class MsServer {
     private void start() {
         messageSystem = new MessageSystemImpl();
 
-        try (ServerSocket serverSocket = new ServerSocket(MS_PORT)) {
+        try (ServerSocket serverSocket = new ServerSocket(MS_SERVER_PORT)) {
             while (!Thread.currentThread().isInterrupted()) {
-                logger.info("waiting for client connection");
+                logger.info("MsServer waiting for client connection");
                 Socket clientSocket = serverSocket.accept();
                 executor.submit(() -> clientHandler(clientSocket));
             }

@@ -13,25 +13,28 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Slf4j
-public class DatabaseServer {
+public class DBServer {
 
-    private final ExecutorService executor = Executors.newFixedThreadPool(2);
     private static final int DB_SERVER_PORT = 8083;
-    private final MsClient dbMsClient;
-    private final Gson gson = new Gson();
-    private final Socket msClientSocket;
+    private final ExecutorService executor = Executors.newFixedThreadPool(2);
 
-    DatabaseServer(MsClient dbMsClient, Socket msClientSocket) {
-        this.dbMsClient = dbMsClient;
-        this.msClientSocket = msClientSocket;
+    private final MsClient msClient;
+    private final Socket clientSocket;
+
+    private final Gson gson = new Gson();
+
+
+    DBServer(MsClient dbMsClient, Socket clientSocket) {
+        this.msClient = dbMsClient;
+        this.clientSocket = clientSocket;
     }
 
     void start() {
         try (ServerSocket serverSocket = new ServerSocket(DB_SERVER_PORT)) {
             while (!Thread.currentThread().isInterrupted()) {
-                logger.info("waiting for client connection");
-                Socket clientSocket = serverSocket.accept();
-                executor.submit(() -> clientHandler(clientSocket));
+                logger.info("Database Server waiting for client connection");
+                Socket socket = serverSocket.accept();
+                executor.submit(() -> clientHandler(socket));
             }
         } catch (Exception ex) {
             logger.error("error", ex);
@@ -39,14 +42,14 @@ public class DatabaseServer {
         executor.shutdown();
     }
 
-    private void clientHandler(Socket clientSocket) {
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
+    private void clientHandler(Socket socket) {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
 
             while (true) {
                 String input = in.readLine();
                 if (input != null) {
                     Message message = gson.fromJson(input, Message.class);
-                    dbMsClient.handle(message, msClientSocket);
+                    msClient.handle(message, clientSocket);
                 }
             }
         } catch (Exception ex) {

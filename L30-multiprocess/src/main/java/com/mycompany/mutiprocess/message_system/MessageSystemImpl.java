@@ -3,6 +3,7 @@ package com.mycompany.mutiprocess.message_system;
 import com.mycompany.mutiprocess.ms_client.ClientType;
 import com.mycompany.mutiprocess.ms_client.Message;
 import com.mycompany.mutiprocess.ms_client.MsClient;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.Socket;
@@ -88,7 +89,6 @@ public class MessageSystemImpl implements MessageSystem {
             if (msClient.getType() == ClientType.FRONTEND_SERVICE) {
                 if (clientSocketFrontend == null) {
                     clientSocketFrontend = new Socket(HOST, FRONTEND_SERVER_PORT);
-
                 }
                 msClient.sendMessage(message, clientSocketFrontend);
             }
@@ -123,11 +123,12 @@ public class MessageSystemImpl implements MessageSystem {
         clientSockets.put(msClient.getId(), clientSocket);
     }
 
+    @SneakyThrows
     @Override
     public void removeClient(MsClient msClient) {
         MsClient removedClient = clientMap.remove(msClient.getId());
-        //todo: is socket supposed to be closed?
         Socket clientSocket = clientSockets.remove(msClient.getId());
+        clientSocket.close();
         if (removedClient == null) {
             logger.warn("client not found: {}", msClient);
         } else {

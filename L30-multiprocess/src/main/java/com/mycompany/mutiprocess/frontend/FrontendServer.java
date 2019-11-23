@@ -15,23 +15,26 @@ import java.util.concurrent.Executors;
 @Slf4j
 public class FrontendServer {
 
-    private final ExecutorService executor = Executors.newFixedThreadPool(2);
     private static final int FRONTEND_SERVER_PORT = 8082;
+    private final ExecutorService executor = Executors.newFixedThreadPool(10);
     private final MsClient frontendMsClient;
+    private final Socket clientSocket;
     private final Gson gson = new Gson();
 
-    public FrontendServer(MsClient frontendMsClient) {
+    public FrontendServer(MsClient frontendMsClient, Socket clientSocket) {
 
         this.frontendMsClient = frontendMsClient;
+        this.clientSocket = clientSocket;
     }
 
     public void start() {
+        //first executor.submit() added as Spring blocks further initialization on serverSocket.accept()
         executor.submit(() -> {
             try (ServerSocket serverSocket = new ServerSocket(FRONTEND_SERVER_PORT)) {
                 while (!Thread.currentThread().isInterrupted()) {
-                    logger.info("waiting for client connection");
-                    Socket clientSocket = serverSocket.accept();
-                    clientHandler(clientSocket);
+                    logger.info("Frontend Server waiting for client connection");
+                    Socket socket = serverSocket.accept();
+                    clientHandler(socket);
                 }
             } catch (Exception ex) {
                 logger.error("error", ex);
@@ -40,8 +43,8 @@ public class FrontendServer {
         executor.shutdown();
     }
 
-    private void clientHandler(Socket clientSocket) {
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
+    private void clientHandler(Socket socket) {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
 
             while (true) {
                 String input = in.readLine();

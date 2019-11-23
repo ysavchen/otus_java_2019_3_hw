@@ -5,12 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-@Transactional
 public class DBServiceImpl implements DBService {
 
     private final SessionFactory sessionFactory;

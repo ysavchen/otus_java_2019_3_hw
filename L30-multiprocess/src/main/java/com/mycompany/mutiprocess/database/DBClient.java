@@ -4,8 +4,9 @@ import com.mycompany.mutiprocess.database.handlers.GetAllUsersRequestHandler;
 import com.mycompany.mutiprocess.database.handlers.StoreUserRequestHandler;
 import com.mycompany.mutiprocess.database.service.DBService;
 import com.mycompany.mutiprocess.database.service.DBServiceImpl;
-import com.mycompany.mutiprocess.ms_client.*;
-import lombok.SneakyThrows;
+import com.mycompany.mutiprocess.ms_client.Message;
+import com.mycompany.mutiprocess.ms_client.MessageType;
+import com.mycompany.mutiprocess.ms_client.MsClient;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
@@ -13,14 +14,15 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 import java.net.Socket;
 
-public class DatabaseClient {
+public class DBClient {
 
-    private static final int MS_PORT = 8081;
-    private static final String HOST = "localhost";
+    private final MsClient msClient;
 
-    public static void main(String[] args) {
+    DBClient(MsClient msClient, Socket clientSocket) {
+        this.msClient = msClient;
 
-        new DatabaseClient().start();
+        Message registerMsg = msClient.produceMessage(null, null, MessageType.REGISTER_CLIENT);
+        msClient.sendMessage(registerMsg, clientSocket);
     }
 
     private SessionFactory sessionFactory() {
@@ -33,18 +35,10 @@ public class DatabaseClient {
                 .buildSessionFactory();
     }
 
-    @SneakyThrows
-    private DBService start() {
-        MsClient dbMsClient = new MsClientImpl(ClientType.DATABASE_SERVICE);
+    DBService start() {
         DBService dbService = new DBServiceImpl(sessionFactory());
-        dbMsClient.addHandler(MessageType.STORE_USER, new StoreUserRequestHandler(dbService));
-        dbMsClient.addHandler(MessageType.ALL_USERS_DATA, new GetAllUsersRequestHandler(dbService));
-
-        Message registerMsg = dbMsClient.produceMessage(null, null, MessageType.REGISTER_CLIENT);
-        Socket clientSocket = new Socket(HOST, MS_PORT);
-        dbMsClient.sendMessage(registerMsg, clientSocket);
-
-        new DatabaseServer(dbMsClient, clientSocket).start();
+        msClient.addHandler(MessageType.STORE_USER, new StoreUserRequestHandler(dbService));
+        msClient.addHandler(MessageType.ALL_USERS_DATA, new GetAllUsersRequestHandler(dbService));
         return dbService;
     }
 }

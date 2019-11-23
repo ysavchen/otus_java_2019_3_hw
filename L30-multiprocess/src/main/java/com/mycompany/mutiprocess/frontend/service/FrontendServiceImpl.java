@@ -1,12 +1,10 @@
 package com.mycompany.mutiprocess.frontend.service;
 
-import com.mycompany.mutiprocess.frontend.FrontendServer;
 import com.mycompany.mutiprocess.ms_client.ClientType;
 import com.mycompany.mutiprocess.ms_client.Message;
 import com.mycompany.mutiprocess.ms_client.MessageType;
 import com.mycompany.mutiprocess.ms_client.MsClient;
 import com.mycompany.mutiprocess.ms_client.domain.User;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.Socket;
@@ -28,11 +26,10 @@ public class FrontendServiceImpl implements FrontendService {
     private final ClientType databaseClient;
     private Socket clientSocket;
 
-    @SneakyThrows
-    public FrontendServiceImpl(MsClient msClient, ClientType databaseClient) {
+    public FrontendServiceImpl(MsClient msClient, Socket clientSocket, ClientType databaseClient) {
         this.msClient = msClient;
+        this.clientSocket = clientSocket;
         this.databaseClient = databaseClient;
-        this.clientSocket = new Socket(HOST, MS_PORT);
 
         Message registerMsg = msClient.produceMessage(null, null, MessageType.REGISTER_CLIENT);
         msClient.sendMessage(registerMsg, clientSocket);
