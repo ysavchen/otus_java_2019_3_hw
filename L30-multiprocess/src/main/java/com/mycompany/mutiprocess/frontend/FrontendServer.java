@@ -32,7 +32,7 @@ public class FrontendServer {
         Message regServerMsg = msClient.produceMessage(null, serverPort, MessageType.REGISTER_MESSAGE_CONSUMER);
         msClient.sendMessage(regServerMsg, clientSocket);
 
-        //first executor.submit() added as Spring blocks further initialization on serverSocket.accept()
+        //executor.submit() added before ServerSocket created as Spring blocks further initialization on serverSocket.accept()
         executor.submit(() -> {
             try (ServerSocket serverSocket = new ServerSocket(serverPort)) {
                 while (!Thread.currentThread().isInterrupted()) {
