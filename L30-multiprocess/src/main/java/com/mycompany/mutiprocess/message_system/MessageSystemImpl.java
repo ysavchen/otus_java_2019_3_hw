@@ -83,10 +83,7 @@ public class MessageSystemImpl implements MessageSystem {
             serverSocketMap.values()
                     .stream()
                     .filter(server -> server.getType() == msClient.getType())
-                    .findAny()
-                    .ifPresentOrElse(
-                            server -> msClient.sendMessage(message, server.getClientSocket()),
-                            () -> logger.warn("server not found"));
+                    .forEach(server -> msClient.sendMessage(message, server.getClientSocket()));
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
             logger.error("message:{}", msClient);
