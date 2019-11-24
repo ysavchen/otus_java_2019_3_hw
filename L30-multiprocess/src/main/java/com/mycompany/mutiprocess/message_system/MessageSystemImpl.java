@@ -91,7 +91,7 @@ public class MessageSystemImpl implements MessageSystem {
                                 server -> msClient.sendMessage(message, server.getClientSocket()),
                                 () -> logger.warn("server not found"));
 
-            //if a message supposed to be sent to Frontend, both servers must get it, as only one of them has the needed MessageHandler for this message.
+            //if a message supposed to be sent to Frontend, both servers must get it, as only one of them has the needed dataConsumer for this message.
             // Currently it's not known which one.
             } else if (msClient.getType() == ClientType.FRONTEND_SERVICE) {
                 serverSocketMap.values()
