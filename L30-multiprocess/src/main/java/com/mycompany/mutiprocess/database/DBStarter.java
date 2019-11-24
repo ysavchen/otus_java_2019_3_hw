@@ -7,6 +7,9 @@ import com.mycompany.mutiprocess.ms_client.MsClientImpl;
 import java.net.Socket;
 import java.util.Random;
 
+/**
+ * Database must be started in a server mode via h2/h2.bat file
+ */
 public class DBStarter {
 
     private static final int MS_PORT = 8081;
