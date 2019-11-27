@@ -17,28 +17,24 @@ import java.util.concurrent.Executors;
 public class DBServer {
 
     private final int serverPort;
-    private final ExecutorService executor = Executors.newFixedThreadPool(2);
-
     private final MsClient msClient;
-    private final Socket clientSocket;
 
+    private final ExecutorService executor = Executors.newFixedThreadPool(2);
     private final Gson gson = new Gson();
 
-
-    DBServer(int serverPort, MsClient dbMsClient, Socket clientSocket) {
+    DBServer(int serverPort, MsClient dbMsClient) {
         this.serverPort = serverPort;
         this.msClient = dbMsClient;
-        this.clientSocket = clientSocket;
     }
 
     void start() {
         try (ServerSocket serverSocket = new ServerSocket(serverPort)) {
 
             Message registerMsg = msClient.produceMessage(null, serverPort, MessageType.REGISTER_MESSAGE_CONSUMER);
-            msClient.sendMessage(registerMsg, clientSocket);
+            msClient.sendMessage(registerMsg);
 
             while (!Thread.currentThread().isInterrupted()) {
-                logger.info("Database Server waiting for client connection");
+                logger.info("waiting for client connection");
                 Socket socket = serverSocket.accept();
                 executor.submit(() -> clientHandler(socket));
             }
@@ -57,7 +53,8 @@ public class DBServer {
                 if (input != null) {
                     try {
                         Message message = gson.fromJson(input, Message.class);
-                        msClient.handle(message, clientSocket);
+                        logger.info("Got message from queue: {}", message);
+                        msClient.handle(message);
                     } catch (Exception ex) {
                         logger.error("error", ex);
                     }

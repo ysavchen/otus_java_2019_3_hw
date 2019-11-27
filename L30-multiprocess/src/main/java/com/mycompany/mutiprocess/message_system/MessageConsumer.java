@@ -1,8 +1,8 @@
 package com.mycompany.mutiprocess.message_system;
 
 import com.mycompany.mutiprocess.ms_client.ClientType;
+import com.mycompany.mutiprocess.ms_client.Message;
 
-import java.net.Socket;
 import java.util.UUID;
 
 public interface MessageConsumer {
@@ -11,6 +11,6 @@ public interface MessageConsumer {
 
     ClientType getType();
 
-    Socket getClientSocket();
+    void sendMessage(Message message);
 
 }

@@ -34,7 +34,7 @@ public class MsServer {
     void start() {
         try (ServerSocket serverSocket = new ServerSocket(serverPort)) {
             while (!Thread.currentThread().isInterrupted()) {
-                logger.info("MsServer waiting for client connection");
+                logger.info("waiting for client connection");
                 Socket clientSocket = serverSocket.accept();
                 executor.submit(() -> clientHandler(clientSocket));
             }
@@ -54,9 +54,8 @@ public class MsServer {
                     try {
                         Message message = gson.fromJson(input, Message.class);
                         if (message.getType() == MessageType.REGISTER_CLIENT) {
-
-                            msClient = new MsClientImpl(message.getFromClientId(), message.getFrom());
-                            messageSystem.addClient(msClient, clientSocket);
+                            msClient = new MsClientImpl(message.getFromClientId(), clientSocket, message.getFrom());
+                            messageSystem.addClient(msClient);
 
                         } else if (message.getType() == MessageType.REGISTER_MESSAGE_CONSUMER) {
                             int serverPort = Serializers.deserialize(message.getPayload(), Integer.class);

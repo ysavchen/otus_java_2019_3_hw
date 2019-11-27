@@ -1,10 +1,10 @@
 package com.mycompany.mutiprocess.database;
 
+import com.mycompany.mutiprocess.database.handlers.GetAllUsersRequestHandler;
+import com.mycompany.mutiprocess.database.handlers.StoreUserRequestHandler;
 import com.mycompany.mutiprocess.database.service.DBService;
 import com.mycompany.mutiprocess.database.service.DBServiceImpl;
-import com.mycompany.mutiprocess.ms_client.ClientType;
-import com.mycompany.mutiprocess.ms_client.MsClient;
-import com.mycompany.mutiprocess.ms_client.MsClientImpl;
+import com.mycompany.mutiprocess.ms_client.*;
 
 import java.net.Socket;
 import java.util.Random;
@@ -18,14 +18,18 @@ public class DBStarter {
     private static final String HOST = "localhost";
 
     public static void main(String[] args) throws Exception {
-        MsClient msClient = new MsClientImpl(ClientType.DATABASE_SERVICE);
-        Socket socket = new Socket(HOST, MS_PORT);
-
         DBService dbService = new DBServiceImpl(DBUtils.sessionFactory());
-        new DBClient(dbService, msClient, socket).start();
+
+        Socket clientSocket = new Socket(HOST, MS_PORT);
+        MsClient msClient = new MsClientImpl(clientSocket, ClientType.DATABASE_SERVICE);
+        msClient.addHandler(MessageType.STORE_USER, new StoreUserRequestHandler(dbService));
+        msClient.addHandler(MessageType.ALL_USERS_DATA, new GetAllUsersRequestHandler(dbService));
+
+        Message registerMsg = msClient.produceMessage(null, null, MessageType.REGISTER_CLIENT);
+        msClient.sendMessage(registerMsg);
 
         int serverPort = getRandomPort(8085, 8185);
-        new DBServer(serverPort, msClient, socket).start();
+        new DBServer(serverPort, msClient).start();
     }
 
     private static int getRandomPort(int min, int max) {

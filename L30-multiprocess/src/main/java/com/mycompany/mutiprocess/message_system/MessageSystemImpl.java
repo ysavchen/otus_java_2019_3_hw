@@ -6,7 +6,6 @@ import com.mycompany.mutiprocess.ms_client.MsClient;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import java.net.Socket;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.*;
@@ -22,8 +21,7 @@ public class MessageSystemImpl implements MessageSystem {
     private final AtomicBoolean runFlag = new AtomicBoolean(true);
 
     private final Map<UUID, MsClient> clientMap = new ConcurrentHashMap<>();
-    private final Map<UUID, Socket> clientSockets = new ConcurrentHashMap<>();
-    private final Map<UUID, MessageConsumer> serverSocketMap = new ConcurrentHashMap<>();
+    private final Map<UUID, MessageConsumer> msgConsumerMap = new ConcurrentHashMap<>();
 
     private final BlockingQueue<Message> messageQueue = new ArrayBlockingQueue<>(MESSAGE_QUEUE_SIZE);
 
@@ -83,21 +81,21 @@ public class MessageSystemImpl implements MessageSystem {
         try {
             //if a message to be sent to DB, only one (any) server must get it (otherwise duplicate data is stored)
             if (msClient.getType() == ClientType.DATABASE_SERVICE) {
-                serverSocketMap.values()
+                msgConsumerMap.values()
                         .stream()
                         .filter(server -> server.getType() == msClient.getType())
                         .findAny()
                         .ifPresentOrElse(
-                                server -> msClient.sendMessage(message, server.getClientSocket()),
+                                server -> server.sendMessage(message),
                                 () -> logger.warn("server not found"));
 
-             //if a message to be sent to Frontend, both servers must get it, as only one of them has the needed dataConsumer for this message.
-             //Currently it's not known which one.
+            //if a message to be sent to Frontend, both servers must get it, as only one of them has the needed dataConsumer for this message.
+            //Currently it's not known which one.
             } else if (msClient.getType() == ClientType.FRONTEND_SERVICE) {
-                serverSocketMap.values()
+                msgConsumerMap.values()
                         .stream()
                         .filter(server -> server.getType() == msClient.getType())
-                        .forEach(server -> msClient.sendMessage(message, server.getClientSocket()));
+                        .forEach(server -> server.sendMessage(message));
             } else {
                 logger.warn("Server with type {} not found", msClient.getType());
             }
@@ -116,28 +114,25 @@ public class MessageSystemImpl implements MessageSystem {
     }
 
     @Override
-    public void addClient(MsClient msClient, Socket clientSocket) {
+    public void addClient(MsClient msClient) {
         logger.info("new client: {}", msClient);
         if (clientMap.containsKey(msClient.getId())) {
             throw new IllegalArgumentException(msClient + " already exists");
         }
         clientMap.put(msClient.getId(), msClient);
-        clientSockets.put(msClient.getId(), clientSocket);
     }
 
     @SneakyThrows
     @Override
     public void addMessageConsumer(MessageConsumer consumer) {
         logger.info("new server: {}", consumer);
-        serverSocketMap.put(consumer.getId(), consumer);
+        msgConsumerMap.put(consumer.getId(), consumer);
     }
 
     @SneakyThrows
     @Override
     public void removeClient(MsClient msClient) {
         MsClient removedClient = clientMap.remove(msClient.getId());
-        Socket clientSocket = clientSockets.remove(msClient.getId());
-        clientSocket.close();
         if (removedClient == null) {
             logger.warn("client not found: {}", msClient);
         } else {
@@ -148,6 +143,7 @@ public class MessageSystemImpl implements MessageSystem {
     @Override
     public boolean newMessage(Message msg) {
         if (runFlag.get()) {
+            logger.info("Adding message to queue: {}", msg);
             return messageQueue.offer(msg);
         } else {
             logger.warn("MS is being shutting down... rejected:{}", msg);

@@ -19,24 +19,22 @@ public class FrontendServer {
     private final int serverPort;
     private final ExecutorService executor = Executors.newFixedThreadPool(10);
     private final MsClient msClient;
-    private final Socket clientSocket;
     private final Gson gson = new Gson();
 
-    public FrontendServer(int serverPort, MsClient msClient, Socket clientSocket) {
+    public FrontendServer(int serverPort, MsClient msClient) {
         this.serverPort = serverPort;
         this.msClient = msClient;
-        this.clientSocket = clientSocket;
     }
 
     public void start() {
         Message regServerMsg = msClient.produceMessage(null, serverPort, MessageType.REGISTER_MESSAGE_CONSUMER);
-        msClient.sendMessage(regServerMsg, clientSocket);
+        msClient.sendMessage(regServerMsg);
 
         //executor.submit() added before ServerSocket created as Spring blocks further initialization on serverSocket.accept()
         executor.submit(() -> {
             try (ServerSocket serverSocket = new ServerSocket(serverPort)) {
                 while (!Thread.currentThread().isInterrupted()) {
-                    logger.info("Frontend Server waiting for client connection");
+                    logger.info("waiting for client connection");
                     Socket socket = serverSocket.accept();
                     clientHandler(socket);
                 }
@@ -56,7 +54,8 @@ public class FrontendServer {
                 if (input != null) {
                     try {
                         Message message = gson.fromJson(input, Message.class);
-                        msClient.handle(message, clientSocket);
+                        logger.info("Got message from queue: {}", message);
+                        msClient.handle(message);
                     } catch (Exception ex) {
                         logger.error("error", ex);
                     }

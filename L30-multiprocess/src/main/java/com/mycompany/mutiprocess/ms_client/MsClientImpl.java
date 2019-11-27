@@ -2,7 +2,6 @@ package com.mycompany.mutiprocess.ms_client;
 
 import com.google.gson.Gson;
 import com.mycompany.mutiprocess.ms_client.common.Serializers;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.PrintWriter;
@@ -19,15 +18,18 @@ public class MsClientImpl implements MsClient {
 
     private final ClientType clientType;
     private final Map<MessageType, MessageHandler> handlers = new ConcurrentHashMap<>();
+    private final Socket clientSocket;
     private final Gson gson = new Gson();
 
-    public MsClientImpl(ClientType clientType) {
+    public MsClientImpl(Socket clientSocket, ClientType clientType) {
         this.clientId = UUID.randomUUID();
+        this.clientSocket = clientSocket;
         this.clientType = clientType;
     }
 
-    public MsClientImpl(UUID clientId, ClientType clientType) {
+    public MsClientImpl(UUID clientId, Socket clientSocket, ClientType clientType) {
         this.clientId = clientId;
+        this.clientSocket = clientSocket;
         this.clientType = clientType;
     }
 
@@ -45,21 +47,25 @@ public class MsClientImpl implements MsClient {
         return clientType;
     }
 
-    @SneakyThrows
     @Override
-    public void sendMessage(Message message, Socket clientSocket) {
-        PrintWriter out = new PrintWriter(clientSocket.getOutputStream());
-        out.println(gson.toJson(message));
-        out.flush();
+    public void sendMessage(Message message) {
+        try {
+            logger.info("Sending message: {}", message);
+            PrintWriter out = new PrintWriter(clientSocket.getOutputStream());
+            out.println(gson.toJson(message));
+            out.flush();
+        } catch (Exception ex) {
+            logger.error("error", ex);
+        }
     }
 
     @Override
-    public void handle(Message msg, Socket clientSocket) {
+    public void handle(Message msg) {
         logger.info("new message:{}", msg);
         try {
             MessageHandler requestHandler = handlers.get(msg.getType());
             if (requestHandler != null) {
-                requestHandler.handle(msg, clientId).ifPresent(message -> sendMessage(message, clientSocket));
+                requestHandler.handle(msg, clientId).ifPresent(this::sendMessage);
             } else {
                 logger.error("handler not found for the message type:{}", msg.getType());
             }
