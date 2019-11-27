@@ -1,5 +1,7 @@
 package com.mycompany.mutiprocess.database;
 
+import com.mycompany.mutiprocess.database.service.DBService;
+import com.mycompany.mutiprocess.database.service.DBServiceImpl;
 import com.mycompany.mutiprocess.ms_client.ClientType;
 import com.mycompany.mutiprocess.ms_client.MsClient;
 import com.mycompany.mutiprocess.ms_client.MsClientImpl;
@@ -16,13 +18,14 @@ public class DBStarter {
     private static final String HOST = "localhost";
 
     public static void main(String[] args) throws Exception {
-        MsClient dbMsClient = new MsClientImpl(ClientType.DATABASE_SERVICE);
+        MsClient msClient = new MsClientImpl(ClientType.DATABASE_SERVICE);
         Socket socket = new Socket(HOST, MS_PORT);
 
-        new DBClient(dbMsClient, socket).start();
+        DBService dbService = new DBServiceImpl(DBUtils.sessionFactory());
+        new DBClient(dbService, msClient, socket).start();
 
         int serverPort = getRandomPort(8085, 8185);
-        new DBServer(serverPort, dbMsClient, socket).start();
+        new DBServer(serverPort, msClient, socket).start();
     }
 
     private static int getRandomPort(int min, int max) {
