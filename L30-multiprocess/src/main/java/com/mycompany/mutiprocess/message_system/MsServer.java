@@ -51,22 +51,26 @@ public class MsServer {
             while (true) {
                 String input = in.readLine();
                 if (input != null) {
-                    Message message = gson.fromJson(input, Message.class);
-                    if (message.getType() == MessageType.REGISTER_CLIENT) {
+                    try {
+                        Message message = gson.fromJson(input, Message.class);
+                        if (message.getType() == MessageType.REGISTER_CLIENT) {
 
-                        msClient = new MsClientImpl(message.getFromClientId(), message.getFrom());
-                        messageSystem.addClient(msClient, clientSocket);
+                            msClient = new MsClientImpl(message.getFromClientId(), message.getFrom());
+                            messageSystem.addClient(msClient, clientSocket);
 
-                    } else if (message.getType() == MessageType.REGISTER_MESSAGE_CONSUMER) {
-                        int serverPort = Serializers.deserialize(message.getPayload(), Integer.class);
-                        var messageConsumer = new MessageConsumerImpl(message.getFrom(), new Socket(host, serverPort));
-                        messageSystem.addMessageConsumer(messageConsumer);
+                        } else if (message.getType() == MessageType.REGISTER_MESSAGE_CONSUMER) {
+                            int serverPort = Serializers.deserialize(message.getPayload(), Integer.class);
+                            var messageConsumer = new MessageConsumerImpl(message.getFrom(), new Socket(host, serverPort));
+                            messageSystem.addMessageConsumer(messageConsumer);
 
-                    } else if (message.getType() == MessageType.REMOVE_CLIENT) {
-                        messageSystem.removeClient(msClient);
-                        break;
-                    } else {
-                        messageSystem.newMessage(message);
+                        } else if (message.getType() == MessageType.REMOVE_CLIENT) {
+                            messageSystem.removeClient(msClient);
+                            break;
+                        } else {
+                            messageSystem.newMessage(message);
+                        }
+                    } catch (Exception ex) {
+                        logger.error("error", ex);
                     }
                 }
             }

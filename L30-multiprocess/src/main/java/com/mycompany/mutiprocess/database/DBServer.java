@@ -55,8 +55,12 @@ public class DBServer {
             while (true) {
                 String input = in.readLine();
                 if (input != null) {
-                    Message message = gson.fromJson(input, Message.class);
-                    msClient.handle(message, clientSocket);
+                    try {
+                        Message message = gson.fromJson(input, Message.class);
+                        msClient.handle(message, clientSocket);
+                    } catch (Exception ex) {
+                        logger.error("error", ex);
+                    }
                 }
             }
         } catch (Exception ex) {
