@@ -81,7 +81,7 @@ public class MessageSystemImpl implements MessageSystem {
 
     private void handleMessage(MsClient msClient, Message message) {
         try {
-            //if a message supposed to be sent to DB, only one (any) server must get it (otherwise duplicate data is stored)
+            //if a message to be sent to DB, only one (any) server must get it (otherwise duplicate data is stored)
             if (msClient.getType() == ClientType.DATABASE_SERVICE) {
                 serverSocketMap.values()
                         .stream()
@@ -91,8 +91,8 @@ public class MessageSystemImpl implements MessageSystem {
                                 server -> msClient.sendMessage(message, server.getClientSocket()),
                                 () -> logger.warn("server not found"));
 
-            //if a message supposed to be sent to Frontend, both servers must get it, as only one of them has the needed dataConsumer for this message.
-            // Currently it's not known which one.
+             //if a message to be sent to Frontend, both servers must get it, as only one of them has the needed dataConsumer for this message.
+             //Currently it's not known which one.
             } else if (msClient.getType() == ClientType.FRONTEND_SERVICE) {
                 serverSocketMap.values()
                         .stream()

@@ -19,20 +19,20 @@ import java.util.concurrent.Executors;
 public class MsServer {
 
     private final ExecutorService executor = Executors.newFixedThreadPool(10);
-    private static final int MS_SERVER_PORT = 8081;
-    private static final String HOST = "localhost";
-    private MessageSystem messageSystem;
-
     private final Gson gson = new Gson();
 
-    public static void main(String[] args) {
-        new MsServer().start();
+    private final int serverPort;
+    private final String host;
+    private final MessageSystem messageSystem;
+
+    MsServer(int serverPort, String host, MessageSystem messageSystem) {
+        this.serverPort = serverPort;
+        this.host = host;
+        this.messageSystem = messageSystem;
     }
 
-    private void start() {
-        messageSystem = new MessageSystemImpl();
-
-        try (ServerSocket serverSocket = new ServerSocket(MS_SERVER_PORT)) {
+    void start() {
+        try (ServerSocket serverSocket = new ServerSocket(serverPort)) {
             while (!Thread.currentThread().isInterrupted()) {
                 logger.info("MsServer waiting for client connection");
                 Socket clientSocket = serverSocket.accept();
@@ -59,7 +59,7 @@ public class MsServer {
 
                     } else if (message.getType() == MessageType.REGISTER_MESSAGE_CONSUMER) {
                         int serverPort = Serializers.deserialize(message.getPayload(), Integer.class);
-                        var messageConsumer = new MessageConsumerImpl(message.getFrom(), new Socket(HOST, serverPort));
+                        var messageConsumer = new MessageConsumerImpl(message.getFrom(), new Socket(host, serverPort));
                         messageSystem.addMessageConsumer(messageConsumer);
 
                     } else if (message.getType() == MessageType.REMOVE_CLIENT) {
