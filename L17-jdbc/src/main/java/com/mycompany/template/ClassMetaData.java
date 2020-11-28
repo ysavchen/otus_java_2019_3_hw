@@ -1,4 +1,4 @@
-package com.mycompany.executor;
+package com.mycompany.template;
 
 import com.mycompany.annotations.Id;
 import com.mycompany.exceptions.NoIdFoundException;

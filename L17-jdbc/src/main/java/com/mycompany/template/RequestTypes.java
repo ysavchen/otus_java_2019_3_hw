@@ -1,4 +1,4 @@
-package com.mycompany.executor;
+package com.mycompany.template;
 
 enum RequestTypes {
 
