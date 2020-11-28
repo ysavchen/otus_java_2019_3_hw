@@ -73,7 +73,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.8</version>
+            <version>1.18.16</version>
             <scope>provided</scope>
         </dependency>
 
@@ -81,7 +81,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.25</version>
+            <version>1.7.30</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -98,7 +98,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.4.197</version>
+            <version>1.4.200</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
